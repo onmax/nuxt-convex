@@ -76,7 +76,7 @@ function resolveConfig(options: ConvexConfig): ResolvedConvexConfig {
   return defu(options, { url, storage: false }) as ResolvedConvexConfig
 }
 
-function setupConvexClient(nuxt: Nuxt, resolve: (path: string) => string) {
+function setupConvexClient(nuxt: Nuxt, _resolve: (path: string) => string) {
   // Generate virtual module for #convex
   const template = addTemplate({
     filename: 'convex/client.mjs',

@@ -56,14 +56,12 @@ export function useConvexUpload(options: UseConvexUploadOptions) {
       _progress.value = 100
       options.onSuccess?.(storageId, file)
       return storageId
-    }
-    catch (e) {
+    } catch (e) {
       const error = e as Error
       _error.value = error
       options.onError?.(error)
       return null
-    }
-    finally {
+    } finally {
       _isUploading.value = false
     }
   }

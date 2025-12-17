@@ -4,6 +4,7 @@
   "description": "Nuxt module for Convex - reactive backend with real-time sync, file storage, and auto-imports",
   "type": "module",
   "license": "MIT",
+  "packageManager": "pnpm@10.15.1",
   "author": "onmax",
   "repository": { "type": "git", "url": "git+https://github.com/onmax/nuxt-convex.git" },
   "homepage": "https://github.com/onmax/nuxt-convex#readme",
@@ -21,7 +22,9 @@
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "nuxt-module-build build"
+    "typecheck": "nuxt-module-build build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
     "convex": ">=1.0.0",
@@ -34,9 +37,11 @@
     "pathe": "^2.0.0"
   },
   "devDependencies": {
+    "@nuxt/eslint-config": "^1.12.1",
     "@nuxt/module-builder": "latest",
     "@nuxt/devtools": "latest",
     "@nuxt/test-utils": "latest",
+    "eslint": "^9.39.2",
     "@types/node": "^22.0.0",
     "convex": "latest",
     "@convex-vue/core": "latest",

@@ -29,13 +29,17 @@ onMounted(async () => {
 
   // Tasks - filtered by userId
   const tasksQuery = useConvexQuery(api.tasks.list, { userId: userId.value })
-  watch(() => tasksQuery.data.value, (v) => { tasks.value = v || [] }, { immediate: true })
+  watch(() => tasksQuery.data.value, (v) => {
+    tasks.value = v || []
+  }, { immediate: true })
   addTaskMutation = useConvexMutation(api.tasks.add)
   deleteTaskMutation = useConvexMutation(api.tasks.remove)
 
   // Uploads - filtered by userId
   const uploadsQuery = useConvexQuery(api._hub.storage.list, { userId: userId.value })
-  watch(() => uploadsQuery.data.value, (v) => { uploads.value = v || [] }, { immediate: true })
+  watch(() => uploadsQuery.data.value, (v) => {
+    uploads.value = v || []
+  }, { immediate: true })
   saveFileMutation = useConvexMutation(api._hub.storage.saveFile)
   deleteUploadMutation = useConvexMutation(api._hub.storage.remove)
 
@@ -52,8 +56,12 @@ onMounted(async () => {
     },
   })
   uploadFn = uploader.upload
-  watch(() => uploader.isUploading.value, (v) => { isUploading.value = v })
-  watch(() => uploader.error.value, (v) => { uploadError.value = v })
+  watch(() => uploader.isUploading.value, (v) => {
+    isUploading.value = v
+  })
+  watch(() => uploader.error.value, (v) => {
+    uploadError.value = v
+  })
 })
 
 // Re-init queries when user changes
@@ -67,9 +75,13 @@ watch(userId, async (newId) => {
   const { useConvexQuery } = await import('#convex')
   const { api } = await import('../../convex/_generated/api')
   const tasksQuery = useConvexQuery(api.tasks.list, { userId: newId })
-  watch(() => tasksQuery.data.value, (v) => { tasks.value = v || [] }, { immediate: true })
+  watch(() => tasksQuery.data.value, (v) => {
+    tasks.value = v || []
+  }, { immediate: true })
   const uploadsQuery = useConvexQuery(api._hub.storage.list, { userId: newId })
-  watch(() => uploadsQuery.data.value, (v) => { uploads.value = v || [] }, { immediate: true })
+  watch(() => uploadsQuery.data.value, (v) => {
+    uploads.value = v || []
+  }, { immediate: true })
 })
 
 async function addTask() {
@@ -78,8 +90,7 @@ async function addTask() {
   try {
     await addTaskMutation.mutate({ title: newTaskTitle.value, userId: userId.value })
     newTaskTitle.value = ''
-  }
-  finally {
+  } finally {
     isAdding.value = false
   }
 }
@@ -104,11 +115,15 @@ async function deleteUpload(id: string) {
   <div class="max-w-2xl mx-auto p-8 space-y-8">
     <!-- Header with Auth -->
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold">nuxt-convex Playground</h1>
+      <h1 class="text-2xl font-bold">
+        nuxt-convex Playground
+      </h1>
       <div v-if="user" class="flex items-center gap-3">
         <UAvatar :src="user.image" :alt="user.name" size="sm" />
         <span class="text-sm">{{ user.name }}</span>
-        <UButton size="sm" variant="ghost" @click="signOut()">Sign out</UButton>
+        <UButton size="sm" variant="ghost" @click="signOut()">
+          Sign out
+        </UButton>
       </div>
       <UButton v-else icon="i-simple-icons-github" @click="signIn('github')">
         Sign in with GitHub
@@ -119,8 +134,12 @@ async function deleteUpload(id: string) {
     <UCard v-if="!user">
       <div class="text-center py-8">
         <UIcon name="i-heroicons-lock-closed" class="size-12 text-gray-400 mx-auto mb-4" />
-        <h2 class="text-lg font-semibold mb-2">Sign in to continue</h2>
-        <p class="text-gray-500 mb-4">Your tasks and uploads are private to your account</p>
+        <h2 class="text-lg font-semibold mb-2">
+          Sign in to continue
+        </h2>
+        <p class="text-gray-500 mb-4">
+          Your tasks and uploads are private to your account
+        </p>
         <UButton icon="i-simple-icons-github" @click="signIn('github')">
           Sign in with GitHub
         </UButton>
@@ -195,10 +214,14 @@ async function deleteUpload(id: string) {
               <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                 <UButton icon="i-heroicons-trash" color="error" variant="ghost" size="sm" @click="deleteUpload(file._id)" />
               </div>
-              <p class="text-xs text-gray-500 mt-1 truncate">{{ file.name }}</p>
+              <p class="text-xs text-gray-500 mt-1 truncate">
+                {{ file.name }}
+              </p>
             </div>
           </div>
-          <p v-else class="text-gray-500 text-sm">No files uploaded yet</p>
+          <p v-else class="text-gray-500 text-sm">
+            No files uploaded yet
+          </p>
         </div>
       </UCard>
 
