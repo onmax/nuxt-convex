@@ -9,3 +9,5 @@ test/fixtures/**/node_modules
 test/fixtures/**/.nuxt
 test/fixtures/**/.output
 test/fixtures/**/convex
+
+playground/.data
