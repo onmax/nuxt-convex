@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@nuxthub/core": "^0.10.2",
-    "@onmax/nuxt-better-auth": "https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@a1bb78f",
+    "@onmax/nuxt-better-auth": "https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@3e975f9",
     "better-auth": "^1.4.7",
     "convex": "^1.0.0"
   },
