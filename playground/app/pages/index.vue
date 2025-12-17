@@ -3,7 +3,7 @@ const config = useRuntimeConfig()
 const convexUrl = (config.public.convex as { url?: string })?.url
 
 // Auth
-const { user, signIn, signOut } = useAuth()
+const { user, loggedIn, signIn, signOut } = useUserSession()
 const userId = computed(() => user.value?.id || '')
 
 // All Convex operations are client-only
@@ -128,7 +128,7 @@ async function deleteUpload(id: string) {
           Sign out
         </UButton>
       </div>
-      <UButton v-else icon="i-simple-icons-github" @click="signIn('github')">
+      <UButton v-else icon="i-simple-icons-github" @click="signIn.social({ provider: 'github' })">
         Sign in with GitHub
       </UButton>
     </div>
@@ -143,7 +143,7 @@ async function deleteUpload(id: string) {
         <p class="text-gray-500 mb-4">
           Your tasks and uploads are private to your account
         </p>
-        <UButton icon="i-simple-icons-github" @click="signIn('github')">
+        <UButton icon="i-simple-icons-github" @click="signIn.social({ provider: 'github' })">
           Sign in with GitHub
         </UButton>
       </div>

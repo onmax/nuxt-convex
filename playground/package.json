@@ -2,8 +2,9 @@
   "name": "nuxt-convex-playground",
   "private": true,
   "dependencies": {
+    "@nuxthub/core": "^0.10.2",
+    "@onmax/nuxt-better-auth": "link:/home/maxi/nuxt/better-auth",
     "better-auth": "^1.4.7",
-    "better-auth-nuxt": "link:/home/maxi/nuxt/better-auth-nuxt",
     "convex": "^1.0.0"
   },
   "devDependencies": {

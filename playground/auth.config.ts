@@ -1,7 +1,7 @@
 import process from 'node:process'
-import { defineBetterAuthConfig } from 'better-auth-nuxt/config'
+import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
 
-export default defineBetterAuthConfig({
+export default defineServerAuth(() => ({
   appName: 'nuxt-convex Playground',
   socialProviders: {
     github: {
@@ -9,4 +9,4 @@ export default defineBetterAuthConfig({
       clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
     },
   },
-})
+}))
