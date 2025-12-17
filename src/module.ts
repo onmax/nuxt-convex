@@ -37,11 +37,6 @@ export default defineNuxtModule<ConvexConfig>({
       { url: config.url },
     )
 
-    // Add ~convex alias for easy imports
-    const convexDir = join(nuxt.options.rootDir, 'convex')
-    nuxt.options.alias['~convex'] = convexDir
-    nuxt.options.alias['@convex'] = convexDir
-
     // Add plugin to initialize Convex Vue (client-only)
     addPlugin({ src: resolve('./runtime/plugin.client'), mode: 'client' })
 
@@ -98,16 +93,8 @@ export { useConvexQuery, useConvexMutation, useConvexAction } from '@convex-vue/
 declare module '#convex' {
   export { useConvexQuery, useConvexMutation, useConvexAction } from '@convex-vue/core'
 }
-
-declare module '~convex/_generated/api' {
-  export * from '${join(nuxt.options.rootDir, 'convex/_generated/api')}'
-}
-
-declare module '@convex/_generated/api' {
-  export * from '${join(nuxt.options.rootDir, 'convex/_generated/api')}'
-}
 `,
-  })
+  }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex'] = template.dst
 }
@@ -138,7 +125,7 @@ declare module '#convex/storage' {
   export function useConvexStorage(): ConvexStorageReturn
 }
 `,
-  })
+  }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex/storage'] = template.dst
 
