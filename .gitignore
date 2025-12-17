@@ -1,0 +1,11 @@
+node_modules
+dist
+.nuxt
+.output
+*.log
+.env
+.env.*
+test/fixtures/**/node_modules
+test/fixtures/**/.nuxt
+test/fixtures/**/.output
+test/fixtures/**/convex

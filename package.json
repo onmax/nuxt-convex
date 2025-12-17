@@ -1,0 +1,47 @@
+{
+  "name": "nuxt-convex",
+  "version": "0.1.0",
+  "description": "Nuxt module for Convex - reactive backend with real-time sync, file storage, and auto-imports",
+  "type": "module",
+  "license": "MIT",
+  "author": "onmax",
+  "repository": { "type": "git", "url": "git+https://github.com/onmax/nuxt-convex.git" },
+  "homepage": "https://github.com/onmax/nuxt-convex#readme",
+  "bugs": { "url": "https://github.com/onmax/nuxt-convex/issues" },
+  "keywords": ["nuxt", "nuxt-module", "convex", "realtime", "database", "storage", "vue"],
+  "exports": { ".": { "types": "./dist/types.d.mts", "import": "./dist/module.mjs" } },
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
+  "files": ["dist"],
+  "scripts": {
+    "prepack": "nuxt-module-build build",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "nuxt-module-build build"
+  },
+  "peerDependencies": {
+    "convex": ">=1.0.0",
+    "@convex-vue/core": ">=0.0.4"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^4.0.0",
+    "consola": "^3.4.0",
+    "defu": "^6.1.4",
+    "pathe": "^2.0.0"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "latest",
+    "@nuxt/devtools": "latest",
+    "@nuxt/test-utils": "latest",
+    "@types/node": "^22.0.0",
+    "convex": "latest",
+    "@convex-vue/core": "latest",
+    "nuxt": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.0",
+    "vue": "latest"
+  }
+}
