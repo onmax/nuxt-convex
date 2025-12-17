@@ -1,12 +1,11 @@
-import { defineServerAuth } from '@onmax/nuxt-better-auth/runtime/config'
+import { defineBetterAuthConfig } from 'better-auth-nuxt/config'
 
-export default defineServerAuth(() => ({
+export default defineBetterAuthConfig({
   appName: 'nuxt-convex Playground',
-  // OAuth only - no database needed
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID || '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
     },
   },
-}))
+})

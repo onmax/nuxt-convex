@@ -1,7 +1,7 @@
 import NuxtConvex from '../src/module'
 
 export default defineNuxtConfig({
-  modules: [NuxtConvex, '@nuxt/ui', '@onmax/nuxt-better-auth'],
+  modules: [NuxtConvex, '@nuxt/ui', 'better-auth-nuxt'],
   css: ['~/assets/css/main.css'],
 
   convex: {
