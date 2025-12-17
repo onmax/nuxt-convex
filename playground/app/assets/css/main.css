@@ -1,2 +1,24 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
+
+@theme {
+  --color-convex-purple: #948ae3;
+  --color-convex-pink: #fc618d;
+  --color-convex-green: #7bd88f;
+  --color-convex-yellow: #f8e67a;
+}
+
+html {
+  color-scheme: dark;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-convex-purple), var(--color-convex-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-gradient-convex {
+  background: linear-gradient(135deg, var(--color-convex-purple) 0%, var(--color-convex-pink) 100%);
+}
