@@ -1,9 +1,13 @@
 {
   "name": "nuxt-convex-playground",
   "private": true,
+  "scripts": {
+    "dev": "nuxi dev",
+    "dev:build": "nuxi build"
+  },
   "dependencies": {
     "@nuxthub/core": "^0.10.2",
-    "@onmax/nuxt-better-auth": "link:/home/maxi/nuxt/better-auth",
+    "@onmax/nuxt-better-auth": "https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@50bb199",
     "better-auth": "^1.4.7",
     "convex": "^1.0.0"
   },
