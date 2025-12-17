@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "npx nuxi dev",
-    "build": "npx nuxi build"
+    "build": "cd .. && npx nuxt-module-build build --stub && npx nuxt-module-build prepare && cd playground && npx nuxi build"
   },
   "dependencies": {
     "@nuxthub/core": "^0.10.2",
