@@ -1,0 +1,50 @@
+packages:
+  - playground
+
+catalog:
+  yaml: ^2.8.2
+catalogs:
+  # Build tooling
+  build:
+    '@nuxt/module-builder': latest
+    typescript: ^5.0.0
+
+  # Convex
+  convex:
+    '@convex-vue/core': latest
+    convex: latest
+
+  # Linting and formatting
+  lint:
+    '@antfu/eslint-config': ^4.13.2
+    '@nuxt/eslint-config': ^1.12.1
+    eslint: ^9.39.2
+    eslint-plugin-format: ^1.1.0
+
+  # Nuxt ecosystem
+  nuxt:
+    '@nuxt/devtools': latest
+    nuxt: ^4.0.0
+    vue: latest
+
+  # Playground specific
+  playground:
+    '@nuxt/ui': ^3.0.0
+    '@nuxthub/core': ^0.10.2
+    '@onmax/nuxt-better-auth': https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@cbe6f78
+    better-auth: ^1.4.7
+    wrangler: ^4.0.0
+  # Runtime dependencies for the module
+  prod:
+    '@nuxt/kit': ^4.0.0
+    consola: ^3.4.0
+    defu: ^6.1.4
+    pathe: ^2.0.0
+  # Testing
+  test:
+    '@nuxt/test-utils': latest
+    vitest: ^3.2.0
+    vitest-package-exports: ^0.1.1
+  # Types
+  types:
+    '@types/node': ^22.0.0

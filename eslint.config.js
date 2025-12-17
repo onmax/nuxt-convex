@@ -10,6 +10,7 @@ export default createConfigForNuxt({
     typescript: true,
     vue: true,
     formatters: true,
+    pnpm: true,
     ignores: ['**/convex/_generated/**'],
   }),
 )

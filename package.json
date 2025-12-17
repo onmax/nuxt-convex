@@ -7,40 +7,14 @@
   "author": "onmax",
   "license": "MIT",
   "homepage": "https://github.com/onmax/nuxt-convex#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/onmax/nuxt-convex.git"
-  },
-  "bugs": {
-    "url": "https://github.com/onmax/nuxt-convex/issues"
-  },
-  "keywords": [
-    "nuxt",
-    "nuxt-module",
-    "convex",
-    "realtime",
-    "database",
-    "storage",
-    "vue"
-  ],
-  "exports": {
-    ".": {
-      "types": "./dist/types.d.mts",
-      "import": "./dist/module.mjs"
-    }
-  },
+  "repository": { "type": "git", "url": "git+https://github.com/onmax/nuxt-convex.git" },
+  "bugs": { "url": "https://github.com/onmax/nuxt-convex/issues" },
+  "keywords": ["nuxt", "nuxt-module", "convex", "realtime", "database", "storage", "vue"],
+  "exports": { ".": { "types": "./dist/types.d.mts", "import": "./dist/module.mjs" } },
   "main": "./dist/module.mjs",
   "types": "./dist/types.d.mts",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "./dist/types.d.mts"
-      ]
-    }
-  },
-  "files": [
-    "dist"
-  ],
+  "typesVersions": { "*": { ".": ["./dist/types.d.mts"] } },
+  "files": ["dist"],
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
@@ -58,27 +32,27 @@
     "convex": ">=1.0.0"
   },
   "dependencies": {
-    "@nuxt/kit": "^4.0.0",
-    "consola": "^3.4.0",
-    "defu": "^6.1.4",
-    "pathe": "^2.0.0"
+    "@nuxt/kit": "catalog:prod",
+    "consola": "catalog:prod",
+    "defu": "catalog:prod",
+    "pathe": "catalog:prod"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.13.2",
-    "@convex-vue/core": "latest",
-    "@nuxt/devtools": "latest",
-    "@nuxt/eslint-config": "^1.12.1",
-    "@nuxt/module-builder": "latest",
-    "@nuxt/test-utils": "latest",
-    "@types/node": "^22.0.0",
-    "convex": "latest",
-    "eslint": "^9.39.2",
-    "eslint-plugin-format": "^1.1.0",
-    "nuxt": "^4.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^3.2.0",
-    "vitest-package-exports": "^0.1.1",
-    "vue": "latest",
-    "yaml": "^2.8.2"
+    "@antfu/eslint-config": "catalog:lint",
+    "@convex-vue/core": "catalog:convex",
+    "@nuxt/devtools": "catalog:nuxt",
+    "@nuxt/eslint-config": "catalog:lint",
+    "@nuxt/module-builder": "catalog:build",
+    "@nuxt/test-utils": "catalog:test",
+    "@types/node": "catalog:types",
+    "convex": "catalog:convex",
+    "eslint": "catalog:lint",
+    "eslint-plugin-format": "catalog:lint",
+    "nuxt": "catalog:nuxt",
+    "typescript": "catalog:build",
+    "vitest": "catalog:test",
+    "vitest-package-exports": "catalog:test",
+    "vue": "catalog:nuxt",
+    "yaml": "catalog:"
   }
 }

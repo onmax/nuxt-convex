@@ -6,14 +6,14 @@
     "build": "nuxi build"
   },
   "dependencies": {
-    "@nuxthub/core": "^0.10.2",
-    "@onmax/nuxt-better-auth": "https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@cbe6f78",
-    "better-auth": "^1.4.7",
-    "convex": "^1.0.0"
+    "@nuxthub/core": "catalog:playground",
+    "@onmax/nuxt-better-auth": "catalog:playground",
+    "better-auth": "catalog:playground",
+    "convex": "catalog:convex"
   },
   "devDependencies": {
-    "@nuxt/ui": "^3.0.0",
-    "nuxt": "^4.0.0",
-    "wrangler": "^4.0.0"
+    "@nuxt/ui": "catalog:playground",
+    "nuxt": "catalog:nuxt",
+    "wrangler": "catalog:playground"
   }
 }
