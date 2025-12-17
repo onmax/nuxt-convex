@@ -2,8 +2,8 @@
   "name": "nuxt-convex-playground",
   "private": true,
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build"
+    "dev": "nuxt dev",
+    "build": "nuxt build"
   },
   "dependencies": {
     "@nuxthub/core": "^0.10.2",
