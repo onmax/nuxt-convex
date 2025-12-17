@@ -1,3 +1,4 @@
+import process from 'node:process'
 import NuxtConvex from '../src/module'
 
 export default defineNuxtConfig({

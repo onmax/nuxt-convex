@@ -1,20 +1,46 @@
 {
   "name": "nuxt-convex",
-  "version": "0.1.0",
-  "description": "Nuxt module for Convex - reactive backend with real-time sync, file storage, and auto-imports",
   "type": "module",
-  "license": "MIT",
+  "version": "0.1.0",
   "packageManager": "pnpm@10.15.1",
+  "description": "Nuxt module for Convex - reactive backend with real-time sync, file storage, and auto-imports",
   "author": "onmax",
-  "repository": { "type": "git", "url": "git+https://github.com/onmax/nuxt-convex.git" },
+  "license": "MIT",
   "homepage": "https://github.com/onmax/nuxt-convex#readme",
-  "bugs": { "url": "https://github.com/onmax/nuxt-convex/issues" },
-  "keywords": ["nuxt", "nuxt-module", "convex", "realtime", "database", "storage", "vue"],
-  "exports": { ".": { "types": "./dist/types.d.mts", "import": "./dist/module.mjs" } },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onmax/nuxt-convex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onmax/nuxt-convex/issues"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "convex",
+    "realtime",
+    "database",
+    "storage",
+    "vue"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
+    }
+  },
   "main": "./dist/module.mjs",
   "types": "./dist/types.d.mts",
-  "typesVersions": { "*": { ".": ["./dist/types.d.mts"] } },
-  "files": ["dist"],
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types.d.mts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
@@ -28,8 +54,8 @@
     "lint:fix": "eslint . --fix"
   },
   "peerDependencies": {
-    "convex": ">=1.0.0",
-    "@convex-vue/core": ">=0.0.4"
+    "@convex-vue/core": ">=0.0.4",
+    "convex": ">=1.0.0"
   },
   "dependencies": {
     "@nuxt/kit": "^4.0.0",
@@ -38,17 +64,21 @@
     "pathe": "^2.0.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^4.13.2",
+    "@convex-vue/core": "latest",
+    "@nuxt/devtools": "latest",
     "@nuxt/eslint-config": "^1.12.1",
     "@nuxt/module-builder": "latest",
-    "@nuxt/devtools": "latest",
     "@nuxt/test-utils": "latest",
-    "eslint": "^9.39.2",
     "@types/node": "^22.0.0",
     "convex": "latest",
-    "@convex-vue/core": "latest",
+    "eslint": "^9.39.2",
+    "eslint-plugin-format": "^1.1.0",
     "nuxt": "^4.0.0",
     "typescript": "^5.0.0",
     "vitest": "^3.2.0",
-    "vue": "latest"
+    "vitest-package-exports": "^0.1.1",
+    "vue": "latest",
+    "yaml": "^2.8.2"
   }
 }

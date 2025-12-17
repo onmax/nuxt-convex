@@ -1,4 +1,5 @@
-import { ref, readonly } from '#imports'
+import type { DeepReadonly, Ref } from '#imports'
+import { readonly, ref } from '#imports'
 
 export interface UseConvexUploadOptions {
   /** Mutation to generate upload URL (from useConvexStorage or custom) */
@@ -7,6 +8,13 @@ export interface UseConvexUploadOptions {
   onSuccess?: (storageId: string, file: File) => void
   /** Called on upload error */
   onError?: (error: Error) => void
+}
+
+export interface UseConvexUploadReturn {
+  upload: (file: File) => Promise<string | null>
+  isUploading: DeepReadonly<Ref<boolean>>
+  progress: DeepReadonly<Ref<number>>
+  error: DeepReadonly<Ref<Error | null>>
 }
 
 /**
@@ -23,7 +31,7 @@ export interface UseConvexUploadOptions {
  * const handleFile = (file: File) => upload(file)
  * ```
  */
-export function useConvexUpload(options: UseConvexUploadOptions) {
+export function useConvexUpload(options: UseConvexUploadOptions): UseConvexUploadReturn {
   const _isUploading = ref(false)
   const _progress = ref(0)
   const _error = ref<Error | null>(null)
@@ -40,7 +48,8 @@ export function useConvexUpload(options: UseConvexUploadOptions) {
 
     try {
       const uploadUrl = await options.generateUploadUrl.mutate({})
-      if (!uploadUrl) throw new Error('[nuxt-convex] Failed to generate upload URL')
+      if (!uploadUrl)
+        throw new Error('[nuxt-convex] Failed to generate upload URL')
 
       const response = await fetch(uploadUrl, {
         method: 'POST',
@@ -56,12 +65,14 @@ export function useConvexUpload(options: UseConvexUploadOptions) {
       _progress.value = 100
       options.onSuccess?.(storageId, file)
       return storageId
-    } catch (e) {
+    }
+    catch (e) {
       const error = e as Error
       _error.value = error
       options.onError?.(error)
       return null
-    } finally {
+    }
+    finally {
       _isUploading.value = false
     }
   }

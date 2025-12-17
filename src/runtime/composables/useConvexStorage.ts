@@ -1,8 +1,9 @@
-import { readonly, ref, type Ref } from '#imports'
-import { useConvexMutation, useConvexQuery } from '@convex-vue/core'
+import type { Ref } from '#imports'
 import type { FunctionReference } from 'convex/server'
+import { readonly, ref } from '#imports'
+import { useConvexMutation, useConvexQuery } from '@convex-vue/core'
 
-interface StorageApi {
+export interface ConvexStorageApi {
   _hub?: {
     storage?: {
       generateUploadUrl: FunctionReference<'mutation'>
@@ -12,12 +13,18 @@ interface StorageApi {
   }
 }
 
+export interface ConvexStorageReturn {
+  generateUploadUrl: { mutate: () => Promise<string> } | { mutate: () => Promise<never> }
+  getUrl: (storageId: string) => Ref<string | null>
+  remove: { mutate: (args: { storageId: string }) => Promise<void> } | { mutate: () => Promise<never> }
+}
+
 /**
  * Composable for Convex file storage operations.
  * Requires convex/_hub/storage.ts functions (auto-scaffolded by module).
  * @param api - The Convex API from `~/convex/_generated/api`
  */
-export function useConvexStorage(api: StorageApi) {
+export function useConvexStorage(api: ConvexStorageApi): ConvexStorageReturn {
   const storage = api?._hub?.storage
 
   if (!storage) {

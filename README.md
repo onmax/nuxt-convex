@@ -45,7 +45,7 @@ Use the Convex Vue composables to interact with your backend. The module re-expo
 
 ```vue [app/pages/tasks.vue]
 <script setup>
-import { useConvexQuery, useConvexMutation } from '#convex'
+import { useConvexMutation, useConvexQuery } from '#convex'
 import { api } from '~/convex/_generated/api'
 
 const tasks = useConvexQuery(api.tasks.list, {})
@@ -58,7 +58,9 @@ async function createTask(title: string) {
 
 <template>
   <ul>
-    <li v-for="task in tasks" :key="task._id">{{ task.title }}</li>
+    <li v-for="task in tasks" :key="task._id">
+      {{ task.title }}
+    </li>
   </ul>
 </template>
 ```
@@ -69,8 +71,8 @@ The module provides a `useConvexUpload` composable for uploading files to Convex
 
 ```vue [app/pages/upload.vue]
 <script setup>
-import { useConvexUpload } from '#imports'
 import { useConvexMutation } from '#convex'
+import { useConvexUpload } from '#imports'
 import { api } from '~/convex/_generated/api'
 
 const generateUploadUrl = useConvexMutation(api._hub.storage.generateUploadUrl)
@@ -86,8 +88,10 @@ async function handleFileChange(event: Event) {
 </script>
 
 <template>
-  <input type="file" @change="handleFileChange" :disabled="isUploading">
-  <p v-if="error">{{ error.message }}</p>
+  <input type="file" :disabled="isUploading" @change="handleFileChange">
+  <p v-if="error">
+    {{ error.message }}
+  </p>
 </template>
 ```
 
@@ -95,10 +99,10 @@ When storage is enabled, the module creates `convex/_hub/storage.ts` with the ne
 
 ## Configuration
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `url` | `string` | `process.env.CONVEX_URL` | Convex deployment URL |
-| `storage` | `boolean` | `false` | Enable file storage integration |
+| Option    | Type      | Default                  | Description                     |
+| --------- | --------- | ------------------------ | ------------------------------- |
+| `url`     | `string`  | `process.env.CONVEX_URL` | Convex deployment URL           |
+| `storage` | `boolean` | `false`                  | Enable file storage integration |
 
 ## Better Auth Integration
 
@@ -113,8 +117,8 @@ pnpm add @onmax/nuxt-better-auth @convex-dev/better-auth better-auth@1.3.8 --sav
 ### 2. Register the Convex component
 
 ```ts [convex/convex.config.ts]
-import { defineApp } from 'convex/server'
 import betterAuth from '@convex-dev/better-auth/convex.config'
+import { defineApp } from 'convex/server'
 
 const app = defineApp()
 app.use(betterAuth)
@@ -136,9 +140,9 @@ export default defineNuxtConfig({
 ### 4. Create auth instance
 
 ```ts [server/utils/auth.ts]
-import { betterAuth } from 'better-auth'
-import { convex } from '@convex-dev/better-auth/server/plugins'
 import { createClient } from '@convex-dev/better-auth'
+import { convex } from '@convex-dev/better-auth/server/plugins'
+import { betterAuth } from 'better-auth'
 import { components } from '~/convex/_generated/api'
 
 const authComponent = createClient(components.betterAuth)

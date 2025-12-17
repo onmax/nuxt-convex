@@ -1,8 +1,8 @@
-import { fileURLToPath } from 'node:url'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { describe, it, expect } from 'vitest'
-import { setup, $fetch } from '@nuxt/test-utils/e2e'
+import { fileURLToPath } from 'node:url'
+import { $fetch, setup } from '@nuxt/test-utils/e2e'
+import { describe, expect, it } from 'vitest'
 
 const rootDir = fileURLToPath(new URL('./fixtures/full', import.meta.url))
 

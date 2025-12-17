@@ -22,7 +22,8 @@ let deleteUploadMutation: any
 let uploadFn: ((file: File) => Promise<string | null>) | null = null
 
 onMounted(async () => {
-  if (!userId.value) return
+  if (!userId.value)
+    return
 
   const { useConvexQuery, useConvexMutation } = await import('#convex')
   const { api } = await import('../../convex/_generated/api')
@@ -85,12 +86,14 @@ watch(userId, async (newId) => {
 })
 
 async function addTask() {
-  if (!newTaskTitle.value.trim() || !addTaskMutation || !userId.value) return
+  if (!newTaskTitle.value.trim() || !addTaskMutation || !userId.value)
+    return
   isAdding.value = true
   try {
     await addTaskMutation.mutate({ title: newTaskTitle.value, userId: userId.value })
     newTaskTitle.value = ''
-  } finally {
+  }
+  finally {
     isAdding.value = false
   }
 }

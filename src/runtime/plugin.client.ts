@@ -1,8 +1,9 @@
+import type { ConvexVueClient } from '@convex-vue/core'
+import type { Plugin } from 'nuxt/app'
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 import { createConvexVue } from '@convex-vue/core'
-import type { ConvexVueClient } from '@convex-vue/core'
 
-export default defineNuxtPlugin((nuxtApp): { provide: { convex: ConvexVueClient } } | undefined => {
+const plugin: Plugin<{ convex: ConvexVueClient }> = defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
   const convexUrl = (config.public.convex as { url?: string })?.url
 
@@ -16,3 +17,5 @@ export default defineNuxtPlugin((nuxtApp): { provide: { convex: ConvexVueClient 
 
   return { provide: { convex } }
 })
+
+export default plugin

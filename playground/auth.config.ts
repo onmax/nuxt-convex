@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { defineBetterAuthConfig } from 'better-auth-nuxt/config'
 
 export default defineBetterAuthConfig({

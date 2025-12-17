@@ -7,4 +7,4 @@ enabled = true
 
 # Cron trigger - daily at 3am UTC
 [triggers]
-crons = ["0 3 * * *"]
+crons = [ "0 3 * * *" ]
