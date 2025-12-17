@@ -62,4 +62,4 @@ jobs:
       - run: pnpm install
       - run: pnpm dev:prepare
       - run: pnpm prepack
-      - run: pnpx pkg-pr-new publish --compact --no-template --pnpm
+      - run: pnpx pkg-pr-new publish --no-template --pnpm
