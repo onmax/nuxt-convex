@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxi dev",
-    "dev:build": "nuxi build"
+    "build": "nuxi build"
   },
   "dependencies": {
     "@nuxthub/core": "^0.10.2",
