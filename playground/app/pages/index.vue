@@ -3,7 +3,7 @@ const config = useRuntimeConfig()
 const convexUrl = (config.public.convex as { url?: string })?.url
 
 // Auth
-const { user, loggedIn, signIn, signOut } = useUserSession()
+const { user, signIn, signOut } = useUserSession()
 const userId = computed(() => user.value?.id || '')
 
 // All Convex operations are client-only
