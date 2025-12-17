@@ -2,8 +2,8 @@
   "name": "nuxt-convex-playground",
   "private": true,
   "scripts": {
-    "dev": "npx nuxi dev",
-    "build": "cd .. && npx nuxt-module-build build --stub && npx nuxt-module-build prepare && cd playground && npx nuxi build"
+    "dev": "nuxi dev",
+    "build": "nuxi build"
   },
   "dependencies": {
     "@nuxthub/core": "^0.10.2",
