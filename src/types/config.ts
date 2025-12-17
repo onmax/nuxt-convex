@@ -9,12 +9,3 @@ export interface ResolvedConvexConfig {
   url: string
   storage: boolean
 }
-
-declare module '@nuxt/schema' {
-  interface NuxtConfig {
-    convex?: ConvexConfig
-  }
-  interface NuxtOptions {
-    convex?: ConvexConfig
-  }
-}

@@ -13,10 +13,18 @@ export interface ConvexStorageApi {
   }
 }
 
+type Nullable<T> = T | null | undefined
+
+interface MutationReturn<Args, Result> {
+  isLoading: Ref<boolean>
+  error: Ref<Nullable<Error>>
+  mutate: (args: Args) => Promise<Result | undefined>
+}
+
 export interface ConvexStorageReturn {
-  generateUploadUrl: { mutate: () => Promise<string> } | { mutate: () => Promise<never> }
+  generateUploadUrl: MutationReturn<Record<string, never>, string> | { mutate: () => Promise<never> }
   getUrl: (storageId: string) => Ref<string | null>
-  remove: { mutate: (args: { storageId: string }) => Promise<void> } | { mutate: () => Promise<never> }
+  remove: MutationReturn<{ storageId: string }, void> | { mutate: () => Promise<never> }
 }
 
 /**

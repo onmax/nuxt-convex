@@ -1,9 +1,9 @@
-import type { DeepReadonly, Ref } from '#imports'
+import type { DeepReadonly, Ref } from 'vue'
 import { readonly, ref } from '#imports'
 
 export interface UseConvexUploadOptions {
   /** Mutation to generate upload URL (from useConvexStorage or custom) */
-  generateUploadUrl: { mutate: (args?: any) => Promise<string> }
+  generateUploadUrl: { mutate: (args?: any) => Promise<string | undefined> }
   /** Called on successful upload with storageId and file */
   onSuccess?: (storageId: string, file: File) => void
   /** Called on upload error */
