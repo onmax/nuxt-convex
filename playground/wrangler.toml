@@ -4,6 +4,7 @@ compatibility_date = "2025-01-01"
 
 [observability]
 enabled = true
+head_sampling_rate = 1
 
 # Cron trigger - daily at 3am UTC
 [triggers]
