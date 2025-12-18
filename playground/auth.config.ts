@@ -1,12 +1,11 @@
-import process from 'node:process'
 import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
 
-export default defineServerAuth(() => ({
+export default defineServerAuth(({ runtimeConfig }) => ({
   appName: 'nuxt-convex Playground',
   socialProviders: {
     github: {
-      clientId: process.env.GITHUB_CLIENT_ID || '',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+      clientId: runtimeConfig.github?.clientId || '',
+      clientSecret: runtimeConfig.github?.clientSecret || '',
     },
   },
 }))
