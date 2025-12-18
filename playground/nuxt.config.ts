@@ -10,6 +10,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
+    github: {
+      clientId: process.env.NUXT_GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.NUXT_GITHUB_CLIENT_SECRET || '',
+    },
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://nuxt-convex-playground.maximogarciamtnez.workers.dev',
     },
