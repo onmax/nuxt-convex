@@ -10,7 +10,6 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
-    betterAuthSecret: process.env.BETTER_AUTH_SECRET || '',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://nuxt-convex-playground.maximogarciamtnez.workers.dev',
     },
