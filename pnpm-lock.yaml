@@ -51,10 +51,10 @@ catalogs:
       specifier: ^3.0.0
       version: 3.3.7
     '@nuxthub/core':
-      specifier: ^0.10.2
-      version: 0.10.2
+      specifier: ^0.10.3
+      version: 0.10.3
     '@onmax/nuxt-better-auth':
-      specifier: https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@3a53248
+      specifier: https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@b951b16
       version: 0.0.1
     better-auth:
       specifier: ^1.4.7
@@ -160,10 +160,10 @@ importers:
     dependencies:
       '@nuxthub/core':
         specifier: catalog:playground
-        version: 0.10.2(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3)
+        version: 0.10.3(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3)
       '@onmax/nuxt-better-auth':
         specifier: catalog:playground
-        version: https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@3a53248(@nuxthub/core@0.10.2(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3))(better-auth@1.4.7(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3)))(magicast@0.5.1)
+        version: https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@b951b16(@nuxthub/core@0.10.3(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3))(better-auth@1.4.7(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3)))(magicast@0.5.1)
       better-auth:
         specifier: catalog:playground
         version: 1.4.7(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
@@ -1573,15 +1573,15 @@ packages:
       rolldown:
         optional: true
 
-  '@nuxthub/core@0.10.2':
-    resolution: {integrity: sha512-gtm206biD9bRVoFpeDQBlTE88FLH5Xr3LkTsxBTkyywCzSQpE4DCpRnquTy6oPHcykg0oT59Xu643QWMp+XQ2g==}
+  '@nuxthub/core@0.10.3':
+    resolution: {integrity: sha512-G0oA1KRItX9u+pT6h0qXKAnP1YpcBJODYg93Tilti9Ym7dZsdY67OAgDBtD9DaBg6+ryLlxGv/sOJiA/0me3MQ==}
     hasBin: true
 
   '@nuxtjs/color-mode@3.5.2':
     resolution: {integrity: sha512-cC6RfgZh3guHBMLLjrBB2Uti5eUoGM9KyauOaYS9ETmxNWBMTvpgjvSiSJp1OFljIXPIqVTJ3xtJpSNZiO3ZaA==}
 
-  '@onmax/nuxt-better-auth@https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@3a53248':
-    resolution: {tarball: https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@3a53248}
+  '@onmax/nuxt-better-auth@https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@b951b16':
+    resolution: {tarball: https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@b951b16}
     version: 0.0.1
     peerDependencies:
       '@nuxthub/core': '>=0.10.0'
@@ -4140,6 +4140,9 @@ packages:
 
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
+
+  hookable@6.0.0-rc.1:
+    resolution: {integrity: sha512-HTdlk761/7uL1OuzvMicnj5F5pGq+iITNCYuKVXakQGn95zyYl5b8u/t407RrU34Jv0vYMiqtkFXEJKHYSFViQ==}
 
   html-entities@2.6.0:
     resolution: {integrity: sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==}
@@ -8096,7 +8099,7 @@ snapshots:
       - vue-tsc
       - yaml
 
-  '@nuxthub/core@0.10.2(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3)':
+  '@nuxthub/core@0.10.3(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3)':
     dependencies:
       '@cloudflare/workers-types': 4.20251217.0
       '@nuxt/kit': 4.2.2(magicast@0.5.1)
@@ -8109,6 +8112,7 @@ snapshots:
       execa: 9.6.1
       get-port-please: 3.2.0
       h3: 1.15.4
+      hookable: 6.0.0-rc.1
       mime: 4.1.0
       nypm: 0.6.2
       ofetch: 1.5.1
@@ -8164,7 +8168,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@onmax/nuxt-better-auth@https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@3a53248(@nuxthub/core@0.10.2(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3))(better-auth@1.4.7(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3)))(magicast@0.5.1)':
+  '@onmax/nuxt-better-auth@https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@b951b16(@nuxthub/core@0.10.3(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3))(better-auth@1.4.7(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3)))(magicast@0.5.1)':
     dependencies:
       '@nuxt/kit': 4.2.2(magicast@0.5.1)
       better-auth: 1.4.7(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(yaml@2.8.2))(vue@3.5.25(typescript@5.9.3))
@@ -8173,7 +8177,7 @@ snapshots:
       pathe: 2.0.3
       radix3: 1.1.2
     optionalDependencies:
-      '@nuxthub/core': 0.10.2(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3)
+      '@nuxthub/core': 0.10.3(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(synckit@0.11.11)(typescript@5.9.3)
     transitivePeerDependencies:
       - magicast
 
@@ -10582,6 +10586,8 @@ snapshots:
       function-bind: 1.1.2
 
   hookable@5.5.3: {}
+
+  hookable@6.0.0-rc.1: {}
 
   html-entities@2.6.0: {}
 

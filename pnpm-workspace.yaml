@@ -30,8 +30,8 @@ catalogs:
   # Playground specific
   playground:
     '@nuxt/ui': ^3.0.0
-    '@nuxthub/core': ^0.10.2
-    '@onmax/nuxt-better-auth': https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@3a53248
+    '@nuxthub/core': ^0.10.3
+    '@onmax/nuxt-better-auth': https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@b951b16
     better-auth: ^1.4.7
     wrangler: ^4.0.0
   # Runtime dependencies for the module
