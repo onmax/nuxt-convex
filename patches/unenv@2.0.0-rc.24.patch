@@ -1,0 +1,46 @@
+diff --git a/dist/runtime/node/internal/async_hooks/async-local-storage.mjs b/dist/runtime/node/internal/async_hooks/async-local-storage.mjs
+index e44ce0f7285acf6d050977b8b6fce4a84d8b1250..780483267e9281aebfd738b9be6fb0c9dc913d8c 100644
+--- a/dist/runtime/node/internal/async_hooks/async-local-storage.mjs
++++ b/dist/runtime/node/internal/async_hooks/async-local-storage.mjs
+@@ -17,17 +17,34 @@ class _AsyncLocalStorage {
+ 		this._enterStore = store;
+ 	}
+ 	run(store, callback, ...args) {
++		const previousStore = this._currentStore;
+ 		this._currentStore = store;
+-		const res = callback(...args);
+-		this._currentStore = undefined;
+-		return res;
++		try {
++			const res = callback(...args);
++			if (res != null && typeof res.then === "function") {
++				return res.finally(() => { this._currentStore = previousStore; });
++			}
++			this._currentStore = previousStore;
++			return res;
++		} catch (error) {
++			this._currentStore = previousStore;
++			throw error;
++		}
+ 	}
+ 	exit(callback, ...args) {
+-		const _previousStore = this._currentStore;
++		const previousStore = this._currentStore;
+ 		this._currentStore = undefined;
+-		const res = callback(...args);
+-		this._currentStore = _previousStore;
+-		return res;
++		try {
++			const res = callback(...args);
++			if (res != null && typeof res.then === "function") {
++				return res.finally(() => { this._currentStore = previousStore; });
++			}
++			this._currentStore = previousStore;
++			return res;
++		} catch (error) {
++			this._currentStore = previousStore;
++			throw error;
++		}
+ 	}
+ 	static snapshot() {
+ 		throw new Error("[unenv] `AsyncLocalStorage.snapshot` is not implemented!");
