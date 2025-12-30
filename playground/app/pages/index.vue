@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ConvexClient } from 'convex/browser'
+
 const config = useRuntimeConfig()
 const convexUrl = (config.public.convex as { url?: string })?.url
 
@@ -15,41 +17,46 @@ const fileInput = ref<HTMLInputElement>()
 const isUploading = ref(false)
 const uploadError = ref<Error | null>(null)
 
-let addTaskMutation: any
-let deleteTaskMutation: any
-let saveFileMutation: any
-let deleteUploadMutation: any
+// Get Convex client during setup - this captures the injection context
+// The client can then be used in any async context (onMounted, callbacks, etc.)
+let convexClient: ConvexClient | null = null
+let api: any = null
 let uploadFn: ((file: File) => Promise<string | null>) | null = null
+let tasksUnsubscribe: (() => void) | null = null
+let uploadsUnsubscribe: (() => void) | null = null
 
-onMounted(async () => {
-  if (!userId.value)
+// Must be called during setup to capture Vue injection context
+if (import.meta.client) {
+  const { useConvex } = await import('#convex')
+  convexClient = useConvex()
+  api = (await import('../../convex/_generated/api')).api
+}
+
+function subscribeToData(uid: string) {
+  if (!convexClient || !api || !uid)
     return
+  // Unsubscribe from previous subscriptions
+  tasksUnsubscribe?.()
+  uploadsUnsubscribe?.()
+  // Subscribe to tasks
+  tasksUnsubscribe = convexClient.onUpdate(api.tasks.list, { userId: uid }, (result) => {
+    tasks.value = result || []
+  })
+  // Subscribe to uploads
+  uploadsUnsubscribe = convexClient.onUpdate(api._hub.storage.list, { userId: uid }, (result) => {
+    uploads.value = result || []
+  })
+}
 
-  const { useConvexQuery, useConvexMutation } = await import('#convex')
-  const { api } = await import('../../convex/_generated/api')
-
-  // Tasks - filtered by userId
-  const tasksQuery = useConvexQuery(api.tasks.list, { userId: userId.value })
-  watch(() => tasksQuery.data.value, (v) => {
-    tasks.value = v || []
-  }, { immediate: true })
-  addTaskMutation = useConvexMutation(api.tasks.add)
-  deleteTaskMutation = useConvexMutation(api.tasks.remove)
-
-  // Uploads - filtered by userId
-  const uploadsQuery = useConvexQuery(api._hub.storage.list, { userId: userId.value })
-  watch(() => uploadsQuery.data.value, (v) => {
-    uploads.value = v || []
-  }, { immediate: true })
-  saveFileMutation = useConvexMutation(api._hub.storage.saveFile)
-  deleteUploadMutation = useConvexMutation(api._hub.storage.remove)
-
-  // Upload composable
-  const { generateUploadUrl } = useConvexStorage(api)
+onMounted(() => {
+  if (!userId.value || !convexClient || !api)
+    return
+  subscribeToData(userId.value)
+  // Setup upload function
   const uploader = useConvexUpload({
-    generateUploadUrl,
+    generateUploadUrl: { mutate: () => convexClient!.mutation(api._hub.storage.generateUploadUrl, {}) },
     onSuccess: async (storageId, file) => {
-      await saveFileMutation.mutate({ storageId, name: file.name, type: file.type, userId: userId.value })
+      await convexClient!.mutation(api._hub.storage.saveFile, { storageId, name: file.name, type: file.type, userId: userId.value })
       useToast().add({ title: 'File uploaded', description: file.name, color: 'success' })
     },
     onError: (err) => {
@@ -57,39 +64,34 @@ onMounted(async () => {
     },
   })
   uploadFn = uploader.upload
-  watch(() => uploader.isUploading.value, (v) => {
-    isUploading.value = v
-  })
-  watch(() => uploader.error.value, (v) => {
-    uploadError.value = v
-  })
+  watch(() => uploader.isUploading.value, v => isUploading.value = v)
+  watch(() => uploader.error.value, v => uploadError.value = v)
 })
 
-// Re-init queries when user changes
-watch(userId, async (newId) => {
+// Re-subscribe when user changes
+watch(userId, (newId) => {
   if (!newId) {
     tasks.value = []
     uploads.value = []
+    tasksUnsubscribe?.()
+    uploadsUnsubscribe?.()
     return
   }
-  const { useConvexQuery } = await import('#convex')
-  const { api } = await import('../../convex/_generated/api')
-  const tasksQuery = useConvexQuery(api.tasks.list, { userId: newId })
-  watch(() => tasksQuery.data.value, (v) => {
-    tasks.value = v || []
-  }, { immediate: true })
-  const uploadsQuery = useConvexQuery(api._hub.storage.list, { userId: newId })
-  watch(() => uploadsQuery.data.value, (v) => {
-    uploads.value = v || []
-  }, { immediate: true })
+  subscribeToData(newId)
+})
+
+// Cleanup on unmount
+onUnmounted(() => {
+  tasksUnsubscribe?.()
+  uploadsUnsubscribe?.()
 })
 
 async function addTask() {
-  if (!newTaskTitle.value.trim() || !addTaskMutation || !userId.value)
+  if (!newTaskTitle.value.trim() || !convexClient || !api || !userId.value)
     return
   isAdding.value = true
   try {
-    await addTaskMutation.mutate({ title: newTaskTitle.value, userId: userId.value })
+    await convexClient.mutation(api.tasks.add, { title: newTaskTitle.value, userId: userId.value })
     newTaskTitle.value = ''
   }
   finally {
@@ -98,18 +100,21 @@ async function addTask() {
 }
 
 async function deleteTask(id: string) {
-  await deleteTaskMutation?.mutate({ id })
+  if (!convexClient || !api)
+    return
+  await convexClient.mutation(api.tasks.remove, { id })
 }
 
 async function handleFileUpload(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
-  if (file && uploadFn) {
+  if (file && uploadFn)
     await uploadFn(file)
-  }
 }
 
 async function deleteUpload(id: string) {
-  await deleteUploadMutation?.mutate({ id })
+  if (!convexClient || !api)
+    return
+  await convexClient.mutation(api._hub.storage.remove, { id })
 }
 
 const features = [
