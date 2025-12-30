@@ -23,7 +23,7 @@ catalogs:
     nuxt: ^4.0.0
     vue: latest
   playground:
-    '@nuxt/ui': ^3.0.0
+    '@nuxt/ui': ^4.0.0
     '@nuxthub/core': ^0.10.3
     '@onmax/nuxt-better-auth': https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@5f06fbf
     better-auth: ^1.4.7
