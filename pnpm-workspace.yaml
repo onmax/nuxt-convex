@@ -1,8 +1,6 @@
 packages:
   - playground
 
-patchedDependencies:
-  unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
 catalog:
   yaml: ^2.8.2
 
