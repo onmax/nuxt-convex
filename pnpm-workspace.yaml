@@ -1,6 +1,8 @@
 packages:
   - playground
 
+patchedDependencies:
+  unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
 catalog:
   yaml: ^2.8.2
 
@@ -23,7 +25,7 @@ catalogs:
   playground:
     '@nuxt/ui': ^3.0.0
     '@nuxthub/core': ^0.10.3
-    '@onmax/nuxt-better-auth': https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@d82d7f5
+    '@onmax/nuxt-better-auth': https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@5f06fbf
     better-auth: ^1.4.7
     wrangler: ^4.0.0
   prod:
@@ -37,6 +39,3 @@ catalogs:
     vitest-package-exports: ^0.1.1
   types:
     '@types/node': ^22.0.0
-
-patchedDependencies:
-  unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
