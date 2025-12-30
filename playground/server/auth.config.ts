@@ -8,4 +8,11 @@ export default defineServerAuth(({ runtimeConfig }) => ({
       clientSecret: runtimeConfig.github?.clientSecret || '',
     },
   },
+  session: {
+    cookieCache: { enabled: true, maxAge: 7 * 24 * 60 * 60, strategy: 'jwe' },
+  },
+  account: {
+    storeStateStrategy: 'cookie',
+    storeAccountCookie: true,
+  },
 }))
