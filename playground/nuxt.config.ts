@@ -22,6 +22,13 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-module',
+    cloudflare: {
+      nodeCompat: true,
+      wrangler: {
+        name: 'nuxt-convex-playground',
+        observability: { enabled: true },
+      },
+    },
   },
 
   auth: {
