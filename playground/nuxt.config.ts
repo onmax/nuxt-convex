@@ -6,6 +6,10 @@ export default defineNuxtConfig({
 
   hub: {},
 
+  icon: {
+    customCollections: [{ prefix: 'custom', dir: './app/assets/icons' }],
+  },
+
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
 

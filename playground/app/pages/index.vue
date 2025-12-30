@@ -123,7 +123,7 @@ const features = [
       <header class="flex items-center justify-between px-6 py-4">
         <div class="flex items-center gap-2">
           <UIcon name="i-simple-icons-nuxtdotjs" class="size-6 text-nuxt" />
-          <UIcon name="i-simple-icons-convex" class="size-6 text-primary" />
+          <UIcon name="i-custom-convex" class="size-6 text-primary" />
         </div>
         <UColorModeButton />
       </header>
@@ -133,7 +133,7 @@ const features = [
         <div class="flex items-center gap-4 mb-8">
           <UIcon name="i-simple-icons-nuxtdotjs" class="size-12 text-nuxt" />
           <span class="text-2xl text-muted">+</span>
-          <UIcon name="i-simple-icons-convex" class="size-12 text-primary" />
+          <UIcon name="i-custom-convex" class="size-12 text-primary" />
         </div>
 
         <h1 class="text-5xl sm:text-6xl font-bold text-highlighted mb-4 text-center">
@@ -176,7 +176,7 @@ const features = [
       <header class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-3">
           <UIcon name="i-simple-icons-nuxtdotjs" class="size-6 text-nuxt" />
-          <UIcon name="i-simple-icons-convex" class="size-6 text-primary" />
+          <UIcon name="i-custom-convex" class="size-6 text-primary" />
           <span class="text-lg font-semibold text-highlighted">nuxt-convex</span>
         </div>
         <div class="flex items-center gap-3">
