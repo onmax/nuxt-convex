@@ -127,7 +127,7 @@ const features = [
             <span class="text-sm font-medium">Nuxt</span>
           </a>
           <a href="https://convex.dev" target="_blank" class="flex items-center gap-1.5 text-muted hover:text-convex">
-            <UIcon name="i-custom-convex" class="size-5" />
+            <UIcon name="i-custom-convex" class="size-4" />
             <span class="text-sm font-medium">Convex</span>
           </a>
         </div>
@@ -142,7 +142,7 @@ const features = [
         <div class="flex items-center gap-4 mb-8">
           <UIcon name="i-simple-icons-nuxtdotjs" class="size-12 text-nuxt" />
           <span class="text-2xl text-muted">+</span>
-          <UIcon name="i-custom-convex" class="size-12 text-convex" />
+          <UIcon name="i-custom-convex" class="size-10 text-convex" />
         </div>
 
         <h1 class="text-5xl sm:text-6xl font-bold text-highlighted mb-4 text-center">
@@ -152,7 +152,7 @@ const features = [
           Realtime data & file storage for Nuxt
         </p>
 
-        <UButton size="xl" icon="i-simple-icons-github" @click="signIn.social({ provider: 'github' })">
+        <UButton size="xl" color="primary" icon="i-simple-icons-github" @click="signIn.social({ provider: 'github' })">
           Continue with GitHub
         </UButton>
 
@@ -189,7 +189,7 @@ const features = [
             <span class="text-sm font-medium hidden sm:block">Nuxt</span>
           </a>
           <a href="https://convex.dev" target="_blank" class="flex items-center gap-1.5 text-muted hover:text-convex">
-            <UIcon name="i-custom-convex" class="size-5" />
+            <UIcon name="i-custom-convex" class="size-4" />
             <span class="text-sm font-medium hidden sm:block">Convex</span>
           </a>
           <USeparator orientation="vertical" class="h-5" />
@@ -228,7 +228,7 @@ const features = [
 
             <form class="flex gap-2 mb-4" @submit.prevent="addTask">
               <UInput v-model="newTaskTitle" placeholder="Add a task..." class="flex-1" />
-              <UButton type="submit" :loading="isAdding" :disabled="!newTaskTitle.trim()">
+              <UButton type="submit" color="primary" :loading="isAdding" :disabled="!newTaskTitle.trim()">
                 Add
               </UButton>
             </form>
@@ -270,6 +270,7 @@ const features = [
             <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileUpload">
             <UButton
               :loading="isUploading"
+              color="primary"
               icon="i-heroicons-arrow-up-tray"
               variant="outline"
               class="w-full mb-4"
