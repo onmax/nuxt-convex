@@ -121,11 +121,20 @@ const features = [
     <div v-if="!user" class="min-h-screen flex flex-col">
       <!-- Header -->
       <header class="flex items-center justify-between px-6 py-4">
-        <div class="flex items-center gap-2">
-          <UIcon name="i-simple-icons-nuxtdotjs" class="size-6 text-nuxt" />
-          <UIcon name="i-custom-convex" class="size-6 text-primary" />
+        <div class="flex items-center gap-4">
+          <a href="https://nuxt.com" target="_blank" class="flex items-center gap-1.5 text-muted hover:text-nuxt">
+            <UIcon name="i-simple-icons-nuxtdotjs" class="size-5" />
+            <span class="text-sm font-medium">Nuxt</span>
+          </a>
+          <a href="https://convex.dev" target="_blank" class="flex items-center gap-1.5 text-muted hover:text-convex">
+            <UIcon name="i-custom-convex" class="size-5" />
+            <span class="text-sm font-medium">Convex</span>
+          </a>
         </div>
-        <UColorModeButton />
+        <div class="flex items-center gap-2">
+          <UButton to="https://github.com/onmax/nuxt-convex" target="_blank" icon="i-simple-icons-github" variant="ghost" color="neutral" size="sm" />
+          <UColorModeButton />
+        </div>
       </header>
 
       <!-- Hero -->
@@ -133,7 +142,7 @@ const features = [
         <div class="flex items-center gap-4 mb-8">
           <UIcon name="i-simple-icons-nuxtdotjs" class="size-12 text-nuxt" />
           <span class="text-2xl text-muted">+</span>
-          <UIcon name="i-custom-convex" class="size-12 text-primary" />
+          <UIcon name="i-custom-convex" class="size-12 text-convex" />
         </div>
 
         <h1 class="text-5xl sm:text-6xl font-bold text-highlighted mb-4 text-center">
@@ -174,16 +183,23 @@ const features = [
     <div v-else class="max-w-5xl mx-auto px-6 py-8">
       <!-- Header -->
       <header class="flex items-center justify-between mb-8">
-        <div class="flex items-center gap-3">
-          <UIcon name="i-simple-icons-nuxtdotjs" class="size-6 text-nuxt" />
-          <UIcon name="i-custom-convex" class="size-6 text-primary" />
-          <span class="text-lg font-semibold text-highlighted">nuxt-convex</span>
-        </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4">
+          <a href="https://nuxt.com" target="_blank" class="flex items-center gap-1.5 text-muted hover:text-nuxt">
+            <UIcon name="i-simple-icons-nuxtdotjs" class="size-5" />
+            <span class="text-sm font-medium hidden sm:block">Nuxt</span>
+          </a>
+          <a href="https://convex.dev" target="_blank" class="flex items-center gap-1.5 text-muted hover:text-convex">
+            <UIcon name="i-custom-convex" class="size-5" />
+            <span class="text-sm font-medium hidden sm:block">Convex</span>
+          </a>
+          <USeparator orientation="vertical" class="h-5" />
           <UBadge color="success" variant="subtle">
             <span class="size-1.5 rounded-full bg-success animate-pulse mr-1.5" />
             Connected
           </UBadge>
+        </div>
+        <div class="flex items-center gap-3">
+          <UButton to="https://github.com/onmax/nuxt-convex" target="_blank" icon="i-simple-icons-github" variant="ghost" color="neutral" size="sm" />
           <UColorModeButton />
           <USeparator orientation="vertical" class="h-6" />
           <UAvatar :src="user.image" :alt="user.name" size="sm" />
