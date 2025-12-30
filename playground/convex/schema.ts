@@ -4,7 +4,7 @@ import { v } from 'convex/values'
 export default defineSchema({
   tasks: defineTable({
     title: v.string(),
-    userId: v.string(),
+    userId: v.optional(v.string()),
     createdAt: v.number(),
   }).index('by_user', ['userId']),
   uploads: defineTable({
