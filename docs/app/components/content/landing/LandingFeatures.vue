@@ -31,9 +31,13 @@ const features = [
             <div class="p-2 rounded-md bg-amber-100 dark:bg-amber-900/30">
               <UIcon :name="feature.icon" class="size-5 text-amber-600 dark:text-amber-400" />
             </div>
-            <h3 class="font-semibold text-stone-900 dark:text-stone-100">{{ feature.title }}</h3>
+            <h3 class="font-semibold text-stone-900 dark:text-stone-100">
+              {{ feature.title }}
+            </h3>
           </div>
-          <p class="text-sm text-stone-600 dark:text-stone-400">{{ feature.description }}</p>
+          <p class="text-sm text-stone-600 dark:text-stone-400">
+            {{ feature.description }}
+          </p>
         </div>
       </div>
 
