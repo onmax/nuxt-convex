@@ -64,6 +64,9 @@
     "defu": "catalog:prod",
     "pathe": "catalog:prod"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["better-sqlite3", "sharp"]
+  },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
     "@convex-vue/core": "catalog:convex",

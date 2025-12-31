@@ -1,0 +1,20 @@
+{
+  "name": "docs",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate",
+    "preview": "nuxi preview"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3",
+    "@nuxt/fonts": "^0.12",
+    "@nuxt/ui": "^4",
+    "@vercel/analytics": "^1",
+    "@vercel/speed-insights": "^1",
+    "docus": "^5",
+    "nuxt": "^4"
+  }
+}
