@@ -12,3 +12,4 @@ test/fixtures/**/convex
 
 playground/.data
 .wrangler
+.vercel

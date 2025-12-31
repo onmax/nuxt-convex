@@ -39,4 +39,8 @@ export default defineNuxtConfig({
   llms: {
     domain: 'nuxt-convex.onmax.me',
   },
+
+  nitro: {
+    preset: 'vercel-static',
+  },
 })
