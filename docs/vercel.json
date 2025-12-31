@@ -1,4 +1,0 @@
-{
-  "installCommand": "cd .. && pnpm install",
-  "buildCommand": "pnpm build"
-}
