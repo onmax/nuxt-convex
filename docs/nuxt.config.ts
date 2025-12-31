@@ -39,6 +39,4 @@ export default defineNuxtConfig({
   llms: {
     domain: 'nuxt-convex.onmax.me',
   },
-
-  ogImage: { compatibility: { runtime: { resvg: false } } },
 })
