@@ -23,7 +23,7 @@ export interface ConvexStorageReturn {
 /**
  * Composable for Convex file storage operations.
  * MUST be called during component setup (not in onMounted/callbacks).
- * @param api - The Convex API from `~/convex/_generated/api`
+ * @param api - The Convex API from `#convex/api`
  */
 export function useConvexStorage(api: ConvexStorageApi): ConvexStorageReturn {
   const storage = api?._hub?.storage

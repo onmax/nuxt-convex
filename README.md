@@ -18,7 +18,7 @@
 ## Features
 
 - **Real-time by default** - Queries auto-update when data changes
-- **Virtual modules** - Import from `#convex` and `#convex/storage`
+- **Virtual modules** - Import from `#convex`, `#convex/api`, and `#convex/storage`
 - **Auto-imports** - Composables available without manual imports
 - **File storage** - Upload API with auto-scaffolded Convex functions
 - **DevTools** - Convex dashboard tab in Nuxt DevTools
@@ -39,7 +39,6 @@ pnpm add nuxt-convex convex @convex-vue/core
 Add the module to your Nuxt configuration:
 
 ```ts [nuxt.config.ts]
-// nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['nuxt-convex'],
   convex: {
@@ -59,7 +58,6 @@ Convex functions live in the `convex/` directory at your project root. See [Conv
 Define your database tables with [schemas](https://docs.convex.dev/database/schemas). Tables are created automatically when you push to Convex.
 
 ```ts [convex/schema.ts]
-// convex/schema.ts
 import { defineSchema, defineTable } from 'convex/server'
 import { v } from 'convex/values'
 
@@ -80,7 +78,6 @@ The `v` object provides [validators](https://docs.convex.dev/database/schemas#va
 [Queries](https://docs.convex.dev/functions/query-functions) read data from the database. They are reactive - the UI updates automatically when underlying data changes.
 
 ```ts [convex/tasks.ts]
-// convex/tasks.ts
 import { v } from 'convex/values'
 import { query } from './_generated/server'
 
@@ -108,7 +105,6 @@ export const get = query({
 [Mutations](https://docs.convex.dev/functions/mutation-functions) write data to the database. They are transactional and run on the server.
 
 ```ts [convex/tasks.ts]
-// convex/tasks.ts
 import { v } from 'convex/values'
 import { mutation } from './_generated/server'
 
@@ -147,7 +143,6 @@ export const remove = mutation({
 [Actions](https://docs.convex.dev/functions/actions) run arbitrary code including external API calls, but cannot directly access the database. Use them for third-party integrations.
 
 ```ts [convex/ai.ts]
-// convex/ai.ts
 import { v } from 'convex/values'
 import { action } from './_generated/server'
 
@@ -175,10 +170,9 @@ Import composables from `#convex`. They wrap [@convex-vue/core](https://github.c
 Subscribe to a [query](https://docs.convex.dev/functions/query-functions). Returns reactive data that auto-updates when the database changes.
 
 ```vue [app/pages/tasks.vue]
-<!-- app/pages/tasks.vue -->
 <script setup lang="ts">
 import { useConvexQuery } from '#convex'
-import { api } from '~/convex/_generated/api'
+import { api } from '#convex/api'
 
 const { data: tasks, isLoading, error } = useConvexQuery(api.tasks.list, { userId: 'user_123' })
 </script>
@@ -211,10 +205,9 @@ const { data: tasks, isLoading, error } = useConvexQuery(api.tasks.list, { userI
 Call a [mutation](https://docs.convex.dev/functions/mutation-functions) to write data.
 
 ```vue [app/components/AddTask.vue]
-<!-- app/components/AddTask.vue -->
 <script setup lang="ts">
 import { useConvexMutation } from '#convex'
-import { api } from '~/convex/_generated/api'
+import { api } from '#convex/api'
 
 const { mutate: addTask, isLoading, error } = useConvexMutation(api.tasks.add)
 
@@ -252,10 +245,9 @@ async function handleSubmit() {
 Call an [action](https://docs.convex.dev/functions/actions) for external API calls or long-running tasks.
 
 ```vue [app/components/Summarize.vue]
-<!-- app/components/Summarize.vue -->
 <script setup lang="ts">
 import { useConvexAction } from '#convex'
-import { api } from '~/convex/_generated/api'
+import { api } from '#convex/api'
 
 const { execute: summarize, isLoading, error } = useConvexAction(api.ai.summarize)
 
@@ -280,10 +272,9 @@ async function handleSummarize(text: string) {
 Get the raw [ConvexClient](https://docs.convex.dev/api/classes/browser.ConvexClient) for advanced usage.
 
 ```vue [app/components/Advanced.vue]
-<!-- app/components/Advanced.vue -->
 <script setup lang="ts">
 import { useConvex } from '#convex'
-import { api } from '~/convex/_generated/api'
+import { api } from '#convex/api'
 
 const client = useConvex()
 
@@ -299,7 +290,6 @@ Convex provides built-in [file storage](https://docs.convex.dev/file-storage). E
 ### Setup
 
 ```ts [nuxt.config.ts]
-// nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['nuxt-convex'],
   convex: {
@@ -313,7 +303,6 @@ This creates `convex/_hub/storage.ts` with `generateUploadUrl`, `getUrl`, and `r
 Add the `uploads` table to your schema:
 
 ```ts [convex/schema.ts]
-// convex/schema.ts
 import { defineSchema, defineTable } from 'convex/server'
 import { v } from 'convex/values'
 
@@ -334,10 +323,9 @@ export default defineSchema({
 Low-level composable for storage operations. Import from `#convex/storage`.
 
 ```vue [app/components/Storage.vue]
-<!-- app/components/Storage.vue -->
 <script setup lang="ts">
+import { api } from '#convex/api'
 import { useConvexStorage } from '#convex/storage'
-import { api } from '~/convex/_generated/api'
 
 const { generateUploadUrl, getUrl, remove } = useConvexStorage(api)
 
@@ -365,11 +353,10 @@ await remove.mutate({ storageId: 'storage_id_here' })
 High-level composable for file uploads with progress tracking. Auto-imported.
 
 ```vue [app/pages/upload.vue]
-<!-- app/pages/upload.vue -->
 <script setup lang="ts">
 import { useConvexMutation } from '#convex'
+import { api } from '#convex/api'
 import { useConvexStorage } from '#convex/storage'
-import { api } from '~/convex/_generated/api'
 
 const { generateUploadUrl } = useConvexStorage(api)
 const saveFile = useConvexMutation(api._hub.storage.saveFile)
@@ -457,7 +444,6 @@ pnpm add @onmax/nuxt-better-auth
 ### 2. Configure nuxt-better-auth
 
 ```ts [nuxt.config.ts]
-// nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['nuxt-convex', '@onmax/nuxt-better-auth'],
   convex: { storage: true },
@@ -467,7 +453,6 @@ export default defineNuxtConfig({
 ### 3. Create server auth config
 
 ```ts [server/auth.config.ts]
-// server/auth.config.ts
 import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
 
 export default defineServerAuth(() => ({
@@ -486,7 +471,6 @@ pnpm add @convex-dev/better-auth better-auth --save-exact
 ```
 
 ```ts [convex/convex.config.ts]
-// convex/convex.config.ts
 import betterAuth from '@convex-dev/better-auth/convex.config'
 import { defineApp } from 'convex/server'
 
@@ -496,11 +480,10 @@ export default app
 ```
 
 ```ts [server/auth.config.ts]
-// server/auth.config.ts
+import { components } from '#convex/api'
 import { createClient } from '@convex-dev/better-auth'
 import { convex } from '@convex-dev/better-auth/server/plugins'
 import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
-import { components } from '~/convex/_generated/api'
 
 const authComponent = createClient(components.betterAuth)
 

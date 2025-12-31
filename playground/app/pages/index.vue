@@ -26,7 +26,7 @@ let uploadsUnsubscribe: (() => void) | null = null
 if (import.meta.client) {
   const { useConvex } = await import('#convex')
   convexClient = useConvex()
-  api = (await import('../../convex/_generated/api')).api
+  api = (await import('#convex/api')).api
 }
 
 function subscribeToData(uid: string) {
