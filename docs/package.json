@@ -9,12 +9,12 @@
     "preview": "nuxi preview"
   },
   "dependencies": {
-    "@nuxt/content": "catalog:",
-    "@nuxt/fonts": "catalog:",
-    "@nuxt/ui": "catalog:conflicts_playground_h4",
-    "@vercel/analytics": "catalog:",
-    "@vercel/speed-insights": "catalog:",
-    "docus": "catalog:",
-    "nuxt": "catalog:conflicts_nuxt_h4"
+    "@nuxt/content": "^3",
+    "@nuxt/fonts": "^0.12",
+    "@nuxt/ui": "^4",
+    "@vercel/analytics": "^1",
+    "@vercel/speed-insights": "^1",
+    "docus": "^5",
+    "nuxt": "^4"
   }
 }
