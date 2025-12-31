@@ -17,6 +17,7 @@
 
 ## Features
 
+- **Real-time by default** - Queries auto-update when data changes
 - **Virtual modules** - Import from `#convex` and `#convex/storage`
 - **Auto-imports** - Composables available without manual imports
 - **File storage** - Upload API with auto-scaffolded Convex functions
@@ -38,6 +39,7 @@ pnpm add nuxt-convex convex @convex-vue/core
 Add the module to your Nuxt configuration:
 
 ```ts [nuxt.config.ts]
+// nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['nuxt-convex'],
   convex: {
@@ -46,29 +48,149 @@ export default defineNuxtConfig({
 })
 ```
 
-The module reads the `CONVEX_URL` environment variable automatically. Run `npx convex dev` to start the Convex development server and set this variable.
+The module reads `CONVEX_URL` or `NUXT_PUBLIC_CONVEX_URL` environment variables automatically. Run `npx convex dev` to start the Convex development server.
+
+## Creating Your Backend
+
+Convex functions live in the `convex/` directory at your project root. See [Convex docs](https://docs.convex.dev/functions) for full reference.
+
+### Schema
+
+Define your database tables with [schemas](https://docs.convex.dev/database/schemas). Tables are created automatically when you push to Convex.
+
+```ts [convex/schema.ts]
+// convex/schema.ts
+import { defineSchema, defineTable } from 'convex/server'
+import { v } from 'convex/values'
+
+export default defineSchema({
+  tasks: defineTable({
+    title: v.string(),
+    userId: v.optional(v.string()),
+    isCompleted: v.boolean(),
+    createdAt: v.number(),
+  }).index('by_user', ['userId']),
+})
+```
+
+The `v` object provides [validators](https://docs.convex.dev/database/schemas#validators) for all Convex types: `v.string()`, `v.number()`, `v.boolean()`, `v.id('tableName')`, `v.array()`, `v.object()`, `v.optional()`, `v.union()`, etc.
+
+### Queries
+
+[Queries](https://docs.convex.dev/functions/query-functions) read data from the database. They are reactive - the UI updates automatically when underlying data changes.
+
+```ts [convex/tasks.ts]
+// convex/tasks.ts
+import { v } from 'convex/values'
+import { query } from './_generated/server'
+
+export const list = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    return await ctx.db
+      .query('tasks')
+      .withIndex('by_user', q => q.eq('userId', userId))
+      .order('desc')
+      .collect()
+  },
+})
+
+export const get = query({
+  args: { id: v.id('tasks') },
+  handler: async (ctx, { id }) => {
+    return await ctx.db.get(id)
+  },
+})
+```
+
+### Mutations
+
+[Mutations](https://docs.convex.dev/functions/mutation-functions) write data to the database. They are transactional and run on the server.
+
+```ts [convex/tasks.ts]
+// convex/tasks.ts
+import { v } from 'convex/values'
+import { mutation } from './_generated/server'
+
+export const add = mutation({
+  args: { title: v.string(), userId: v.string() },
+  handler: async (ctx, { title, userId }) => {
+    return await ctx.db.insert('tasks', {
+      title,
+      userId,
+      isCompleted: false,
+      createdAt: Date.now(),
+    })
+  },
+})
+
+export const toggle = mutation({
+  args: { id: v.id('tasks') },
+  handler: async (ctx, { id }) => {
+    const task = await ctx.db.get(id)
+    if (task) {
+      await ctx.db.patch(id, { isCompleted: !task.isCompleted })
+    }
+  },
+})
+
+export const remove = mutation({
+  args: { id: v.id('tasks') },
+  handler: async (ctx, { id }) => {
+    await ctx.db.delete(id)
+  },
+})
+```
+
+### Actions
+
+[Actions](https://docs.convex.dev/functions/actions) run arbitrary code including external API calls, but cannot directly access the database. Use them for third-party integrations.
+
+```ts [convex/ai.ts]
+// convex/ai.ts
+import { v } from 'convex/values'
+import { action } from './_generated/server'
+
+export const summarize = action({
+  args: { text: v.string() },
+  handler: async (ctx, { text }) => {
+    const response = await fetch('https://api.openai.com/v1/...', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+      body: JSON.stringify({ prompt: text }),
+    })
+    return await response.json()
+  },
+})
+```
+
+Actions can call mutations/queries via `ctx.runMutation()` and `ctx.runQuery()`.
 
 ## Usage
 
-### Queries and Mutations
+Import composables from `#convex`. They wrap [@convex-vue/core](https://github.com/niconiahi/convex-vue).
 
-Use the Convex Vue composables to interact with your backend. The module re-exports these from `#convex`:
+### useConvexQuery
+
+Subscribe to a [query](https://docs.convex.dev/functions/query-functions). Returns reactive data that auto-updates when the database changes.
 
 ```vue [app/pages/tasks.vue]
-<script setup>
-import { useConvexMutation, useConvexQuery } from '#convex'
+<!-- app/pages/tasks.vue -->
+<script setup lang="ts">
+import { useConvexQuery } from '#convex'
 import { api } from '~/convex/_generated/api'
 
-const tasks = useConvexQuery(api.tasks.list, {})
-const addTask = useConvexMutation(api.tasks.add)
-
-async function createTask(title: string) {
-  await addTask.mutate({ title })
-}
+const { data: tasks, isLoading, error } = useConvexQuery(api.tasks.list, { userId: 'user_123' })
 </script>
 
 <template>
-  <ul>
+  <div v-if="isLoading">
+    Loading...
+  </div>
+  <div v-else-if="error">
+    Error: {{ error.message }}
+  </div>
+  <ul v-else>
     <li v-for="task in tasks" :key="task._id">
       {{ task.title }}
     </li>
@@ -76,37 +198,233 @@ async function createTask(title: string) {
 </template>
 ```
 
-### File Upload
+**Return values:**
 
-The module provides a `useConvexUpload` composable for uploading files to Convex storage. Enable storage in your config to auto-scaffold the required Convex functions:
+| Property    | Type                  | Description             |
+| ----------- | --------------------- | ----------------------- |
+| `data`      | `Ref<T \| undefined>` | Query result, reactive  |
+| `isLoading` | `Ref<boolean>`        | True while initial load |
+| `error`     | `Ref<Error \| null>`  | Error if query failed   |
 
-```vue [app/pages/upload.vue]
-<script setup>
+### useConvexMutation
+
+Call a [mutation](https://docs.convex.dev/functions/mutation-functions) to write data.
+
+```vue [app/components/AddTask.vue]
+<!-- app/components/AddTask.vue -->
+<script setup lang="ts">
 import { useConvexMutation } from '#convex'
-import { useConvexUpload } from '#imports'
 import { api } from '~/convex/_generated/api'
 
-const generateUploadUrl = useConvexMutation(api._hub.storage.generateUploadUrl)
-const { upload, isUploading, error } = useConvexUpload({ generateUploadUrl })
+const { mutate: addTask, isLoading, error } = useConvexMutation(api.tasks.add)
+
+const title = ref('')
+
+async function handleSubmit() {
+  await addTask({ title: title.value, userId: 'user_123' })
+  title.value = ''
+}
+</script>
+
+<template>
+  <form @submit.prevent="handleSubmit">
+    <input v-model="title" :disabled="isLoading" placeholder="New task...">
+    <button :disabled="isLoading">
+      Add
+    </button>
+    <p v-if="error">
+      {{ error.message }}
+    </p>
+  </form>
+</template>
+```
+
+**Return values:**
+
+| Property    | Type                   | Description              |
+| ----------- | ---------------------- | ------------------------ |
+| `mutate`    | `(args) => Promise<T>` | Call the mutation        |
+| `isLoading` | `Ref<boolean>`         | True while running       |
+| `error`     | `Ref<Error \| null>`   | Error if mutation failed |
+
+### useConvexAction
+
+Call an [action](https://docs.convex.dev/functions/actions) for external API calls or long-running tasks.
+
+```vue [app/components/Summarize.vue]
+<!-- app/components/Summarize.vue -->
+<script setup lang="ts">
+import { useConvexAction } from '#convex'
+import { api } from '~/convex/_generated/api'
+
+const { execute: summarize, isLoading, error } = useConvexAction(api.ai.summarize)
+
+const result = ref('')
+
+async function handleSummarize(text: string) {
+  result.value = await summarize({ text })
+}
+</script>
+```
+
+**Return values:**
+
+| Property    | Type                   | Description            |
+| ----------- | ---------------------- | ---------------------- |
+| `execute`   | `(args) => Promise<T>` | Call the action        |
+| `isLoading` | `Ref<boolean>`         | True while running     |
+| `error`     | `Ref<Error \| null>`   | Error if action failed |
+
+### useConvex
+
+Get the raw [ConvexClient](https://docs.convex.dev/api/classes/browser.ConvexClient) for advanced usage.
+
+```vue [app/components/Advanced.vue]
+<!-- app/components/Advanced.vue -->
+<script setup lang="ts">
+import { useConvex } from '#convex'
+import { api } from '~/convex/_generated/api'
+
+const client = useConvex()
+
+// Direct client access for advanced patterns
+const result = await client.query(api.tasks.get, { id: 'abc123' })
+</script>
+```
+
+## File Storage
+
+Convex provides built-in [file storage](https://docs.convex.dev/file-storage). Enable it in your config to auto-scaffold the required functions.
+
+### Setup
+
+```ts [nuxt.config.ts]
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['nuxt-convex'],
+  convex: {
+    storage: true,
+  },
+})
+```
+
+This creates `convex/_hub/storage.ts` with `generateUploadUrl`, `getUrl`, and `remove` functions. Customize as needed.
+
+Add the `uploads` table to your schema:
+
+```ts [convex/schema.ts]
+// convex/schema.ts
+import { defineSchema, defineTable } from 'convex/server'
+import { v } from 'convex/values'
+
+export default defineSchema({
+  uploads: defineTable({
+    storageId: v.id('_storage'),
+    name: v.string(),
+    type: v.string(),
+    url: v.optional(v.string()),
+    userId: v.string(),
+    createdAt: v.number(),
+  }).index('by_user', ['userId']),
+})
+```
+
+### useConvexStorage
+
+Low-level composable for storage operations. Import from `#convex/storage`.
+
+```vue [app/components/Storage.vue]
+<!-- app/components/Storage.vue -->
+<script setup lang="ts">
+import { useConvexStorage } from '#convex/storage'
+import { api } from '~/convex/_generated/api'
+
+const { generateUploadUrl, getUrl, remove } = useConvexStorage(api)
+
+// Get a reactive URL for a stored file
+const fileUrl = getUrl('storage_id_here')
+
+// Generate upload URL for direct upload
+const uploadUrl = await generateUploadUrl.mutate()
+
+// Delete a file
+await remove.mutate({ storageId: 'storage_id_here' })
+</script>
+```
+
+**Return values:**
+
+| Property            | Type                                         | Description           |
+| ------------------- | -------------------------------------------- | --------------------- |
+| `generateUploadUrl` | `{ mutate: () => Promise<string> }`          | Get URL for uploading |
+| `getUrl`            | `(storageId: string) => Ref<string \| null>` | Reactive file URL     |
+| `remove`            | `{ mutate: (args) => Promise<void> }`        | Delete a file         |
+
+### useConvexUpload
+
+High-level composable for file uploads with progress tracking. Auto-imported.
+
+```vue [app/pages/upload.vue]
+<!-- app/pages/upload.vue -->
+<script setup lang="ts">
+import { useConvexMutation } from '#convex'
+import { useConvexStorage } from '#convex/storage'
+import { api } from '~/convex/_generated/api'
+
+const { generateUploadUrl } = useConvexStorage(api)
+const saveFile = useConvexMutation(api._hub.storage.saveFile)
+
+const { upload, isUploading, progress, error } = useConvexUpload({
+  generateUploadUrl,
+  onSuccess: async (storageId, file) => {
+    await saveFile.mutate({
+      storageId,
+      name: file.name,
+      type: file.type,
+      userId: 'user_123',
+    })
+  },
+  onError: err => console.error('Upload failed:', err),
+})
 
 async function handleFileChange(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (file) {
     const storageId = await upload(file)
-    console.log('Uploaded file:', storageId)
+    console.log('Uploaded:', storageId)
   }
 }
 </script>
 
 <template>
-  <input type="file" :disabled="isUploading" @change="handleFileChange">
-  <p v-if="error">
-    {{ error.message }}
-  </p>
+  <div>
+    <input type="file" :disabled="isUploading" @change="handleFileChange">
+    <p v-if="isUploading">
+      Uploading... {{ progress }}%
+    </p>
+    <p v-if="error">
+      {{ error.message }}
+    </p>
+  </div>
 </template>
 ```
 
-When storage is enabled, the module creates `convex/_hub/storage.ts` with the necessary mutations and queries. You can customize this file as needed.
+**Options:**
+
+| Option              | Type                                      | Description                       |
+| ------------------- | ----------------------------------------- | --------------------------------- |
+| `generateUploadUrl` | `{ mutate: () => Promise<string> }`       | Required. From `useConvexStorage` |
+| `onSuccess`         | `(storageId: string, file: File) => void` | Called after successful upload    |
+| `onError`           | `(error: Error) => void`                  | Called on upload error            |
+
+**Return values:**
+
+| Property      | Type                                      | Description                      |
+| ------------- | ----------------------------------------- | -------------------------------- |
+| `upload`      | `(file: File) => Promise<string \| null>` | Upload a file, returns storageId |
+| `isUploading` | `Ref<boolean>`                            | True while uploading             |
+| `progress`    | `Ref<number>`                             | Upload progress 0-100            |
+| `error`       | `Ref<Error \| null>`                      | Error if upload failed           |
 
 ## Configuration
 
@@ -115,19 +433,60 @@ When storage is enabled, the module creates `convex/_hub/storage.ts` with the ne
 | `url`     | `string`  | `process.env.CONVEX_URL` | Convex deployment URL           |
 | `storage` | `boolean` | `false`                  | Enable file storage integration |
 
+**Environment variables:**
+
+| Variable                 | Description                                     |
+| ------------------------ | ----------------------------------------------- |
+| `CONVEX_URL`             | Convex deployment URL (set by `npx convex dev`) |
+| `NUXT_PUBLIC_CONVEX_URL` | Alternative, follows Nuxt convention            |
+
+## DevTools
+
+When running in development, the module adds a **Convex** tab to Nuxt DevTools with an embedded Convex dashboard. Access your data, run functions, and view logs directly from DevTools.
+
 ## Better Auth Integration
 
-Use [nuxt-better-auth](https://nuxt-better-auth.onmax.me/) with Convex as your auth database.
+Use [nuxt-better-auth](https://nuxt-better-auth.onmax.me/) for authentication alongside Convex for your app data.
 
 ### 1. Install dependencies
 
 ```bash
-pnpm add @onmax/nuxt-better-auth @convex-dev/better-auth better-auth@1.3.8 --save-exact
+pnpm add @onmax/nuxt-better-auth
 ```
 
-### 2. Register the Convex component
+### 2. Configure nuxt-better-auth
+
+```ts [nuxt.config.ts]
+// nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ['nuxt-convex', '@onmax/nuxt-better-auth'],
+  convex: { storage: true },
+})
+```
+
+### 3. Create server auth config
+
+```ts [server/auth.config.ts]
+// server/auth.config.ts
+import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
+
+export default defineServerAuth(() => ({
+  emailAndPassword: { enabled: true },
+}))
+```
+
+See [nuxt-better-auth docs](https://nuxt-better-auth.onmax.me/) for database adapters, social providers, and plugins.
+
+### Using Convex as Auth Database (Advanced)
+
+To store auth data directly in Convex instead of a SQL database:
+
+```bash
+pnpm add @convex-dev/better-auth better-auth --save-exact
+```
 
 ```ts [convex/convex.config.ts]
+// convex/convex.config.ts
 import betterAuth from '@convex-dev/better-auth/convex.config'
 import { defineApp } from 'convex/server'
 
@@ -136,36 +495,23 @@ app.use(betterAuth)
 export default app
 ```
 
-### 3. Configure nuxt-better-auth
-
-```ts [nuxt.config.ts]
-export default defineNuxtConfig({
-  modules: ['nuxt-convex', '@onmax/nuxt-better-auth'],
-  convex: { storage: true },
-  betterAuth: {
-    // Uses Convex adapter from @convex-dev/better-auth
-  },
-})
-```
-
-### 4. Create auth instance
-
-```ts [server/utils/auth.ts]
+```ts [server/auth.config.ts]
+// server/auth.config.ts
 import { createClient } from '@convex-dev/better-auth'
 import { convex } from '@convex-dev/better-auth/server/plugins'
-import { betterAuth } from 'better-auth'
+import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
 import { components } from '~/convex/_generated/api'
 
 const authComponent = createClient(components.betterAuth)
 
-export const auth = betterAuth({
+export default defineServerAuth(() => ({
   database: authComponent.adapter(),
   plugins: [convex()],
   emailAndPassword: { enabled: true },
-})
+}))
 ```
 
-Convex stores users, sessions, and accounts. nuxt-better-auth handles routes and composables.
+This stores users, sessions, and accounts in Convex. See [@convex-dev/better-auth](https://github.com/get-convex/convex-better-auth) for details.
 
 ## Development
 
