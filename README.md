@@ -163,7 +163,7 @@ Actions can call mutations/queries via `ctx.runMutation()` and `ctx.runQuery()`.
 
 ## Usage
 
-Import composables from `#convex`. They wrap [@convex-vue/core](https://github.com/niconiahi/convex-vue).
+Composables are auto-imported. They wrap [@convex-vue/core](https://github.com/niconiahi/convex-vue).
 
 ### useConvexQuery
 
@@ -171,7 +171,6 @@ Subscribe to a [query](https://docs.convex.dev/functions/query-functions). Retur
 
 ```vue [app/pages/tasks.vue]
 <script setup lang="ts">
-import { useConvexQuery } from '#convex'
 import { api } from '#convex/api'
 
 const { data: tasks, isLoading, error } = useConvexQuery(api.tasks.list, { userId: 'user_123' })
@@ -206,7 +205,6 @@ Call a [mutation](https://docs.convex.dev/functions/mutation-functions) to write
 
 ```vue [app/components/AddTask.vue]
 <script setup lang="ts">
-import { useConvexMutation } from '#convex'
 import { api } from '#convex/api'
 
 const { mutate: addTask, isLoading, error } = useConvexMutation(api.tasks.add)
@@ -246,7 +244,6 @@ Call an [action](https://docs.convex.dev/functions/actions) for external API cal
 
 ```vue [app/components/Summarize.vue]
 <script setup lang="ts">
-import { useConvexAction } from '#convex'
 import { api } from '#convex/api'
 
 const { execute: summarize, isLoading, error } = useConvexAction(api.ai.summarize)
@@ -273,7 +270,6 @@ Get the raw [ConvexClient](https://docs.convex.dev/api/classes/browser.ConvexCli
 
 ```vue [app/components/Advanced.vue]
 <script setup lang="ts">
-import { useConvex } from '#convex'
 import { api } from '#convex/api'
 
 const client = useConvex()
@@ -320,12 +316,11 @@ export default defineSchema({
 
 ### useConvexStorage
 
-Low-level composable for storage operations. Import from `#convex/storage`.
+Low-level composable for storage operations. Auto-imported when storage is enabled.
 
 ```vue [app/components/Storage.vue]
 <script setup lang="ts">
 import { api } from '#convex/api'
-import { useConvexStorage } from '#convex/storage'
 
 const { generateUploadUrl, getUrl, remove } = useConvexStorage(api)
 
@@ -354,9 +349,7 @@ High-level composable for file uploads with progress tracking. Auto-imported.
 
 ```vue [app/pages/upload.vue]
 <script setup lang="ts">
-import { useConvexMutation } from '#convex'
 import { api } from '#convex/api'
-import { useConvexStorage } from '#convex/storage'
 
 const { generateUploadUrl } = useConvexStorage(api)
 const saveFile = useConvexMutation(api._hub.storage.saveFile)

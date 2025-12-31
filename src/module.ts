@@ -3,7 +3,7 @@ import type { ConvexConfig, ResolvedConvexConfig } from './types/config'
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import process from 'node:process'
-import { addImportsDir, addPlugin, addTemplate, addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { addImports, addPlugin, addTemplate, addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import { consola } from 'consola'
 import { defu } from 'defu'
 import { join } from 'pathe'
@@ -38,7 +38,9 @@ export default defineNuxtModule<ConvexConfig>({
     )
 
     addPlugin({ src: resolve('./runtime/plugin.client'), mode: 'client' })
-    addImportsDir(resolve('./runtime/composables'))
+
+    // Auto-import useConvexUpload (useConvexStorage is conditionally imported via #convex/storage)
+    addImports({ name: 'useConvexUpload', from: resolve('./runtime/composables/useConvexUpload') })
 
     // More specific alias must be registered first to avoid #convex matching #convex/api
     setupConvexApiAlias(nuxt)
@@ -102,6 +104,14 @@ declare module '#convex' {
   }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex'] = template.dst
+
+  // Auto-import core composables so users don't need manual imports
+  addImports([
+    { name: 'useConvexQuery', from: '#convex' },
+    { name: 'useConvexMutation', from: '#convex' },
+    { name: 'useConvexAction', from: '#convex' },
+    { name: 'useConvex', from: '#convex' },
+  ])
 }
 
 function setupConvexApiAlias(nuxt: Nuxt): void {
@@ -150,6 +160,10 @@ declare module '#convex/storage' {
   }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex/storage'] = template.dst
+
+  // Auto-import useConvexStorage when storage is enabled
+  addImports({ name: 'useConvexStorage', from: '#convex/storage' })
+
   await scaffoldStorageFunctions(nuxt)
 }
 
