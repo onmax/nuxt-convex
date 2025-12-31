@@ -1,20 +1,46 @@
 {
   "name": "nuxt-convex",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.0.1-alpha.0",
   "packageManager": "pnpm@10.15.1",
   "description": "Nuxt module for Convex - reactive backend with real-time sync, file storage, and auto-imports",
   "author": "onmax",
   "license": "MIT",
   "homepage": "https://github.com/onmax/nuxt-convex#readme",
-  "repository": { "type": "git", "url": "git+https://github.com/onmax/nuxt-convex.git" },
-  "bugs": { "url": "https://github.com/onmax/nuxt-convex/issues" },
-  "keywords": ["nuxt", "nuxt-module", "convex", "realtime", "database", "storage", "vue"],
-  "exports": { ".": { "types": "./dist/types.d.mts", "import": "./dist/module.mjs" } },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onmax/nuxt-convex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onmax/nuxt-convex/issues"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "convex",
+    "realtime",
+    "database",
+    "storage",
+    "vue"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
+    }
+  },
   "main": "./dist/module.mjs",
   "types": "./dist/types.d.mts",
-  "typesVersions": { "*": { ".": ["./dist/types.d.mts"] } },
-  "files": ["dist"],
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types.d.mts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
@@ -25,7 +51,8 @@
     "test:watch": "vitest",
     "typecheck": "nuxt-module-build build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "release": "bumpp && git push --follow-tags"
   },
   "peerDependencies": {
     "@convex-vue/core": ">=0.0.4",
@@ -45,6 +72,7 @@
     "@nuxt/module-builder": "catalog:build",
     "@nuxt/test-utils": "catalog:test",
     "@types/node": "catalog:types",
+    "bumpp": "^10.3.2",
     "convex": "catalog:convex",
     "eslint": "catalog:lint",
     "eslint-plugin-format": "catalog:lint",
