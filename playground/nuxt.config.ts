@@ -19,7 +19,7 @@ export default defineNuxtConfig({
       clientSecret: process.env.NUXT_GITHUB_SECRET || '',
     },
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://nuxt-convex-playground.maximogarciamtnez.workers.dev',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://demo-nuxt-convex.onmax.me',
     },
   },
   compatibilityDate: '2025-01-01',
@@ -29,7 +29,7 @@ export default defineNuxtConfig({
     cloudflare: {
       nodeCompat: true,
       wrangler: {
-        name: 'nuxt-convex-playground',
+        name: 'demo-nuxt-convex',
         observability: { enabled: true },
       },
     },
