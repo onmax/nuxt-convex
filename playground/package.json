@@ -12,8 +12,8 @@
     "convex": "catalog:convex"
   },
   "devDependencies": {
-    "@nuxt/ui": "catalog:playground",
-    "nuxt": "catalog:nuxt",
+    "@nuxt/ui": "catalog:",
+    "nuxt": "catalog:",
     "wrangler": "catalog:playground"
   }
 }

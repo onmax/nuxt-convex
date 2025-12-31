@@ -76,7 +76,7 @@
     "convex": "catalog:convex",
     "eslint": "catalog:lint",
     "eslint-plugin-format": "catalog:lint",
-    "nuxt": "catalog:nuxt",
+    "nuxt": "catalog:",
     "typescript": "catalog:build",
     "vitest": "catalog:test",
     "vitest-package-exports": "catalog:test",
