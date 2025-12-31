@@ -1,4 +1,5 @@
 {
-  "buildCommand": "pnpm --filter docs build && cp -r docs/.vercel/output .vercel/output",
+  "buildCommand": "pnpm --filter docs build",
+  "outputDirectory": "docs/.output/public",
   "installCommand": "pnpm install"
 }

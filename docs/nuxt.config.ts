@@ -40,7 +40,5 @@ export default defineNuxtConfig({
     domain: 'nuxt-convex.onmax.me',
   },
 
-  nitro: {
-    preset: 'vercel-static',
-  },
+  ogImage: { compatibility: { runtime: { resvg: false } } },
 })
