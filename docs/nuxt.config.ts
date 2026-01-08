@@ -1,6 +1,8 @@
 export default defineNuxtConfig({
   extends: ['docus'],
 
+  ogImage: { enabled: false },
+
   css: ['~/assets/css/main.css'],
 
   content: {
