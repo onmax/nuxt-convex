@@ -41,6 +41,7 @@ catalogs:
     pathe: ^2.0.0
   test:
     '@nuxt/test-utils': latest
+    '@vue/test-utils': ^2.4.6
     vitest: ^3.2.0
     vitest-package-exports: ^0.1.1
   types:

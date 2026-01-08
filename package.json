@@ -72,6 +72,7 @@
     "@nuxt/module-builder": "catalog:build",
     "@nuxt/test-utils": "catalog:test",
     "@types/node": "catalog:types",
+    "@vue/test-utils": "catalog:test",
     "bumpp": "catalog:",
     "convex": "catalog:convex",
     "eslint": "catalog:lint",
