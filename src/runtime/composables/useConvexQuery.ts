@@ -1,11 +1,19 @@
+import type { ConvexClient } from 'convex/browser'
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
 import type { AsyncData, AsyncDataOptions } from 'nuxt/app'
-import type { MaybeRefOrGetter } from 'vue'
+import type { MaybeRefOrGetter, Ref } from 'vue'
 import { useAsyncData, useNuxtApp, useRuntimeConfig } from '#imports'
 import { CONVEX_INJECTION_KEY } from '@convex-vue/core'
 import { inject, onScopeDispose, ref, toValue, watch } from 'vue'
 
 type QueryReference = FunctionReference<'query'>
+
+interface SubscriptionState<T> {
+  data: Ref<T | null>
+  error: Ref<Error | null>
+  pending: Ref<boolean>
+  status: Ref<'idle' | 'pending' | 'success' | 'error'>
+}
 
 export interface UseConvexQueryOptions<T> extends Omit<AsyncDataOptions<T>, 'transform' | 'default'> {
   /**
@@ -28,30 +36,35 @@ export interface UseConvexQueryOptions<T> extends Omit<AsyncDataOptions<T>, 'tra
  * const { data, pending, error } = await useConvexQuery(api.tasks.list, {})
  *
  * // Client-only mode
- * const { data } = useConvexQuery(api.tasks.list, {}, { ssr: false })
+ * const { data } = await useConvexQuery(api.tasks.list, {}, { ssr: false })
  * </script>
  * ```
  */
-export function useConvexQuery<Query extends QueryReference>(
+export async function useConvexQuery<Query extends QueryReference>(
   query: Query,
   args: MaybeRefOrGetter<FunctionArgs<Query>>,
   options: UseConvexQueryOptions<FunctionReturnType<Query>> = {},
-): AsyncData<FunctionReturnType<Query> | null, Error | null> | Promise<AsyncData<FunctionReturnType<Query> | null, Error | null>> {
+): Promise<AsyncData<FunctionReturnType<Query> | null, Error | null>> {
   const nuxtApp = useNuxtApp()
   const config = useRuntimeConfig()
   const convexUrl = (config.public.convex as { url?: string })?.url
 
-  // Determine if SSR should be used
-  const ssrEnabled = options.ssr ?? true
-  const isServer = import.meta.server
-  const shouldUseSSR = ssrEnabled && (isServer || nuxtApp.isHydrating)
+  // IMPORTANT: inject() must be called synchronously during setup, before any await
+  const client = import.meta.client ? inject(CONVEX_INJECTION_KEY) : null
 
-  if (shouldUseSSR) {
-    return useConvexQuerySSR(query, args, options, convexUrl)
+  if (!convexUrl) {
+    console.warn('[nuxt-convex] No Convex URL configured')
+    return createErrorAsyncData(new Error('Convex URL not configured'))
   }
 
-  // Client-only mode - use synchronous approach
-  return useConvexQueryClient(query, args, convexUrl)
+  const ssrEnabled = options.ssr ?? true
+  const shouldUseSSR = ssrEnabled && (import.meta.server || nuxtApp.isHydrating)
+
+  if (shouldUseSSR) {
+    return useConvexQuerySSR(query, args, options, convexUrl, client)
+  }
+
+  return useConvexQueryClient(query, args, client)
 }
 
 /**
@@ -61,15 +74,11 @@ async function useConvexQuerySSR<Query extends QueryReference>(
   query: Query,
   args: MaybeRefOrGetter<FunctionArgs<Query>>,
   options: UseConvexQueryOptions<FunctionReturnType<Query>>,
-  convexUrl: string | undefined,
+  convexUrl: string,
+  client: ConvexClient | null | undefined,
 ): Promise<AsyncData<FunctionReturnType<Query> | null, Error | null>> {
-  if (!convexUrl) {
-    console.warn('[nuxt-convex] No Convex URL configured')
-    return createNullAsyncData<Query>()
-  }
-
-  // Stable cache key
-  const queryName = (query as any)._name || (query as any).toString?.() || 'unknown'
+  // Convex FunctionReference has _name for stable cache keys
+  const queryName = (query as unknown as { _name?: string })._name ?? 'unknown'
   const sortedArgs = sortObjectKeys(toValue(args))
   const key = `convex:${queryName}:${JSON.stringify(sortedArgs)}`
 
@@ -79,15 +88,16 @@ async function useConvexQuerySSR<Query extends QueryReference>(
       const { fetchQuery } = await import('convex/nextjs')
       return fetchQuery(query, toValue(args), { url: convexUrl })
     },
-    {
-      ...options,
-      server: options.ssr ?? true,
-    },
+    { ...options, server: options.ssr ?? true },
   )
 
-  // Set up real-time subscription on client
   if (import.meta.client) {
-    setupClientSubscription(query, args, asyncData)
+    setupClientSubscription(query, args, {
+      data: asyncData.data as Ref<FunctionReturnType<Query> | null>,
+      error: asyncData.error as Ref<Error | null>,
+      pending: asyncData.pending,
+      status: asyncData.status as Ref<'idle' | 'pending' | 'success' | 'error'>,
+    }, client)
   }
 
   return asyncData
@@ -99,29 +109,23 @@ async function useConvexQuerySSR<Query extends QueryReference>(
 function useConvexQueryClient<Query extends QueryReference>(
   query: Query,
   args: MaybeRefOrGetter<FunctionArgs<Query>>,
-  convexUrl: string | undefined,
+  client: ConvexClient | null | undefined,
 ): AsyncData<FunctionReturnType<Query> | null, Error | null> {
-  if (!convexUrl) {
-    console.warn('[nuxt-convex] No Convex URL configured')
-    return createNullAsyncData<Query>() as AsyncData<FunctionReturnType<Query> | null, Error | null>
-  }
-
-  const data = ref<FunctionReturnType<Query> | null>(null) as AsyncData<FunctionReturnType<Query> | null, Error | null>['data']
+  const data = ref<FunctionReturnType<Query> | null>(null)
   const error = ref<Error | null>(null)
   const pending = ref(true)
   const status = ref<'idle' | 'pending' | 'success' | 'error'>('pending')
 
-  if (import.meta.client) {
-    setupClientSubscription(query, args, { data, error, pending, status })
-  }
+  const state: SubscriptionState<FunctionReturnType<Query>> = { data, error, pending, status }
+  const { refresh } = setupClientSubscription(query, args, state, client)
 
   return {
     data,
     pending,
     error,
-    status: status as AsyncData<FunctionReturnType<Query> | null, Error | null>['status'],
-    refresh: async () => {},
-    execute: async () => {},
+    status,
+    refresh,
+    execute: refresh,
     clear: () => {
       data.value = null
       error.value = null
@@ -133,58 +137,59 @@ function useConvexQueryClient<Query extends QueryReference>(
 
 /**
  * Set up real-time subscription on client.
- * Must be called synchronously during setup phase for inject() to work.
+ * Client must be passed in (injected before any await in the parent).
  */
 function setupClientSubscription<Query extends QueryReference>(
   query: Query,
   args: MaybeRefOrGetter<FunctionArgs<Query>>,
-  state: { data: any, error?: any, pending?: any, status?: any },
-): void {
-  const client = inject(CONVEX_INJECTION_KEY)
-
+  state: SubscriptionState<FunctionReturnType<Query>>,
+  client: ConvexClient | null | undefined,
+): { refresh: () => Promise<void> } {
   if (!client) {
     console.warn('[nuxt-convex] Convex client not found. Real-time updates disabled.')
-    if (state.pending)
-      state.pending.value = false
-    if (state.status)
-      state.status.value = 'error'
-    return
+    state.pending.value = false
+    state.status.value = 'error'
+    state.error.value = new Error('Convex client not found')
+    return { refresh: async () => {} }
   }
 
   let unsubscribe: (() => void) | null = null
 
-  const setupSubscription = (): void => {
+  const subscribe = (): void => {
     unsubscribe?.()
     const currentArgs = toValue(args)
     unsubscribe = client.onUpdate(query, currentArgs, (result) => {
       if (result !== undefined) {
         state.data.value = result as FunctionReturnType<Query>
-        if (state.pending)
-          state.pending.value = false
-        if (state.status)
-          state.status.value = 'success'
+        state.pending.value = false
+        state.status.value = 'success'
       }
     })
   }
 
-  setupSubscription()
+  subscribe()
+  watch(() => toValue(args), subscribe, { deep: true })
+  onScopeDispose(() => unsubscribe?.())
 
-  watch(() => toValue(args), () => setupSubscription(), { deep: true })
-
-  onScopeDispose(() => {
-    unsubscribe?.()
-  })
+  return {
+    refresh: async () => {
+      state.pending.value = true
+      subscribe()
+    },
+  }
 }
 
 /**
- * Create a null AsyncData object for error cases
+ * Create an AsyncData object for error cases
  */
-function createNullAsyncData<Query extends QueryReference>(): AsyncData<FunctionReturnType<Query> | null, Error | null> {
+function createErrorAsyncData<Query extends QueryReference>(
+  err: Error,
+): AsyncData<FunctionReturnType<Query> | null, Error | null> {
   return {
     data: ref(null),
     pending: ref(false),
-    error: ref(null),
-    status: ref('idle'),
+    error: ref(err),
+    status: ref('error'),
     refresh: async () => {},
     execute: async () => {},
     clear: () => {},

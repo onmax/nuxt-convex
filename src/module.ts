@@ -114,7 +114,7 @@ declare module '#convex' {
     query: Query,
     args: MaybeRefOrGetter<FunctionArgs<Query>>,
     options?: UseConvexQueryOptions<FunctionReturnType<Query>>
-  ): AsyncData<FunctionReturnType<Query> | null, Error | null> | Promise<AsyncData<FunctionReturnType<Query> | null, Error | null>>
+  ): Promise<AsyncData<FunctionReturnType<Query> | null, Error | null>>
 
   export function useConvex(): ConvexClient
 }
