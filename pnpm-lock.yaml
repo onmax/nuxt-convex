@@ -114,6 +114,9 @@ catalogs:
       specifier: ^22.0.0
       version: 22.19.3
 
+overrides:
+  h3: ^1.15.4
+
 importers:
 
   .:
@@ -6355,7 +6358,7 @@ packages:
   nuxt-site-config@3.2.14:
     resolution: {integrity: sha512-/IzAkBFpe8kDJiSK7fw7G0EPnNImIh0x4jdwil8Mmaz03usTtkeWgnfZu9NJpMSI9eO5jJ+dxd/avjxssvdqwQ==}
     peerDependencies:
-      h3: '>=1'
+      h3: ^1.15.4
 
   nuxt@4.2.2:
     resolution: {integrity: sha512-n6oYFikgLEb70J4+K19jAzfx4exZcRSRX7yZn09P5qlf2Z59VNOBqNmaZO5ObzvyGUZ308SZfL629/Q2v2FVjw==}
