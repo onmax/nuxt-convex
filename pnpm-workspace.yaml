@@ -2,6 +2,8 @@ packages:
   - playground
   - docs
 
+overrides:
+  h3: ^1.15.4
 catalog:
   '@nuxt/content': ^3.10.0
   '@nuxt/fonts': ^0.12.1
