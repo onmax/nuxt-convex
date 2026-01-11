@@ -1,10 +1,12 @@
 shellEmulator: true
 
 trustPolicy: no-downgrade
-
 packages:
   - playground
   - docs
+
+patchedDependencies:
+  unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
 
 catalog:
   '@nuxt/content': ^3.10.0
@@ -54,5 +56,3 @@ catalogs:
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp
-patchedDependencies:
-  unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
