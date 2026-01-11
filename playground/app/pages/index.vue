@@ -132,6 +132,9 @@ const features = [
           </a>
         </div>
         <div class="flex items-center gap-2">
+          <UButton to="https://nuxt-convex.onmax.me" target="_blank" variant="ghost" color="neutral" size="sm">
+            Docs
+          </UButton>
           <UButton to="https://github.com/onmax/nuxt-convex" target="_blank" icon="i-simple-icons-github" variant="ghost" color="neutral" size="sm" />
           <UColorModeButton />
         </div>
@@ -199,6 +202,9 @@ const features = [
           </UBadge>
         </div>
         <div class="flex items-center gap-3">
+          <UButton to="https://nuxt-convex.onmax.me" target="_blank" variant="ghost" color="neutral" size="sm">
+            Docs
+          </UButton>
           <UButton to="https://github.com/onmax/nuxt-convex" target="_blank" icon="i-simple-icons-github" variant="ghost" color="neutral" size="sm" />
           <UColorModeButton />
           <USeparator orientation="vertical" class="h-6" />

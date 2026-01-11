@@ -2,6 +2,7 @@ import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
 
 export default defineServerAuth(({ runtimeConfig }) => ({
   appName: 'nuxt-convex Playground',
+  trustedOrigins: ['https://*.onmax.me'],
   socialProviders: {
     github: {
       clientId: runtimeConfig.github?.clientId || '',
