@@ -83,10 +83,5 @@
     "vitest-package-exports": "catalog:test",
     "vue": "catalog:nuxt",
     "yaml": "catalog:"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "unenv@2.0.0-rc.24": "patches/unenv@2.0.0-rc.24.patch"
-    }
   }
 }
