@@ -59,10 +59,10 @@
     "convex": ">=1.0.0"
   },
   "dependencies": {
-    "@nuxt/kit": "catalog:prod",
-    "consola": "catalog:prod",
-    "defu": "catalog:prod",
-    "pathe": "catalog:prod"
+    "@nuxt/kit": "^4.2.2",
+    "consola": "^3.4.2",
+    "defu": "^6.1.4",
+    "pathe": "^2.0.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
