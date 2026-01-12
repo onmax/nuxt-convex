@@ -13,4 +13,10 @@ export default createConfigForNuxt({
     pnpm: true,
     ignores: ['**/convex/_generated/**'],
   }),
+  {
+    files: ['package.json'],
+    rules: {
+      'pnpm/json-enforce-catalog': 'off',
+    },
+  },
 )

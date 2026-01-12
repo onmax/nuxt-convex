@@ -83,19 +83,6 @@ catalogs:
     wrangler:
       specifier: ^4.0.0
       version: 4.55.0
-  prod:
-    '@nuxt/kit':
-      specifier: ^4.2.2
-      version: 4.2.2
-    consola:
-      specifier: ^3.4.2
-      version: 3.4.2
-    defu:
-      specifier: ^6.1.4
-      version: 6.1.4
-    pathe:
-      specifier: ^2.0.3
-      version: 2.0.3
   test:
     '@nuxt/test-utils':
       specifier: ^3.23.0
@@ -124,16 +111,16 @@ importers:
   .:
     dependencies:
       '@nuxt/kit':
-        specifier: catalog:prod
+        specifier: ^4.2.2
         version: 4.2.2(magicast@0.5.1)
       consola:
-        specifier: catalog:prod
+        specifier: ^3.4.2
         version: 3.4.2
       defu:
-        specifier: catalog:prod
+        specifier: ^6.1.4
         version: 6.1.4
       pathe:
-        specifier: catalog:prod
+        specifier: ^2.0.3
         version: 2.0.3
     devDependencies:
       '@antfu/eslint-config':
