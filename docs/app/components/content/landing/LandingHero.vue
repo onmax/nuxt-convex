@@ -20,7 +20,7 @@
 
         <div class="flex items-center justify-center gap-2 px-4 py-3 bg-stone-100 dark:bg-stone-900 rounded-lg font-mono text-sm max-w-md mx-auto">
           <span class="text-stone-500">$</span>
-          <span class="text-stone-800 dark:text-stone-200">pnpm add nuxt-convex convex @convex-vue/core</span>
+          <span class="text-stone-800 dark:text-stone-200">pnpm add nuxt-convex convex</span>
         </div>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
