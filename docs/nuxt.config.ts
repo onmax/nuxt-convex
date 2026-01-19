@@ -41,4 +41,8 @@ export default defineNuxtConfig({
   llms: {
     domain: 'nuxt-convex.onmax.me',
   },
+
+  routeRules: {
+    '/integrations/better-auth': { redirect: 'https://nuxt-better-auth.onmax.me/integrations/convex' },
+  },
 })
