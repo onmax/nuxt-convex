@@ -14,6 +14,7 @@
   "devDependencies": {
     "@nuxt/ui": "catalog:",
     "nuxt": "catalog:",
+    "tailwindcss": "catalog:",
     "wrangler": "catalog:playground"
   }
 }

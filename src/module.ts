@@ -3,7 +3,7 @@ import type { ConvexConfig, ResolvedConvexConfig } from './types/config'
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
 import process from 'node:process'
-import { addImports, addPlugin, addTemplate, addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { addComponent, addImports, addPlugin, addTemplate, addTypeTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import { consola } from 'consola'
 import { defu } from 'defu'
 import { join } from 'pathe'
@@ -84,6 +84,7 @@ export { getConvexClient as useConvex } from '${resolve('./runtime/client')}'
 export { useConvexMutation } from '${resolve('./runtime/composables/useConvexMutation')}'
 export { useConvexAction } from '${resolve('./runtime/composables/useConvexAction')}'
 export { useConvexQuery } from '${resolve('./runtime/composables/useConvexQuery')}'
+export { useConvexPaginatedQuery } from '@convex-vue/core'
 `,
     write: true,
   })
@@ -97,6 +98,8 @@ import type { AsyncData, AsyncDataOptions } from 'nuxt/app'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 
 declare module '#convex' {
+  export { useConvexPaginatedQuery } from '@convex-vue/core'
+
   export interface UseConvexMutationReturn<Mutation extends FunctionReference<'mutation'>> {
     isLoading: Ref<boolean>
     error: Ref<Error | null>
@@ -140,7 +143,12 @@ declare module '#convex' {
     { name: 'useConvexMutation', from: '#convex' },
     { name: 'useConvexAction', from: '#convex' },
     { name: 'useConvex', from: '#convex' },
+    { name: 'useConvexPaginatedQuery', from: '#convex' },
   ])
+
+  // Auto-import renderless components
+  addComponent({ name: 'ConvexQuery', export: 'ConvexQuery', filePath: '@convex-vue/core', global: true })
+  addComponent({ name: 'ConvexPaginatedQuery', export: 'ConvexPaginatedQuery', filePath: '@convex-vue/core', global: true })
 }
 
 function setupConvexApiAlias(nuxt: Nuxt): void {
