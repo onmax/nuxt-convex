@@ -120,6 +120,9 @@ importers:
 
   .:
     dependencies:
+      '@convex-vue/core':
+        specifier: ^0.0.4
+        version: 0.0.4(typescript@5.9.3)
       '@nuxt/kit':
         specifier: catalog:prod
         version: 4.2.2(magicast@0.5.1)
@@ -526,6 +529,9 @@ packages:
 
   '@cloudflare/workers-types@4.20251217.0':
     resolution: {integrity: sha512-qdVSqCza5Bv23E0DFET+8SEl9fM1F16WHC0HGoYLlDAyWF7rK2HhkPCdUEOp8DsJXwANWvNOkFdJfE1kLYGHYg==}
+
+  '@convex-vue/core@0.0.4':
+    resolution: {integrity: sha512-MCCNt1VUDsluu7i+7Hn6JPxhy6aDJb3mBxpWfbc8DOCdRK7HYS6WuCD+sy+UjyQa9EWTAtKCxTiZeF+SLdeIBg==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -4290,6 +4296,7 @@ packages:
   convex@1.31.3:
     resolution: {integrity: sha512-SkpLjhFFnml2xKB4vNOaZ+MtqyhVmDdk5AIF2m8rW8Z7nZsMtuO1Tpn2BnDHCysZkZPJj9xopnsF5RtAINQ0Eg==}
     engines: {node: '>=18.0.0', npm: '>=7.0.0'}
+    deprecated: This version of convex contains a bug when used with React Native. Install the latest version with `npm i convex@latest`
     hasBin: true
     peerDependencies:
       '@auth0/auth0-react': ^2.0.1
@@ -7561,6 +7568,7 @@ packages:
   tar@7.5.2:
     resolution: {integrity: sha512-7NyxrTE4Anh8km8iEy7o0QYPs+0JKBTj5ZaqHg6B39erLg0qYXN3BijtShwbsNSvQ+LN75+KV+C4QR/f6Gwnpg==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   terser@5.44.1:
     resolution: {integrity: sha512-t/R3R/n0MSwnnazuPpPNVO60LX0SKL45pyl9YlvxIdkH0Of7D5qM2EVe+yASRIlY5pZ73nclYJfNANGWPwFDZw==}
@@ -8717,6 +8725,19 @@ snapshots:
     optional: true
 
   '@cloudflare/workers-types@4.20251217.0': {}
+
+  '@convex-vue/core@0.0.4(typescript@5.9.3)':
+    dependencies:
+      '@vueuse/core': 10.11.1(vue@3.5.26(typescript@5.9.3))
+      convex: 1.31.3
+      vue: 3.5.26(typescript@5.9.3)
+      vue-router: 4.6.4(vue@3.5.26(typescript@5.9.3))
+    transitivePeerDependencies:
+      - '@auth0/auth0-react'
+      - '@clerk/clerk-react'
+      - '@vue/composition-api'
+      - react
+      - typescript
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:

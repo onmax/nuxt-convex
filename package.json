@@ -58,6 +58,7 @@
     "convex": ">=1.0.0"
   },
   "dependencies": {
+    "@convex-vue/core": "^0.0.4",
     "@nuxt/kit": "catalog:prod",
     "consola": "catalog:prod",
     "defu": "catalog:prod",
