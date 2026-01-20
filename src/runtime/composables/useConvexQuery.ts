@@ -3,8 +3,8 @@ import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex
 import type { AsyncData, AsyncDataOptions } from 'nuxt/app'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { useAsyncData, useNuxtApp, useRuntimeConfig } from '#imports'
-import { CONVEX_INJECTION_KEY } from '@convex-vue/core'
 import { inject, onScopeDispose, ref, toValue, watch } from 'vue'
+import { CONVEX_INJECTION_KEY } from '../client'
 
 type QueryReference = FunctionReference<'query'>
 

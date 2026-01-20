@@ -55,7 +55,6 @@
     "release": "bumpp && git push --follow-tags"
   },
   "peerDependencies": {
-    "@convex-vue/core": ">=0.0.4",
     "convex": ">=1.0.0"
   },
   "dependencies": {
@@ -66,7 +65,6 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
-    "@convex-vue/core": "catalog:convex",
     "@nuxt/devtools": "catalog:nuxt",
     "@nuxt/eslint-config": "catalog:lint",
     "@nuxt/module-builder": "catalog:build",

@@ -1,5 +1,6 @@
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
-import { createConvexVue } from '@convex-vue/core'
+import { ConvexClient } from 'convex/browser'
+import { CONVEX_INJECTION_KEY } from './client'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
@@ -10,8 +11,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     return
   }
 
-  const convex = createConvexVue({ convexUrl })
-  nuxtApp.vueApp.use(convex)
+  const client = new ConvexClient(convexUrl)
+  nuxtApp.vueApp.provide(CONVEX_INJECTION_KEY, client)
 
-  return { provide: { convex } }
+  return { provide: { convex: client } }
 })
