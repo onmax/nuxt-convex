@@ -1,6 +1,8 @@
+import type { GenericCtx } from '@convex-dev/better-auth'
 import type { BetterAuthOptions } from 'better-auth/minimal'
 import type { DataModel } from './_generated/dataModel'
-import { createClient, type GenericCtx } from '@convex-dev/better-auth'
+import process from 'node:process'
+import { createClient } from '@convex-dev/better-auth'
 import { convex, crossDomain } from '@convex-dev/better-auth/plugins'
 import { betterAuth } from 'better-auth/minimal'
 import { components } from './_generated/api'
@@ -12,8 +14,8 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
   verbose: false,
 })
 
-export const createAuthOptions = (ctx: GenericCtx<DataModel>) =>
-  ({
+export function createAuthOptions(ctx: GenericCtx<DataModel>): BetterAuthOptions {
+  return ({
     appName: 'nuxt-convex Playground',
     trustedOrigins: [siteUrl, 'https://*.onmax.me'],
     database: authComponent.adapter(ctx),
@@ -35,6 +37,8 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) =>
       convex({ authConfig }),
     ],
   }) satisfies BetterAuthOptions
+}
 
-export const createAuth = (ctx: GenericCtx<DataModel>) =>
-  betterAuth(createAuthOptions(ctx))
+export function createAuth(ctx: GenericCtx<DataModel>): ReturnType<typeof betterAuth> {
+  return betterAuth(createAuthOptions(ctx))
+}

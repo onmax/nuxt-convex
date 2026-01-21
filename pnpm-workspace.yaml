@@ -25,8 +25,8 @@ catalogs:
     '@nuxt/module-builder': ^1.0.2
     typescript: ^5.9.3
   convex:
-    convex: ^1.31.3
     '@convex-dev/better-auth': ^0.10.10
+    convex: ^1.31.3
   lint:
     '@antfu/eslint-config': ^6.7.3
     '@nuxt/eslint-config': ^1.12.1
