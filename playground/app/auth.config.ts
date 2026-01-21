@@ -1,5 +1,5 @@
-import { createAuthClient } from 'better-auth/vue'
+import { defineClientAuth } from '@onmax/nuxt-better-auth/config'
 
-export function createAppAuthClient(baseURL: string) {
-  return createAuthClient({ baseURL })
-}
+export default defineClientAuth(() => ({
+  baseURL: `${import.meta.env.VITE_CONVEX_SITE_URL}/api/auth`,
+}))

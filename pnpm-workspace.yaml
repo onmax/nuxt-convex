@@ -26,6 +26,7 @@ catalogs:
     typescript: ^5.9.3
   convex:
     convex: ^1.31.3
+    '@convex-dev/better-auth': ^0.10.10
   lint:
     '@antfu/eslint-config': ^6.7.3
     '@nuxt/eslint-config': ^1.12.1
@@ -36,7 +37,7 @@ catalogs:
     vue: ^3.5.26
   playground:
     '@nuxthub/core': ^0.10.3
-    '@onmax/nuxt-better-auth': https://pkg.pr.new/onmax/nuxt-better-auth/@onmax/nuxt-better-auth@5f06fbf
+    '@onmax/nuxt-better-auth': ^0.0.2-alpha.15
     better-auth: ^1.4.7
     wrangler: ^4.0.0
   prod:
