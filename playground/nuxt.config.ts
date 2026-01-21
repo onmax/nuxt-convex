@@ -28,6 +28,11 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare-pages',
+    cloudflare: {
+      wrangler: {
+        d1_databases: [{ binding: 'DB', database_name: 'nuxt-convex-db', database_id: '0b69a5b9-e8e1-4398-aae0-1afd11f1bf9d' }],
+      },
+    },
   },
 
   auth: {
