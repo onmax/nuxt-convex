@@ -13,6 +13,8 @@
   },
   "devDependencies": {
     "@nuxt/ui": "catalog:",
+    "drizzle-kit": "^0.31.0",
+    "drizzle-orm": "^0.41.0",
     "nuxt": "catalog:",
     "tailwindcss": "catalog:",
     "wrangler": "catalog:playground"

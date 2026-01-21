@@ -4,7 +4,9 @@ import NuxtConvex from '../src/module'
 export default defineNuxtConfig({
   modules: [NuxtConvex, '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
 
-  hub: {},
+  hub: {
+    db: 'sqlite',
+  },
 
   icon: {
     customCollections: [{ prefix: 'custom', dir: './app/assets/icons' }],
@@ -25,14 +27,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
 
   nitro: {
-    preset: 'cloudflare-module',
-    cloudflare: {
-      nodeCompat: true,
-      wrangler: {
-        name: 'demo-nuxt-convex',
-        observability: { enabled: true },
-      },
-    },
+    preset: 'cloudflare-pages',
   },
 
   auth: {

@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "demo-nuxt-convex",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": ".output/public",
+  "observability": { "enabled": true },
+  "d1_databases": [{ "binding": "DB", "database_name": "nuxt-convex-db", "database_id": "0b69a5b9-e8e1-4398-aae0-1afd11f1bf9d" }]
+}
