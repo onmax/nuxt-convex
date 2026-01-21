@@ -9,7 +9,10 @@
  */
 
 import type * as _hub_storage from "../_hub/storage.js";
+import type * as actions from "../actions.js";
+import type * as auth from "../auth.js";
 import type * as cleanup from "../cleanup.js";
+import type * as http from "../http.js";
 import type * as tasks from "../tasks.js";
 
 import type {
@@ -20,7 +23,10 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   "_hub/storage": typeof _hub_storage;
+  actions: typeof actions;
+  auth: typeof auth;
   cleanup: typeof cleanup;
+  http: typeof http;
   tasks: typeof tasks;
 }>;
 
