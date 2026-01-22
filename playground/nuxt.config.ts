@@ -36,7 +36,7 @@ export default defineNuxtConfig({
   },
 
   auth: {
-    mode: 'convex',
+    clientOnly: true,
     redirects: {
       login: '/',
       guest: '/',
