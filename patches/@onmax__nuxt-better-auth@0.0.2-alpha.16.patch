@@ -1,0 +1,12 @@
+diff --git a/dist/runtime/config.js b/dist/runtime/config.js
+index a9281f32c9e419050e14a9d414c3b97f59c449b1..0b6d178598a08c8f359c6f66204266638541c840 100644
+--- a/dist/runtime/config.js
++++ b/dist/runtime/config.js
+@@ -6,6 +6,6 @@ export function defineClientAuth(config) {
+   return (baseURL) => {
+     const ctx = { siteUrl: baseURL };
+     const resolved = typeof config === "function" ? config(ctx) : config;
+-    return createAuthClient({ ...resolved, baseURL });
++    return createAuthClient({ baseURL, ...resolved });
+   };
+ }

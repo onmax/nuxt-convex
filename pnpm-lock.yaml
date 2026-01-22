@@ -115,6 +115,9 @@ catalogs:
       version: 25.0.10
 
 patchedDependencies:
+  '@onmax/nuxt-better-auth@0.0.2-alpha.16':
+    hash: d32ce6e179e83bff964f87481990f212582e4b052519829146891afb32846715
+    path: patches/@onmax__nuxt-better-auth@0.0.2-alpha.16.patch
   unenv@2.0.0-rc.24:
     hash: 90a473cb87f9a997d09c4ce5c16823daef31fca40c98c907461b458d04aa7781
     path: patches/unenv@2.0.0-rc.24.patch
@@ -228,7 +231,7 @@ importers:
         version: 0.10.4(db0@0.3.4(@electric-sql/pglite@0.3.15)(better-sqlite3@12.6.2)(drizzle-orm@0.41.0(@cloudflare/workers-types@4.20260122.0)(@electric-sql/pglite@0.3.15)(@prisma/client@5.22.0(prisma@7.3.0(@types/react@19.2.9)(better-sqlite3@12.6.2)(magicast@0.5.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)))(@types/pg@8.16.0)(better-sqlite3@12.6.2)(kysely@0.28.10)(mysql2@3.15.3)(pg@8.17.2)(postgres@3.4.7)(prisma@7.3.0(@types/react@19.2.9)(better-sqlite3@12.6.2)(magicast@0.5.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)))(mysql2@3.15.3))(ioredis@5.9.2)(magicast@0.5.1)(synckit@0.11.12)(typescript@5.9.3)
       '@onmax/nuxt-better-auth':
         specifier: catalog:playground
-        version: 0.0.2-alpha.16(82698dd542018a64501106161c28f2ec)
+        version: 0.0.2-alpha.16(patch_hash=d32ce6e179e83bff964f87481990f212582e4b052519829146891afb32846715)(82698dd542018a64501106161c28f2ec)
       better-auth:
         specifier: catalog:playground
         version: 1.4.9(b65d9c3db46cdd5b43a74efc2d4089e4)
@@ -11331,7 +11334,7 @@ snapshots:
 
   '@one-ini/wasm@0.1.1': {}
 
-  '@onmax/nuxt-better-auth@0.0.2-alpha.16(82698dd542018a64501106161c28f2ec)':
+  '@onmax/nuxt-better-auth@0.0.2-alpha.16(patch_hash=d32ce6e179e83bff964f87481990f212582e4b052519829146891afb32846715)(82698dd542018a64501106161c28f2ec)':
     dependencies:
       '@better-auth/cli': 1.5.0-beta.9(@better-fetch/fetch@1.1.21)(@cloudflare/workers-types@4.20260122.0)(@electric-sql/pglite@0.3.15)(better-call@1.1.7(zod@4.3.5))(jose@6.1.3)(kysely@0.28.10)(magicast@0.5.1)(mongodb@7.0.0)(mysql2@3.15.3)(nanostores@1.1.0)(postgres@3.4.7)(prisma@7.3.0(@types/react@19.2.9)(better-sqlite3@12.6.2)(magicast@0.5.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.17(@types/node@25.0.10)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))
       '@nuxt/kit': 4.2.2(magicast@0.5.1)
