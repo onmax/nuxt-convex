@@ -1,5 +1,6 @@
 {
-  "buildCommand": "pnpm --filter docs build",
-  "outputDirectory": "docs/.output/public",
-  "installCommand": "pnpm install"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm --filter docs build && cp -r docs/.vercel/output .vercel/output",
+  "installCommand": "pnpm install",
+  "outputDirectory": ".vercel/output"
 }
