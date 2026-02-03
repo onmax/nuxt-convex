@@ -1,17 +1,18 @@
 import type { GenericCtx } from '@convex-dev/better-auth'
 import type { DataModel } from './_generated/dataModel'
+import process from 'node:process'
 import { createClient } from '@convex-dev/better-auth'
 import { convex, crossDomain } from '@convex-dev/better-auth/plugins'
+import { betterAuth } from 'better-auth/minimal'
 import { components } from './_generated/api'
 import { query } from './_generated/server'
-import { betterAuth } from 'better-auth/minimal'
 import authConfig from './auth.config'
 
 const siteUrl = process.env.SITE_URL!
 
 export const authComponent = createClient<DataModel>(components.betterAuth)
 
-export const createAuth = (ctx: GenericCtx<DataModel>) => {
+export function createAuth(ctx: GenericCtx<DataModel>): ReturnType<typeof betterAuth> {
   return betterAuth({
     trustedOrigins: [siteUrl],
     database: authComponent.adapter(ctx),
