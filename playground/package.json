@@ -6,6 +6,7 @@
     "build": "nuxi build"
   },
   "dependencies": {
+    "@convex-dev/r2": "catalog:convex",
     "@convex-dev/better-auth": "catalog:convex",
     "@nuxthub/core": "catalog:playground",
     "@onmax/nuxt-better-auth": "catalog:playground",

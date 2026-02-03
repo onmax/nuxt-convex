@@ -3,13 +3,14 @@ definePageMeta({ middleware: 'auth' })
 
 const convexUrl = useRuntimeConfig().public.convex?.url as string | undefined
 
-type TabValue = 'queries' | 'mutations' | 'pagination' | 'storage' | 'actions'
+type TabValue = 'queries' | 'mutations' | 'pagination' | 'storage' | 'r2' | 'actions'
 
 const tabs: Array<{ label: string, value: TabValue, icon: string }> = [
   { label: 'Queries', value: 'queries', icon: 'i-heroicons-magnifying-glass' },
   { label: 'Mutations', value: 'mutations', icon: 'i-heroicons-pencil-square' },
   { label: 'Pagination', value: 'pagination', icon: 'i-heroicons-list-bullet' },
   { label: 'Storage', value: 'storage', icon: 'i-heroicons-cloud-arrow-up' },
+  { label: 'R2', value: 'r2', icon: 'i-simple-icons-cloudflare' },
   { label: 'Actions', value: 'actions', icon: 'i-heroicons-bolt' },
 ]
 
@@ -18,6 +19,7 @@ const demoComponents: Record<TabValue, ReturnType<typeof resolveComponent>> = {
   mutations: resolveComponent('DemosMutationsDemo'),
   pagination: resolveComponent('DemosPaginationDemo'),
   storage: resolveComponent('DemosStorageDemo'),
+  r2: resolveComponent('DemosR2Demo'),
   actions: resolveComponent('DemosActionsDemo'),
 }
 </script>
