@@ -1,7 +1,7 @@
 import type { FunctionArgs, FunctionReference } from 'convex/server'
 import type { PropType } from 'vue'
-import { computed, defineComponent } from 'vue'
 import type { UseConvexPaginatedQueryOptions } from '../composables/useConvexPaginatedQuery'
+import { computed, defineComponent } from 'vue'
 import { useConvexPaginatedQuery } from '../composables/useConvexPaginatedQuery'
 
 type QueryReference = FunctionReference<'query'>

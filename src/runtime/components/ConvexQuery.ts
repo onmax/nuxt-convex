@@ -1,7 +1,7 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
 import type { PropType } from 'vue'
-import { computed, defineComponent, watch } from 'vue'
 import type { UseConvexQueryOptions } from '../composables/useConvexQuery'
+import { computed, defineComponent, watch } from 'vue'
 import { useConvexQuery } from '../composables/useConvexQuery'
 
 type QueryReference = FunctionReference<'query'>

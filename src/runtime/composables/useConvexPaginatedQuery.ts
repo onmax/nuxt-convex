@@ -1,6 +1,6 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType, PaginationResult } from 'convex/server'
-import { getFunctionName } from 'convex/server'
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
+import { getFunctionName } from 'convex/server'
 import { computed, nextTick, onScopeDispose, ref, toValue, watch } from 'vue'
 import { getConvexClient } from '../client'
 
@@ -33,7 +33,7 @@ const RESETTABLE_PAGINATION_ERRORS = [
 ]
 
 function shouldResetOnError(error: Error): boolean {
-  return RESETTABLE_PAGINATION_ERRORS.some((message) => error.message.includes(message))
+  return RESETTABLE_PAGINATION_ERRORS.some(message => error.message.includes(message))
 }
 
 export function useConvexPaginatedQuery<Query extends QueryReference>(
@@ -58,15 +58,15 @@ export function useConvexPaginatedQuery<Query extends QueryReference>(
     rejectSuspense = reject
   })
 
-  const reset = (reload: boolean): void => {
-    unsubscribers.value.forEach((unsubscribe) => unsubscribe?.())
+  function reset(reload: boolean): void {
+    unsubscribers.value.forEach(unsubscribe => unsubscribe?.())
     unsubscribers.value = []
     pages.value = []
     if (reload)
       nextTick(() => loadPage(0))
   }
 
-  const loadPage = (index: number): void => {
+  function loadPage(index: number): void {
     unsubscribers.value[index]?.()
     if (pages.value.length)
       isLoadingMore.value = true
