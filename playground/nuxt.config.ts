@@ -45,5 +45,6 @@ export default defineNuxtConfig({
 
   convex: {
     storage: true,
+    r2: true,
   },
 })
