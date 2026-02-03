@@ -6,7 +6,7 @@ packages:
   - docs
 
 patchedDependencies:
-  '@onmax/nuxt-better-auth@0.0.2-alpha.16': patches/@onmax__nuxt-better-auth@0.0.2-alpha.16.patch
+  '@onmax/nuxt-better-auth@0.0.2-alpha.19': patches/@onmax__nuxt-better-auth@0.0.2-alpha.19.patch
   unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
 catalog:
   '@nuxt/content': ^3.10.0
@@ -37,7 +37,7 @@ catalogs:
     vue: ^3.5.26
   playground:
     '@nuxthub/core': ^0.10.3
-    '@onmax/nuxt-better-auth': ^0.0.2-alpha.16
+    '@onmax/nuxt-better-auth': ^0.0.2-alpha.19
     better-auth: 1.4.9
     wrangler: ^4.0.0
   prod:
