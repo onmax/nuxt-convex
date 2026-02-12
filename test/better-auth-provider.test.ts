@@ -11,4 +11,3 @@ describe('better-auth provider', async () => {
     // assertions are done in the fixture module (throws on failure)
   })
 })
-

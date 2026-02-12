@@ -39,7 +39,7 @@ async function handlePagination<T>(
 ): Promise<{ docs: T[], count: number }> {
   const state: { isDone: boolean, cursor: string | null, docs: T[], count: number } = { isDone: false, cursor: null, docs: [], count: 0 }
 
-  const onResult = (result: PaginationResult<T> & { count?: number }) => {
+  const onResult = (result: PaginationResult<T> & { count?: number }): void => {
     state.cursor = result.pageStatus === 'SplitRecommended' || result.pageStatus === 'SplitRequired'
       ? (result.splitCursor ?? result.continueCursor)
       : result.continueCursor
@@ -109,7 +109,7 @@ export interface ConvexHttpAdapterOptions {
  * - `count()` fetches all documents client-side (Convex limitation)
  * - `offset` pagination not supported in `findMany()`
  */
-export function createConvexHttpAdapter(options: ConvexHttpAdapterOptions) {
+export function createConvexHttpAdapter(options: ConvexHttpAdapterOptions): ReturnType<typeof createAdapterFactory> {
   if (!options.url.startsWith('https://') || !options.url.includes('.convex.')) {
     throw new Error(`Invalid Convex URL: ${options.url}. Expected format: https://your-app.convex.cloud`)
   }
@@ -297,4 +297,3 @@ export function createConvexHttpAdapter(options: ConvexHttpAdapterOptions) {
     },
   })
 }
-

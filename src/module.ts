@@ -11,7 +11,7 @@ import { version } from '../package.json'
 
 const log = consola.withTag('nuxt:convex')
 
-type BetterAuthDatabaseProviderDefinition = {
+interface BetterAuthDatabaseProviderDefinition {
   buildDatabaseCode: (ctx: unknown) => string
   setup?: (ctx: unknown) => void | Promise<void>
 }

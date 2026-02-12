@@ -2,4 +2,3 @@
   "extends": "./.nuxt/tsconfig.json",
   "exclude": ["convex/**"]
 }
-
