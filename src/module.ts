@@ -11,6 +11,13 @@ import { version } from '../package.json'
 
 const log = consola.withTag('nuxt:convex')
 
+type BetterAuthDatabaseProviderDefinition = {
+  buildDatabaseCode: (ctx: unknown) => string
+  setup?: (ctx: unknown) => void | Promise<void>
+}
+
+type BetterAuthDatabaseProviders = Record<string, BetterAuthDatabaseProviderDefinition>
+
 export default defineNuxtModule<ConvexConfig>({
   meta: {
     name: 'nuxt-convex',
@@ -36,6 +43,39 @@ export default defineNuxtModule<ConvexConfig>({
       nuxt.options.runtimeConfig.public.convex as Record<string, unknown> | undefined,
       { url: config.url },
     )
+
+    nuxt.hook('better-auth:database:providers', (providers: BetterAuthDatabaseProviders) => {
+      providers.convex = {
+        buildDatabaseCode: () => `import { useRuntimeConfig } from '#imports'
+import { createConvexHttpAdapter } from 'nuxt-convex/better-auth'
+import { api } from '#convex/api'
+
+export function createDatabase() {
+  const config = useRuntimeConfig()
+  const convexUrl = config.betterAuth?.convexUrl || config.public?.convex?.url
+  if (!convexUrl) {
+    throw new Error('[nuxt-better-auth] Convex URL not configured. Set auth.database.convexUrl, convex.url, or CONVEX_URL.')
+  }
+  return createConvexHttpAdapter({ url: convexUrl, api: api.auth })
+}
+export const db = undefined
+`,
+        setup: (ctx) => {
+          const hookNuxt = (ctx as { nuxt?: Nuxt } | undefined)?.nuxt
+          if (!hookNuxt)
+            return
+
+          const convexUrl = (hookNuxt.options as { auth?: { database?: { convexUrl?: string } } }).auth?.database?.convexUrl
+          if (!convexUrl)
+            return
+
+          hookNuxt.options.runtimeConfig.betterAuth = defu(
+            (hookNuxt.options.runtimeConfig.betterAuth as Record<string, unknown> | undefined) || {},
+            { convexUrl },
+          )
+        },
+      }
+    })
 
     addPlugin({ src: resolve('./runtime/plugin.client'), mode: 'client' })
 
