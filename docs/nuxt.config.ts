@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   site: {
     url: 'https://nuxt-convex.onmax.me',
     name: 'Nuxt Convex',
-    description: 'Nuxt module for Convex - reactive backend with real-time sync, file storage, and auto-imports.',
+    description: 'Convex for Nuxt and Vue with real-time queries, typed APIs, storage helpers, and integration guides.',
     defaultLocale: 'en',
   },
 
@@ -27,8 +27,7 @@ export default defineNuxtConfig({
 
   mdc: {
     highlight: {
-      theme: { default: 'synthwave-84', dark: 'synthwave-84', light: 'one-light' },
-      langs: ['bash', 'json', 'js', 'ts', 'vue', 'html', 'css'],
+      shikiEngine: 'javascript',
     },
   },
 
@@ -36,13 +35,38 @@ export default defineNuxtConfig({
 
   future: { compatibilityVersion: 4 },
 
-  compatibilityDate: '2025-01-01',
+  compatibilityDate: '2025-07-22',
 
   llms: {
     domain: 'nuxt-convex.onmax.me',
+    title: 'Nuxt Convex',
+    description: 'Convex integration docs for Nuxt and Vue.',
+    full: {
+      title: 'Nuxt Convex',
+      description: 'Reference and guides for nuxt-convex and @onmax/convex-vue.',
+    },
+  },
+
+  mcp: {
+    name: 'Nuxt Convex documentation',
+    browserRedirect: '/getting-started',
   },
 
   routeRules: {
-    '/integrations/better-auth': { redirect: 'https://nuxt-better-auth.onmax.me/integrations/convex' },
+    '/getting-started/introduction': { redirect: '/getting-started' },
+    '/vue-core/introduction': { redirect: '/vue-core' },
+    '/backend/schema': { redirect: '/convex-patterns/schema' },
+    '/backend/queries': { redirect: '/convex-patterns/functions' },
+    '/backend/mutations': { redirect: '/convex-patterns/functions' },
+    '/backend/actions': { redirect: '/convex-patterns/functions' },
+    '/composables/use-convex-query': { redirect: '/api-reference/use-convex-query' },
+    '/composables/use-convex-mutation': { redirect: '/api-reference/use-convex-mutation' },
+    '/composables/use-convex-action': { redirect: '/api-reference/use-convex-action' },
+    '/composables/use-convex-client': { redirect: '/api-reference/use-convex-client' },
+    '/composables/use-convex-paginated-query': { redirect: '/api-reference/use-convex-paginated-query' },
+    '/file-storage/setup': { redirect: '/nuxt-module/file-storage' },
+    '/file-storage/use-convex-storage': { redirect: '/api-reference/use-convex-storage' },
+    '/file-storage/use-convex-upload': { redirect: '/api-reference/use-convex-upload' },
+    '/api/configuration': { redirect: '/api-reference/module-configuration' },
   },
 })

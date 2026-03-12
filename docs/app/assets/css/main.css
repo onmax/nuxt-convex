@@ -1,2 +1,24 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
+@theme static {
+  --color-convex-50: #fff4ee;
+  --color-convex-100: #ffe4d0;
+  --color-convex-200: #ffc59e;
+  --color-convex-300: #ff9e63;
+  --color-convex-400: #ff6b28;
+  --color-convex-500: #f4510d;
+  --color-convex-600: #e03a06;
+  --color-convex-700: #ba2c07;
+  --color-convex-800: #94240e;
+  --color-convex-900: #7a210f;
+  --color-convex-950: #420e05;
+}
+
+:root {
+  --ui-radius: 0.25rem;
+}
