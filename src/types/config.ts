@@ -3,9 +3,12 @@ export interface ConvexConfig {
   url?: string
   /** Enable file storage integration. When true, scaffolds convex/_hub/storage.ts */
   storage?: boolean
+  /** Enable Cloudflare R2 integration */
+  r2?: boolean
 }
 
 export interface ResolvedConvexConfig {
   url: string
   storage: boolean
+  r2: boolean
 }

@@ -60,10 +60,14 @@
     "release": "bumpp && git push --follow-tags"
   },
   "peerDependencies": {
+    "@convex-dev/r2": ">=0.9.1",
     "better-auth": ">=1.4.9 <1.6.0",
     "convex": ">=1.0.0"
   },
   "peerDependenciesMeta": {
+    "@convex-dev/r2": {
+      "optional": true
+    },
     "better-auth": {
       "optional": true
     }
