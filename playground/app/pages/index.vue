@@ -3,6 +3,7 @@ definePageMeta({ middleware: 'guest' })
 
 type AuthTab = 'sign-in' | 'sign-up'
 
+const toast = useToast()
 const { user, waitForSession } = useUserSession()
 const signInWithEmail = useSignIn('email')
 const signUpWithEmail = useSignUp('email')
@@ -26,12 +27,9 @@ const signUpForm = reactive({
   password: '',
 })
 
-const signInPending = computed(() => signInWithEmail.status.value === 'pending')
-const signUpPending = computed(() => signUpWithEmail.status.value === 'pending')
-const githubPending = computed(() => signInWithSocial.status.value === 'pending')
-const signInError = computed(() => signInWithEmail.error.value?.message || null)
-const signUpError = computed(() => signUpWithEmail.error.value?.message || null)
-const githubError = computed(() => signInWithSocial.error.value?.message || null)
+const isSignInPending = computed(() => signInWithEmail.status.value === 'pending')
+const isSignUpPending = computed(() => signUpWithEmail.status.value === 'pending')
+const isGitHubPending = computed(() => signInWithSocial.status.value === 'pending')
 
 const features = [
   { icon: 'i-heroicons-bolt', title: 'Realtime', description: 'Live subscriptions sync data instantly across all clients' },
@@ -51,6 +49,15 @@ async function submitSignIn() {
     password: signInForm.password,
   })
 
+  if (signInWithEmail.error.value) {
+    toast.add({
+      color: 'error',
+      title: 'Sign in failed',
+      description: signInWithEmail.error.value.message || 'Please try again.',
+    })
+    return
+  }
+
   if (signInWithEmail.status.value === 'success')
     await finishAuthFlow()
 }
@@ -62,6 +69,15 @@ async function submitSignUp() {
     password: signUpForm.password,
   })
 
+  if (signUpWithEmail.error.value) {
+    toast.add({
+      color: 'error',
+      title: 'Sign up failed',
+      description: signUpWithEmail.error.value.message || 'Please try again.',
+    })
+    return
+  }
+
   if (signUpWithEmail.status.value === 'success') {
     signInForm.email = signUpForm.email
     signInForm.password = signUpForm.password
@@ -71,6 +87,14 @@ async function submitSignUp() {
 
 async function signInWithGitHub() {
   await signInWithSocial.execute({ provider: 'github' })
+
+  if (signInWithSocial.error.value) {
+    toast.add({
+      color: 'error',
+      title: 'GitHub sign in failed',
+      description: signInWithSocial.error.value.message || 'Please try again.',
+    })
+  }
 }
 </script>
 
@@ -139,8 +163,6 @@ async function signInWithGitHub() {
                     class="mt-6 space-y-4"
                     @submit.prevent="submitSignIn"
                   >
-                    <UAlert v-if="signInError" color="error" variant="soft" :title="signInError" />
-
                     <UFormField label="Email" required>
                       <UInput v-model="signInForm.email" type="email" placeholder="you@example.com" size="xl" />
                     </UFormField>
@@ -149,7 +171,7 @@ async function signInWithGitHub() {
                       <UInput v-model="signInForm.password" type="password" placeholder="Enter your password" size="xl" />
                     </UFormField>
 
-                    <UButton type="submit" color="primary" size="xl" block :loading="signInPending">
+                    <UButton type="submit" color="primary" size="xl" block :loading="isSignInPending">
                       Sign in
                     </UButton>
                   </form>
@@ -159,8 +181,6 @@ async function signInWithGitHub() {
                     class="mt-6 space-y-4"
                     @submit.prevent="submitSignUp"
                   >
-                    <UAlert v-if="signUpError" color="error" variant="soft" :title="signUpError" />
-
                     <UFormField label="Name" required>
                       <UInput v-model="signUpForm.name" placeholder="Your name" size="xl" />
                     </UFormField>
@@ -173,7 +193,7 @@ async function signInWithGitHub() {
                       <UInput v-model="signUpForm.password" type="password" placeholder="Choose a password" size="xl" />
                     </UFormField>
 
-                    <UButton type="submit" color="primary" size="xl" block :loading="signUpPending">
+                    <UButton type="submit" color="primary" size="xl" block :loading="isSignUpPending">
                       Create account
                     </UButton>
                   </form>
@@ -192,13 +212,11 @@ async function signInWithGitHub() {
                 variant="soft"
                 block
                 icon="i-simple-icons-github"
-                :loading="githubPending"
+                :loading="isGitHubPending"
                 @click="signInWithGitHub"
               >
                 Continue with GitHub
               </UButton>
-
-              <UAlert v-if="githubError" color="error" variant="soft" :title="githubError" />
             </div>
           </UCard>
         </section>
