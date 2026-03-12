@@ -38,10 +38,13 @@ export function resolveConvexRoot(nuxt: Nuxt, input = 'convex'): ResolvedConvexR
   }
 
   const layerDirs = getLayerDirectories(nuxt)
-  const readDir = layerDirs
+  const existingDir = layerDirs
     .map(layer => join(layer.root, input))
     .find(candidate => existsSync(candidate))
-    || projectDir
+  const generatedDir = layerDirs
+    .map(layer => join(layer.root, input))
+    .find(candidate => existsSync(join(candidate, '_generated')))
+  const readDir = generatedDir || existingDir || projectDir
 
   const fallsBackToProjectWrite = hasNodeModulesSegment(readDir)
 

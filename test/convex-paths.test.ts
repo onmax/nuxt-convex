@@ -79,4 +79,16 @@ describe('resolveConvexRoot', () => {
     expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
     expect(resolved.fallsBackToProjectWrite).toBe(true)
   }))
+
+  it('keeps reading from the generated layer when the project directory only exists for scaffolding', () => withTempLayers((projectRoot) => {
+    const dependencyLayer = join(projectRoot, 'node_modules', 'acme-layer')
+    mkdirSync(join(projectRoot, 'convex', '_hub'), { recursive: true })
+    mkdirSync(join(dependencyLayer, 'convex', '_generated'), { recursive: true })
+
+    const resolved = resolveConvexRoot(createNuxt(projectRoot, [projectRoot, dependencyLayer]), 'convex')
+
+    expect(resolved.readDir).toBe(join(dependencyLayer, 'convex'))
+    expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
+    expect(resolved.fallsBackToProjectWrite).toBe(true)
+  }))
 })
