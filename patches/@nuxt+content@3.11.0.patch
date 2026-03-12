@@ -1,0 +1,17 @@
+diff --git a/dist/module.mjs b/dist/module.mjs
+index a1d2cf1c1d332dd8a2d2e3ec80d51a4c6b0665ef..abc8edebf8ee376a53c41ddc6cdbe6c7099c9fa3 100644
+--- a/dist/module.mjs
++++ b/dist/module.mjs
+@@ -251,10 +251,8 @@ async function initiateValidatorsContext() {
+   if (await isPackageInstalled("valibot") && await isPackageInstalled("@valibot/to-json-schema")) {
+     nuxtContentContext().set("valibot", await import('./chunks/valibot.mjs'));
+   }
+-  if (await isPackageInstalled("zod")) {
+-    nuxtContentContext().set("zod3", await Promise.resolve().then(function () { return zod3; }));
+-    nuxtContentContext().set("zod4", await import('./chunks/zod4.mjs'));
+-  }
++  nuxtContentContext().set("zod3", await Promise.resolve().then(function () { return zod3; }));
++  nuxtContentContext().set("zod4", await import('./chunks/zod4.mjs'));
+ }
+ 
+ const databaseVersion = "v3.5.0";

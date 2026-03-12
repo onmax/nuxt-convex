@@ -4,6 +4,10 @@
   "version": "0.0.6",
   "private": true,
   "packageManager": "pnpm@10.15.1",
+  "dependencies": {
+    "zod": "catalog:",
+    "zod-to-json-schema": "catalog:"
+  },
   "scripts": {
     "build": "pnpm --filter @onmax/convex-vue build && pnpm --filter nuxt-convex build",
     "dev": "pnpm --filter nuxt-convex dev",
@@ -47,8 +51,6 @@
     "vitest": "catalog:test",
     "vitest-package-exports": "catalog:test",
     "vue": "catalog:nuxt",
-    "yaml": "catalog:",
-    "zod": "catalog:",
-    "zod-to-json-schema": "catalog:"
+    "yaml": "catalog:"
   }
 }

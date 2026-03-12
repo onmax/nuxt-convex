@@ -8,6 +8,7 @@ packages:
   - examples/*
 
 patchedDependencies:
+  '@nuxt/content@3.11.0': patches/@nuxt+content@3.11.0.patch
   unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
 catalog:
   '@nuxt/content': ^3.10.0
