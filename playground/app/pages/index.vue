@@ -3,7 +3,10 @@ definePageMeta({ middleware: 'guest' })
 
 type AuthTab = 'sign-in' | 'sign-up'
 
-const { signIn, signUp, user, waitForSession } = useUserSession()
+const { user, waitForSession } = useUserSession()
+const signInWithEmail = useSignIn('email')
+const signUpWithEmail = useSignUp('email')
+const signInWithSocial = useSignIn('social')
 
 const authTabs: Array<{ label: string, value: AuthTab, icon: string }> = [
   { label: 'Sign in', value: 'sign-in', icon: 'i-heroicons-arrow-right-end-on-rectangle' },
@@ -23,33 +26,18 @@ const signUpForm = reactive({
   password: '',
 })
 
-const signInPending = ref(false)
-const signUpPending = ref(false)
-const githubPending = ref(false)
-const signInError = ref<string | null>(null)
-const signUpError = ref<string | null>(null)
-const signUpNotice = ref<string | null>(null)
+const signInPending = computed(() => signInWithEmail.status.value === 'pending')
+const signUpPending = computed(() => signUpWithEmail.status.value === 'pending')
+const githubPending = computed(() => signInWithSocial.status.value === 'pending')
+const signInError = computed(() => signInWithEmail.error.value?.message || null)
+const signUpError = computed(() => signUpWithEmail.error.value?.message || null)
+const githubError = computed(() => signInWithSocial.error.value?.message || null)
 
 const features = [
   { icon: 'i-heroicons-bolt', title: 'Realtime', description: 'Live subscriptions sync data instantly across all clients' },
   { icon: 'i-heroicons-cloud-arrow-up', title: 'File Storage', description: 'Upload files directly to Convex with NuxtHub' },
   { icon: 'i-heroicons-shield-check', title: 'Email + Password', description: 'Basic Better Auth flows on top of Convex' },
 ]
-
-function getErrorMessage(error: unknown): string {
-  if (error && typeof error === 'object') {
-    const value = error as { message?: unknown, error?: unknown }
-    if (typeof value.message === 'string' && value.message.length > 0)
-      return value.message
-    if (value.error && typeof value.error === 'object' && typeof (value.error as { message?: unknown }).message === 'string')
-      return (value.error as { message: string }).message
-  }
-
-  if (error instanceof Error && error.message)
-    return error.message
-
-  return 'Authentication failed. Check your credentials and try again.'
-}
 
 async function finishAuthFlow() {
   await waitForSession()
@@ -58,71 +46,31 @@ async function finishAuthFlow() {
 }
 
 async function submitSignIn() {
-  signInPending.value = true
-  signInError.value = null
+  await signInWithEmail.execute({
+    email: signInForm.email,
+    password: signInForm.password,
+  })
 
-  try {
-    const result = await signIn.email({
-      email: signInForm.email,
-      password: signInForm.password,
-    })
-
-    if (result && typeof result === 'object' && 'error' in result && result.error) {
-      signInError.value = getErrorMessage(result.error)
-      return
-    }
-
+  if (signInWithEmail.status.value === 'success')
     await finishAuthFlow()
-  }
-  catch (error) {
-    signInError.value = getErrorMessage(error)
-  }
-  finally {
-    signInPending.value = false
-  }
 }
 
 async function submitSignUp() {
-  signUpPending.value = true
-  signUpError.value = null
-  signUpNotice.value = null
+  await signUpWithEmail.execute({
+    email: signUpForm.email,
+    name: signUpForm.name,
+    password: signUpForm.password,
+  })
 
-  try {
-    const result = await signUp.email({
-      email: signUpForm.email,
-      name: signUpForm.name,
-      password: signUpForm.password,
-    })
-
-    if (result && typeof result === 'object' && 'error' in result && result.error) {
-      signUpError.value = getErrorMessage(result.error)
-      return
-    }
-
+  if (signUpWithEmail.status.value === 'success') {
     signInForm.email = signUpForm.email
     signInForm.password = signUpForm.password
-    signUpNotice.value = 'Account created. Redirecting to the dashboard if the session is active.'
     await finishAuthFlow()
-  }
-  catch (error) {
-    signUpError.value = getErrorMessage(error)
-  }
-  finally {
-    signUpPending.value = false
   }
 }
 
 async function signInWithGitHub() {
-  githubPending.value = true
-  signInError.value = null
-
-  try {
-    await signIn.social({ provider: 'github' })
-  }
-  catch (error) {
-    signInError.value = getErrorMessage(error)
-    githubPending.value = false
-  }
+  await signInWithSocial.execute({ provider: 'github' })
 }
 </script>
 
@@ -212,7 +160,6 @@ async function signInWithGitHub() {
                     @submit.prevent="submitSignUp"
                   >
                     <UAlert v-if="signUpError" color="error" variant="soft" :title="signUpError" />
-                    <UAlert v-else-if="signUpNotice" color="success" variant="soft" :title="signUpNotice" />
 
                     <UFormField label="Name" required>
                       <UInput v-model="signUpForm.name" placeholder="Your name" size="xl" />
@@ -250,6 +197,8 @@ async function signInWithGitHub() {
               >
                 Continue with GitHub
               </UButton>
+
+              <UAlert v-if="githubError" color="error" variant="soft" :title="githubError" />
             </div>
           </UCard>
         </section>
