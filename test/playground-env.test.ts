@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getPlaygroundSiteUrl, getPlaygroundWorkerName, hasGitHubCredentials, isGitHubAuthEnabled, parseBooleanFlag } from '../playground/utils/playground-env'
+import { getPlaygroundSiteUrl, getPlaygroundWorkerName, hasGitHubCredentials, isGitHubAuthEnabled, parseBooleanFlag } from '../src/internal/playground-env'
 
 describe('playground env helpers', () => {
   it('uses stable defaults when preview env is unset', () => {

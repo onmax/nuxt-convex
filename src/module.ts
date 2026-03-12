@@ -41,7 +41,6 @@ export default defineNuxtModule<ConvexConfig>({
     const { resolve } = createResolver(import.meta.url)
     const config = resolveConfig(options)
 
-    // defu preserves user-defined config
     nuxt.options.runtimeConfig.public.convex = defu(
       nuxt.options.runtimeConfig.public.convex as Record<string, unknown> | undefined,
       { url: config.url, r2: config.r2 },
@@ -82,12 +81,10 @@ export const db = undefined
 
     addPlugin({ src: resolve('./runtime/plugin.client'), mode: 'client' })
 
-    // Auto-import composables
     addImports([
       { name: 'useConvexUpload', from: resolve('./runtime/composables/useConvexUpload') },
     ])
 
-    // More specific alias must be registered first to avoid #convex matching #convex/api
     setupConvexApiAlias(nuxt)
     if (config.r2) {
       setupConvexR2(nuxt, resolve)
@@ -216,7 +213,6 @@ declare module '#convex' {
 
   nuxt.options.alias['#convex'] = template.dst
 
-  // Auto-import core composables so users don't need manual imports
   addImports([
     { name: 'useConvexQuery', from: '#convex' },
     { name: 'useConvexMutation', from: '#convex' },
@@ -225,7 +221,6 @@ declare module '#convex' {
     { name: 'useConvexPaginatedQuery', from: '#convex' },
   ])
 
-  // Auto-import renderless components
   addComponent({ name: 'ConvexQuery', export: 'default', filePath: resolve('./runtime/components/ConvexQuery'), global: true })
   addComponent({ name: 'ConvexPaginatedQuery', export: 'default', filePath: resolve('./runtime/components/ConvexPaginatedQuery'), global: true })
 }
@@ -302,7 +297,6 @@ declare module '#convex/storage' {
 
   nuxt.options.alias['#convex/storage'] = template.dst
 
-  // Auto-import useConvexStorage when storage is enabled
   addImports({ name: 'useConvexStorage', from: '#convex/storage' })
 
   await scaffoldStorageFunctions(nuxt)

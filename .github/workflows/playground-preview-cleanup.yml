@@ -28,18 +28,39 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Validate cleanup configuration
+      - name: Detect cleanup configuration
+        id: cleanup-config
         run: |
+          missing_keys=""
           for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN; do
             if [ -z "${!key}" ]; then
-              echo "::error::Missing required preview cleanup configuration: ${key}"
-              exit 1
+              missing_keys="${missing_keys} ${key}"
             fi
           done
 
-      - run: pnpm install
+          if [ -n "${missing_keys}" ]; then
+            message="Skipping preview cleanup: missing${missing_keys}"
+            echo "::warning::${message}"
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "message=${message}" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.cleanup-config.outputs.enabled == 'true'
+        run: pnpm install
 
       - name: Delete preview worker
+        if: steps.cleanup-config.outputs.enabled == 'true'
         run: |
           worker_name="nuxt-convex-playground-pr-${{ github.event.pull_request.number }}"
           pnpm --dir playground exec wrangler delete "${worker_name}" --force
+
+      - name: Publish skipped cleanup summary
+        if: steps.cleanup-config.outputs.enabled != 'true'
+        run: |
+          {
+            echo "## Playground Preview Cleanup"
+            echo
+            echo "${{ steps.cleanup-config.outputs.message }}"
+          } >> "$GITHUB_STEP_SUMMARY"

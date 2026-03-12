@@ -34,26 +34,39 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Validate preview configuration
+      - name: Detect preview configuration
+        id: preview-config
         run: |
+          missing_keys=""
           for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN CLOUDFLARE_WORKERS_SUBDOMAIN PREVIEW_CONVEX_URL PREVIEW_CONVEX_SITE_URL; do
             if [ -z "${!key}" ]; then
-              echo "::error::Missing required preview configuration: ${key}"
-              exit 1
+              missing_keys="${missing_keys} ${key}"
             fi
           done
 
+          if [ -n "${missing_keys}" ]; then
+            message="Skipping playground preview: missing${missing_keys}"
+            echo "::warning::${message}"
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "message=${message}" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Compute preview metadata
         id: preview
+        if: steps.preview-config.outputs.enabled == 'true'
         run: |
           worker_name="nuxt-convex-playground-pr-${{ github.event.pull_request.number }}"
           preview_url="https://${worker_name}.${CLOUDFLARE_WORKERS_SUBDOMAIN}.workers.dev"
           echo "worker_name=${worker_name}" >> "$GITHUB_OUTPUT"
           echo "preview_url=${preview_url}" >> "$GITHUB_OUTPUT"
 
-      - run: pnpm install
+      - if: steps.preview-config.outputs.enabled == 'true'
+        run: pnpm install
 
       - name: Build playground
+        if: steps.preview-config.outputs.enabled == 'true'
         env:
           CONVEX_URL: ${{ env.PREVIEW_CONVEX_URL }}
           NUXT_PLAYGROUND_WORKER_NAME: ${{ steps.preview.outputs.worker_name }}
@@ -66,6 +79,7 @@ jobs:
         run: pnpm --dir playground build
 
       - name: Deploy preview worker
+        if: steps.preview-config.outputs.enabled == 'true'
         run: |
           pnpm --dir playground exec wrangler --cwd .output deploy \
             --var "CONVEX_URL:${PREVIEW_CONVEX_URL}" \
@@ -77,10 +91,20 @@ jobs:
             --var "VITE_CONVEX_SITE_URL:${PREVIEW_CONVEX_SITE_URL}"
 
       - name: Publish preview summary
+        if: steps.preview-config.outputs.enabled == 'true'
         run: |
           {
             echo "## Playground Preview"
             echo
             echo "- Worker: \`${{ steps.preview.outputs.worker_name }}\`"
             echo "- URL: [${{ steps.preview.outputs.preview_url }}](${{ steps.preview.outputs.preview_url }})"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish skipped preview summary
+        if: steps.preview-config.outputs.enabled != 'true'
+        run: |
+          {
+            echo "## Playground Preview"
+            echo
+            echo "${{ steps.preview-config.outputs.message }}"
           } >> "$GITHUB_STEP_SUMMARY"
