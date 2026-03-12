@@ -27,7 +27,7 @@ describe('nuxt-convex layered defaults', async () => {
 
   it('keeps scaffolded storage imports aligned with the authoritative generated server file', () => {
     const storageSource = readFileSync(storagePath, 'utf8')
-    const match = storageSource.match(/from '([^']+)'/)
+    const match = storageSource.match(/import\s+\{\s*mutation,\s*query\s*\}\s+from\s+'([^']+)'/)
 
     expect(match?.[1]).toBeDefined()
     expect(resolve(join(baseDir, 'convex/_hub'), match![1])).toBe(join(baseDir, 'convex/_generated/server'))

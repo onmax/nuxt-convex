@@ -1,7 +1,7 @@
-import type { UseConvexQueryOptions } from '@onmax/convex-vue'
+import type { UseConvexQueryOptions } from 'convex-vue'
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
 import type { PropType } from 'vue'
-import { useConvexQuery } from '@onmax/convex-vue'
+import { useConvexQuery } from 'convex-vue'
 import { computed, defineComponent } from 'vue'
 
 type QueryReference = FunctionReference<'query'>
