@@ -11,7 +11,7 @@ import authConfig from './auth.config'
 const siteUrl = getPlaygroundSiteUrl()
 const enableGitHubAuth = isGitHubAuthEnabled()
 
-export const authComponent = createClient<DataModel>(components.betterAuth)
+export const authComponent = createClient<DataModel>(components.betterAuth, { cors: true })
 
 export function createAuth(ctx: GenericCtx<DataModel>): ReturnType<typeof betterAuth> {
   return betterAuth({
