@@ -17,9 +17,11 @@ interface QueryListener {
 
 function createHarness({
   client,
+  httpClient,
   storage,
 }: {
-  client: Record<string, any>
+  client?: Record<string, any>
+  httpClient?: { query: ReturnType<typeof vi.fn> }
   storage?: ConvexStorageReferences
 }) {
   const app = createApp({ render: () => null })
@@ -30,7 +32,7 @@ function createHarness({
       storage,
     }),
     clientRef: shallowRef(client) as ConvexVueContext['clientRef'],
-    httpClientRef: shallowRef(undefined),
+    httpClientRef: shallowRef(httpClient as ConvexVueContext['httpClientRef']['value']) as ConvexVueContext['httpClientRef'],
     initClient: vi.fn(),
   }
 
@@ -70,6 +72,7 @@ describe('@onmax/convex-vue', () => {
     if (originalFetch)
       globalThis.fetch = originalFetch
     originalFetch = undefined
+    vi.unstubAllGlobals()
   })
 
   it('subscribes queries and surfaces realtime errors', async () => {
@@ -96,6 +99,26 @@ describe('@onmax/convex-vue', () => {
     await nextTick()
     expect(state.data.value).toBeUndefined()
     expect(state.error.value).toBe(failure)
+
+    harness.stop()
+  })
+
+  it('falls back to the http client when suspense waits for an initial client result', async () => {
+    const httpClient = {
+      query: vi.fn(async () => [{ _id: 'task-http' }]),
+    }
+    const harness = createHarness({
+      client: {
+        onUpdate: vi.fn(() => () => {}),
+      },
+      httpClient,
+    })
+
+    const state = harness.run(() => useConvexQuery(queryRef, { userId: '1' }))
+
+    await expect(state.suspense()).resolves.toEqual([{ _id: 'task-http' }])
+    expect(httpClient.query).toHaveBeenCalledWith(queryRef, { userId: '1' })
+    expect(state.data.value).toEqual([{ _id: 'task-http' }])
 
     harness.stop()
   })
@@ -189,6 +212,19 @@ describe('@onmax/convex-vue', () => {
     await expect(upload.upload(file)).resolves.toBe('storage-1')
     await expect(storage.remove('storage-1')).resolves.toBeUndefined()
     expect(client.mutation).toHaveBeenCalledWith(storageRefs.remove, { storageId: 'storage-1' })
+
+    harness.stop()
+  })
+
+  it('does not require a realtime client just to create storage helpers during SSR', async () => {
+    vi.stubGlobal('window', undefined)
+
+    const harness = createHarness({ storage: storageRefs })
+    const storage = harness.run(() => useConvexStorage())
+    const fileUrl = harness.run(() => storage.getUrl('storage-1'))
+
+    expect(fileUrl.value).toBeNull()
+    await expect(storage.generateUploadUrl()).rejects.toThrow('[convex-vue] Convex client is not initialized')
 
     harness.stop()
   })

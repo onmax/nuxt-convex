@@ -21,8 +21,9 @@ export default defineComponent({
       const value = state.data.value as FunctionReturnType<QueryReference> | undefined
       return value === undefined || (Array.isArray(value) && value.length === 0)
     })
+    const shouldAwaitServerData = props.suspense || (typeof window === 'undefined' && (props.options?.server ?? true))
 
-    if (props.suspense)
+    if (shouldAwaitServerData)
       await state.suspense()
 
     return () => {

@@ -1,5 +1,7 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
+import type { Value } from 'convex/values'
 import type { MaybeRefOrGetter, Ref } from 'vue'
+import { getFunctionName } from 'convex/server'
 import { computed, onScopeDispose, ref, toValue, watch } from 'vue'
 import { useConvexContext } from './internal/useConvexContext'
 import { useConvexClient } from './useConvexClient'
@@ -57,10 +59,22 @@ export function useConvexQuery<Query extends QueryReference>(
   const queryArgs = computed(() => toValue(args))
   const data = ref<FunctionReturnType<Query> | undefined>(undefined)
   const error = ref<Error | null>(null)
+  const queryName = (query as { _name?: string })._name ?? getFunctionName(query)
 
   let unsubscribe: (() => void) | null = null
+  let initialFetchPromise: Promise<FunctionReturnType<Query> | undefined> | null = null
+
+  const seedFromClientCache = (nextArgs: FunctionArgs<Query>): void => {
+    const cached = client.client?.localQueryResult?.(queryName, nextArgs as Record<string, Value>)
+    if (cached === undefined)
+      return
+
+    data.value = cached as FunctionReturnType<Query>
+    error.value = null
+  }
 
   const subscribe = (nextArgs: FunctionArgs<Query>): void => {
+    seedFromClientCache(nextArgs)
     unsubscribe?.()
     unsubscribe = client.onUpdate(
       query,
@@ -76,6 +90,34 @@ export function useConvexQuery<Query extends QueryReference>(
     )
   }
 
+  const fetchInitialData = async (): Promise<FunctionReturnType<Query> | undefined> => {
+    if (!serverEnabled)
+      return undefined
+    if (data.value !== undefined)
+      return data.value
+    if (error.value)
+      throw error.value
+    if (!initialFetchPromise) {
+      initialFetchPromise = (async () => {
+        try {
+          const result = await context.httpClientRef.value?.query(query, queryArgs.value)
+          data.value = result as FunctionReturnType<Query> | undefined
+          error.value = null
+          return data.value
+        }
+        catch (err) {
+          error.value = err instanceof Error ? err : new Error(String(err))
+          throw error.value
+        }
+        finally {
+          initialFetchPromise = null
+        }
+      })()
+    }
+
+    return await initialFetchPromise
+  }
+
   watch(queryArgs, subscribe, { immediate: true, deep: true })
   onScopeDispose(() => unsubscribe?.())
 
@@ -88,6 +130,8 @@ export function useConvexQuery<Query extends QueryReference>(
         return Promise.resolve(data.value)
       if (error.value)
         return Promise.reject(error.value)
+      if (serverEnabled)
+        return fetchInitialData()
 
       return new Promise((resolve, reject) => {
         const stop = watch([data, error], ([nextData, nextError]) => {

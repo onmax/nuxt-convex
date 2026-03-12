@@ -2,7 +2,6 @@ import type { Ref } from 'vue'
 import { readonly, ref } from 'vue'
 import { useConvexContext } from './internal/useConvexContext'
 import { useRealtimeQuery } from './internal/useRealtimeQuery'
-import { useConvexClient } from './useConvexClient'
 
 export interface ConvexStorageReturn {
   generateUploadUrl: () => Promise<string>
@@ -11,9 +10,13 @@ export interface ConvexStorageReturn {
 }
 
 export function useConvexStorage(): ConvexStorageReturn {
-  const client = useConvexClient()
   const context = useConvexContext()
   const storage = context.options.value.storage
+  const getClient = (): NonNullable<typeof context.clientRef.value> => {
+    if (!context.clientRef.value)
+      throw new Error('[convex-vue] Convex client is not initialized')
+    return context.clientRef.value
+  }
 
   if (!storage) {
     console.warn('[convex-vue] Storage is not configured')
@@ -24,10 +27,12 @@ export function useConvexStorage(): ConvexStorageReturn {
       if (!storage?.generateUploadUrl)
         throw new Error('[convex-vue] Storage generateUploadUrl function is not configured')
 
-      return await client.mutation(storage.generateUploadUrl, {})
+      return await getClient().mutation(storage.generateUploadUrl, {})
     },
     getUrl(storageId) {
       if (!storage?.getUrl)
+        return readonly(ref<string | null>(null))
+      if (typeof window === 'undefined' || !context.clientRef.value)
         return readonly(ref<string | null>(null))
 
       const { data } = useRealtimeQuery(storage.getUrl, () => ({ storageId }))
@@ -37,7 +42,7 @@ export function useConvexStorage(): ConvexStorageReturn {
       if (!storage?.remove)
         throw new Error('[convex-vue] Storage remove function is not configured')
 
-      await client.mutation(storage.remove, { storageId })
+      await getClient().mutation(storage.remove, { storageId })
     },
   }
 }

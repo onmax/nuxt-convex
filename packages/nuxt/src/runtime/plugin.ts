@@ -23,8 +23,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   if (config.storage) {
     try {
-      const { storageRefs } = await import('#convex/storage-refs')
-      const storage = storageRefs
+      const { getStorageRefs } = await import('#convex/storage-refs')
+      const storage = await getStorageRefs()
       if (storage?.generateUploadUrl && storage?.getUrl && storage?.remove)
         options.storage = storage as ConvexStorageReferences
     }

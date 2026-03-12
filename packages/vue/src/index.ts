@@ -5,6 +5,7 @@ export type {
   ConvexVueOptions,
   ResolvedConvexVueOptions,
 } from './internal/context'
+export { useConvexContext } from './internal/useConvexContext'
 export { convexVue } from './plugin'
 export { useConvexAction } from './useConvexAction'
 export type { UseConvexActionReturn } from './useConvexAction'
