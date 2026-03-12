@@ -123,6 +123,41 @@ describe('@onmax/convex-vue', () => {
     harness.stop()
   })
 
+  it('does not let stale suspense fetches overwrite data after args change', async () => {
+    let resolveInitialFetch: ((value: Array<{ _id: string }>) => void) | null = null
+    const httpClient = {
+      query: vi.fn(() => new Promise<Array<{ _id: string }>>((resolve) => {
+        resolveInitialFetch = resolve
+      })),
+    }
+    const harness = createHarness({
+      client: {
+        onUpdate: vi.fn((_query, _args, onResult, onError) => {
+          listeners.push({ onResult, onError })
+          return () => {}
+        }),
+      },
+      httpClient,
+    })
+    const args = ref({ userId: '1' })
+    const state = harness.run(() => useConvexQuery(queryRef, args))
+
+    const staleFetch = state.suspense()
+
+    args.value = { userId: '2' }
+    await nextTick()
+
+    listeners[1].onResult([{ _id: 'task-live' }])
+    await nextTick()
+
+    expect(resolveInitialFetch).toBeTypeOf('function')
+    resolveInitialFetch!([{ _id: 'task-stale' }])
+    await expect(staleFetch).resolves.toEqual([{ _id: 'task-stale' }])
+    expect(state.data.value).toEqual([{ _id: 'task-live' }])
+
+    harness.stop()
+  })
+
   it('keeps server-disabled queries pending during SSR until the client can subscribe', () => {
     vi.stubGlobal('window', undefined)
 

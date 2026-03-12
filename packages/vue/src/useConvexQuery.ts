@@ -62,7 +62,11 @@ export function useConvexQuery<Query extends QueryReference>(
   const queryName = (query as { _name?: string })._name ?? getFunctionName(query)
 
   let unsubscribe: (() => void) | null = null
-  let initialFetchPromise: Promise<FunctionReturnType<Query> | undefined> | null = null
+  let currentVersion = 0
+  let pendingFetch: {
+    version: number
+    promise: Promise<FunctionReturnType<Query> | undefined>
+  } | null = null
 
   const seedFromClientCache = (nextArgs: FunctionArgs<Query>): void => {
     const cached = client.client?.localQueryResult?.(queryName, nextArgs as Record<string, Value>)
@@ -74,16 +78,21 @@ export function useConvexQuery<Query extends QueryReference>(
   }
 
   const subscribe = (nextArgs: FunctionArgs<Query>): void => {
+    const version = ++currentVersion
     seedFromClientCache(nextArgs)
     unsubscribe?.()
     unsubscribe = client.onUpdate(
       query,
       nextArgs,
       (result) => {
+        if (version !== currentVersion)
+          return
         data.value = result
         error.value = null
       },
       (err) => {
+        if (version !== currentVersion)
+          return
         data.value = undefined
         error.value = err
       },
@@ -97,25 +106,34 @@ export function useConvexQuery<Query extends QueryReference>(
       return data.value
     if (error.value)
       throw error.value
-    if (!initialFetchPromise) {
-      initialFetchPromise = (async () => {
-        try {
-          const result = await context.httpClientRef.value?.query(query, queryArgs.value)
+    if (pendingFetch?.version === currentVersion)
+      return await pendingFetch.promise
+
+    const version = currentVersion
+    const nextArgs = queryArgs.value
+    const promise = (async () => {
+      try {
+        const result = await context.httpClientRef.value?.query(query, nextArgs)
+        if (version === currentVersion) {
           data.value = result as FunctionReturnType<Query> | undefined
           error.value = null
-          return data.value
         }
-        catch (err) {
-          error.value = err instanceof Error ? err : new Error(String(err))
-          throw error.value
-        }
-        finally {
-          initialFetchPromise = null
-        }
-      })()
-    }
+        return result as FunctionReturnType<Query> | undefined
+      }
+      catch (err) {
+        const normalizedError = err instanceof Error ? err : new Error(String(err))
+        if (version === currentVersion)
+          error.value = normalizedError
+        throw normalizedError
+      }
+      finally {
+        if (pendingFetch?.version === version)
+          pendingFetch = null
+      }
+    })()
 
-    return await initialFetchPromise
+    pendingFetch = { version, promise }
+    return await promise
   }
 
   watch(queryArgs, subscribe, { immediate: true, deep: true })
