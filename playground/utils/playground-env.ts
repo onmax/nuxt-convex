@@ -4,4 +4,4 @@ export {
   hasGitHubCredentials,
   isGitHubAuthEnabled,
   parseBooleanFlag,
-} from '../../src/internal/playground-env'
+} from '../../packages/nuxt/src/internal/playground-env'

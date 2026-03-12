@@ -7,19 +7,14 @@ const { user } = useUserSession()
 const userId = computed(() => user.value?.id || '')
 
 // Paginated query composable
-const { data, pages, isDone, isLoadingMore, loadMore, reset, isLoading } = useConvexPaginatedQuery(
+const { data, pages, isDone, isLoadingMore, loadMore, reset, isPending } = useConvexPaginatedQuery(
   api.tasks.listPaginated,
   computed(() => ({ userId: userId.value })),
   { numItems: 5 },
 )
 
 // Seed mutation for demo
-const { mutate: seedTasks, isLoading: isSeeding } = useConvexMutation(api.tasks.seed, {
-  onSuccess: (count) => {
-    toast.add({ title: `Created ${count} sample tasks`, color: 'success' })
-    reset()
-  },
-})
+const { mutate: seedTasks, isPending: isSeeding } = useConvexMutation(api.tasks.seed)
 
 // Delete all for cleanup
 const { mutate: deleteTask } = useConvexMutation(api.tasks.remove)
@@ -37,6 +32,12 @@ async function clearAll() {
     reset()
   }
 }
+
+async function handleSeed() {
+  const count = await seedTasks({ userId: userId.value, count: 25 })
+  toast.add({ title: `Created ${count} sample tasks`, color: 'success' })
+  reset()
+}
 </script>
 
 <template>
@@ -50,7 +51,7 @@ async function clearAll() {
             <span class="font-semibold">useConvexPaginatedQuery</span>
           </div>
           <div class="flex items-center gap-2">
-            <UButton size="xs" variant="outline" :loading="isSeeding" @click="seedTasks({ userId, count: 25 })">
+            <UButton size="xs" variant="outline" :loading="isSeeding" @click="handleSeed">
               Seed 25 Tasks
             </UButton>
             <UButton size="xs" variant="outline" color="error" :loading="isClearing" :disabled="!data?.length" @click="clearAll">
@@ -64,7 +65,7 @@ async function clearAll() {
         Load data in pages with <code class="bg-muted px-1 rounded">loadMore()</code>. Great for infinite scroll.
       </div>
 
-      <div v-if="isLoading && !data?.length" class="flex items-center gap-2 text-muted py-4">
+      <div v-if="isPending && !data?.length" class="flex items-center gap-2 text-muted py-4">
         <UIcon name="i-heroicons-arrow-path" class="animate-spin" />
         Loading first page...
       </div>
@@ -103,9 +104,9 @@ async function clearAll() {
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
         <div class="flex flex-col gap-1">
-          <span class="text-muted">isLoading</span>
-          <UBadge :color="isLoading ? 'warning' : 'neutral'" variant="subtle">
-            {{ isLoading }}
+          <span class="text-muted">isPending</span>
+          <UBadge :color="isPending ? 'warning' : 'neutral'" variant="subtle">
+            {{ isPending }}
           </UBadge>
         </div>
         <div class="flex flex-col gap-1">

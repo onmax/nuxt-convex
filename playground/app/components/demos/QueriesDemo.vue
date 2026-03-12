@@ -5,10 +5,10 @@ const { user } = useUserSession()
 const userId = computed(() => user.value?.id || '')
 
 // SSR-enabled query (default)
-const { data: tasksSSR, pending: pendingSSR } = await useConvexQuery(api.tasks.list, computed(() => ({ userId: userId.value })))
+const { data: tasksSSR, isPending: pendingSSR } = useConvexQuery(api.tasks.list, computed(() => ({ userId: userId.value })))
 
-// Client-only query (ssr: false)
-const { data: tasksClient, pending: pendingClient } = await useConvexQuery(api.tasks.list, computed(() => ({ userId: userId.value })), { ssr: false })
+// Client-only query (server: false)
+const { data: tasksClient, isPending: pendingClient } = useConvexQuery(api.tasks.list, computed(() => ({ userId: userId.value })), { server: false })
 
 // Reactive args demo - showCompleted is used in UI to demonstrate computed() args pattern
 const showCompleted = ref(false)
@@ -53,7 +53,7 @@ const filterArgs = computed(() => ({ userId: userId.value }))
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon name="i-heroicons-computer-desktop" class="text-secondary" />
-          <span class="font-semibold">useConvexQuery (ssr: false)</span>
+          <span class="font-semibold">useConvexQuery (server: false)</span>
         </div>
       </template>
 

@@ -1,5 +1,7 @@
-// Redirects authenticated users to dashboard
 export default defineNuxtRouteMiddleware(async () => {
+  if (import.meta.server)
+    return
+
   const { user, waitForSession } = useUserSession()
   await waitForSession()
 

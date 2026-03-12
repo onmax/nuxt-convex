@@ -29,11 +29,6 @@ jobs:
 
       - run: npm i -g --force corepack && corepack enable
 
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-
       - name: Detect preview configuration
         id: preview-config
         run: |
@@ -52,6 +47,12 @@ jobs:
           else
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - uses: actions/setup-node@v5
+        if: steps.preview-config.outputs.enabled == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
 
       - name: Compute preview metadata
         id: preview

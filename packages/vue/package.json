@@ -1,0 +1,54 @@
+{
+  "name": "@onmax/convex-vue",
+  "type": "module",
+  "version": "0.0.6",
+  "description": "Vue composables and plugin for Convex",
+  "author": "onmax",
+  "license": "MIT",
+  "homepage": "https://github.com/onmax/nuxt-convex#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onmax/nuxt-convex.git",
+    "directory": "packages/vue"
+  },
+  "bugs": {
+    "url": "https://github.com/onmax/nuxt-convex/issues"
+  },
+  "keywords": [
+    "vue",
+    "convex",
+    "composables",
+    "realtime",
+    "typescript"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "peerDependencies": {
+    "convex": ">=1.0.0",
+    "vue": "^3.5.0"
+  }
+}

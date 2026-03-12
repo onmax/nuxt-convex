@@ -23,11 +23,6 @@ jobs:
 
       - run: npm i -g --force corepack && corepack enable
 
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-
       - name: Detect cleanup configuration
         id: cleanup-config
         run: |
@@ -46,6 +41,12 @@ jobs:
           else
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - uses: actions/setup-node@v5
+        if: steps.cleanup-config.outputs.enabled == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
 
       - if: steps.cleanup-config.outputs.enabled == 'true'
         run: pnpm install

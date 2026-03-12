@@ -16,6 +16,8 @@
     "@vercel/speed-insights": "catalog:",
     "docus": "catalog:",
     "nuxt": "catalog:",
-    "tailwindcss": "catalog:"
+    "tailwindcss": "catalog:",
+    "zod": "catalog:",
+    "zod-to-json-schema": "catalog:"
   }
 }

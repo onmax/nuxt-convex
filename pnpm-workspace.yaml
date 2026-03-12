@@ -2,10 +2,13 @@ shellEmulator: true
 
 trustPolicy: no-downgrade
 packages:
+  - packages/*
   - playground
   - docs
+  - examples/*
 
 patchedDependencies:
+  '@nuxt/content@3.11.0': patches/@nuxt+content@3.11.0.patch
   unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
 catalog:
   '@nuxt/content': ^3.10.0
@@ -18,10 +21,14 @@ catalog:
   nuxt: ^4.2.2
   tailwindcss: ^4.0.0
   yaml: ^2.8.2
+  zod: ^3.25.76
+  zod-to-json-schema: ^3.25.1
 
 catalogs:
   build:
     '@nuxt/module-builder': ^1.0.2
+    publint: ^0.3.12
+    tsdown: ^0.15.8
     typescript: ^5.9.3
   convex:
     '@convex-dev/better-auth': https://pkg.pr.new/get-convex/better-auth/@convex-dev/better-auth@292
@@ -48,11 +55,15 @@ catalogs:
   test:
     '@nuxt/test-utils': ^3.23.0
     '@vue/test-utils': ^2.4.6
+    jsdom: ^26.1.0
     vitest: ^4.0.16
     vitest-package-exports: ^1.1.2
   types:
     '@types/node': ^25.0.5
 
+  vite:
+    '@vitejs/plugin-vue': ^6.0.1
+    vite: ^7.1.7
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp

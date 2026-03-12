@@ -1,5 +1,0 @@
-export type { UseConvexQueryOptions } from '../runtime/composables/useConvexQuery'
-export type { ConvexR2Api, UseConvexR2UploadOptions, UseConvexR2UploadReturn } from '../runtime/composables/useConvexR2Upload'
-export type { ConvexStorageApi, ConvexStorageReturn } from '../runtime/composables/useConvexStorage'
-export type { UseConvexUploadOptions, UseConvexUploadReturn } from '../runtime/composables/useConvexUpload'
-export type { ConvexConfig, ResolvedConvexConfig } from './config'

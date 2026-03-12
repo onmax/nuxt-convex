@@ -4,20 +4,20 @@ import { api } from '#convex/api'
 const message = ref('Hello, Convex!')
 const delay = ref(1000)
 const result = ref<string | null>(null)
+const toast = useToast()
 
-const { mutate: runEcho, isLoading, error } = useConvexAction(api.actions.echo, {
-  onSuccess: (data) => {
-    result.value = data
-    useToast().add({ title: 'Action completed', description: data, color: 'success' })
-  },
-  onError: (err) => {
-    useToast().add({ title: 'Action failed', description: err.message, color: 'error' })
-  },
-})
+const { execute: runEcho, isPending, error } = useConvexAction(api.actions.echo)
 
 async function handleRun() {
   result.value = null
-  await runEcho({ message: message.value, delay: delay.value })
+  try {
+    const data = await runEcho({ message: message.value, delay: delay.value })
+    result.value = data
+    toast.add({ title: 'Action completed', description: data, color: 'success' })
+  }
+  catch (err) {
+    toast.add({ title: 'Action failed', description: (err as Error).message, color: 'error' })
+  }
 }
 </script>
 
@@ -45,7 +45,7 @@ async function handleRun() {
           <span class="text-xs text-muted">ms</span>
         </div>
 
-        <UButton :loading="isLoading" :disabled="!message.trim()" @click="handleRun">
+        <UButton :loading="isPending" :disabled="!message.trim()" @click="handleRun">
           Run Echo Action
         </UButton>
       </div>
@@ -61,15 +61,15 @@ async function handleRun() {
       </template>
 
       <div class="text-sm text-muted mb-4">
-        Actions expose <code class="bg-muted px-1 rounded">isLoading</code> for UI feedback during execution.
+        Actions expose <code class="bg-muted px-1 rounded">isPending</code> for UI feedback during execution.
       </div>
 
       <div class="flex items-center gap-4">
-        <span class="text-sm text-muted">isLoading:</span>
-        <UBadge :color="isLoading ? 'warning' : 'neutral'" variant="subtle">
-          {{ isLoading }}
+        <span class="text-sm text-muted">isPending:</span>
+        <UBadge :color="isPending ? 'warning' : 'neutral'" variant="subtle">
+          {{ isPending }}
         </UBadge>
-        <div v-if="isLoading" class="flex items-center gap-2 text-muted">
+        <div v-if="isPending" class="flex items-center gap-2 text-muted">
           <UIcon name="i-heroicons-arrow-path" class="animate-spin" />
           <span class="text-sm">Running action...</span>
         </div>
