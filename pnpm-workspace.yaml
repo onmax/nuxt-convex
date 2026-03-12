@@ -2,8 +2,10 @@ shellEmulator: true
 
 trustPolicy: no-downgrade
 packages:
+  - packages/*
   - playground
   - docs
+  - examples/*
 
 patchedDependencies:
   '@onmax/nuxt-better-auth@0.0.2-alpha.19': patches/@onmax__nuxt-better-auth@0.0.2-alpha.19.patch
@@ -23,6 +25,8 @@ catalog:
 catalogs:
   build:
     '@nuxt/module-builder': ^1.0.2
+    publint: ^0.3.12
+    tsdown: ^0.15.8
     typescript: ^5.9.3
   convex:
     '@convex-dev/better-auth': ^0.10.10
@@ -48,11 +52,15 @@ catalogs:
   test:
     '@nuxt/test-utils': ^3.23.0
     '@vue/test-utils': ^2.4.6
+    jsdom: ^26.1.0
     vitest: ^4.0.16
     vitest-package-exports: ^1.1.2
   types:
     '@types/node': ^25.0.5
 
+  vite:
+    '@vitejs/plugin-vue': ^6.0.1
+    vite: ^7.1.7
 onlyBuiltDependencies:
   - better-sqlite3
   - sharp

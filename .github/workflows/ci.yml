@@ -24,6 +24,18 @@ jobs:
       - run: pnpm install
       - run: pnpm lint
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: npm i -g --force corepack && corepack enable
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm build
+
   typecheck:
     runs-on: ubuntu-latest
     steps:
@@ -34,7 +46,6 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install
-      - run: pnpm dev:prepare
       - run: pnpm typecheck
 
   test:
@@ -47,11 +58,10 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install
-      - run: pnpm dev:prepare
       - run: pnpm test
 
-  publish:
-    needs: [lint, typecheck, test]
+  package-check:
+    needs: [build, typecheck, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -61,6 +71,6 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install
-      - run: pnpm dev:prepare
-      - run: pnpm prepack
-      - run: pnpx pkg-pr-new publish --no-template --pnpm
+      - run: pnpm build
+      - run: pnpm validate:packages
+      - run: pnpm preview:packages

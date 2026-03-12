@@ -2,9 +2,9 @@
   <img src="https://raw.githubusercontent.com/onmax/nuxt-convex/main/.github/og.webp" alt="Nuxt Convex" width="100%">
 </p>
 
-<h1 align="center">nuxt-convex</h1>
+<h1 align="center">convex vue + nuxt</h1>
 
-<p align="center">Nuxt module for <a href="https://convex.dev">Convex</a></p>
+<p align="center">Standalone Vue composables and a Nuxt module for <a href="https://convex.dev">Convex</a></p>
 
 <p align="center">
   <a href="https://npmjs.com/package/nuxt-convex"><img src="https://img.shields.io/npm/v/nuxt-convex/latest.svg?style=flat&colorA=020420&colorB=00DC82" alt="npm version"></a>
@@ -13,8 +13,18 @@
   <a href="https://nuxt.com"><img src="https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js" alt="Nuxt"></a>
 </p>
 
-> [!WARNING]
-> This library is a work in progress and not ready for production use.
+## Packages
+
+- `@onmax/convex-vue`: the standalone Vue plugin and composables
+- `nuxt-convex`: the Nuxt adapter built on top of `@onmax/convex-vue`
+
+## Workspace
+
+- `packages/vue`: publishable Vue core
+- `packages/nuxt`: publishable Nuxt module
+- `examples/vue`: standalone Vite example for `@onmax/convex-vue`
+- `playground`: Nuxt integration playground
+- `docs`: shared documentation site for both layers
 
 ## Documentation
 

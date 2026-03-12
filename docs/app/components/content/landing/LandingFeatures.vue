@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const features = [
   { title: 'Real-time by default', description: 'Queries auto-update when data changes. No manual refetching or polling needed.', icon: 'i-lucide-zap' },
-  { title: 'Virtual modules', description: 'Import from #convex, #convex/api, and #convex/storage with full type safety.', icon: 'i-lucide-box' },
+  { title: 'Virtual modules', description: 'Import from #convex and #convex/api with full type safety.', icon: 'i-lucide-box' },
   { title: 'Auto-imports', description: 'Composables available globally without manual imports. Just use them.', icon: 'i-lucide-wand-2' },
   { title: 'File storage', description: 'Built-in upload API with progress tracking and auto-scaffolded Convex functions.', icon: 'i-lucide-hard-drive' },
   { title: 'DevTools', description: 'Convex dashboard tab integrated directly into Nuxt DevTools.', icon: 'i-lucide-bug' },

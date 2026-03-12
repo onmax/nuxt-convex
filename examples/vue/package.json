@@ -1,0 +1,18 @@
+{
+  "name": "convex-vue-example",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@onmax/convex-vue": "workspace:*",
+    "convex": "catalog:convex",
+    "vue": "catalog:nuxt"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "catalog:vite",
+    "vite": "catalog:vite"
+  }
+}

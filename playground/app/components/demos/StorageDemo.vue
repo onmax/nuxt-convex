@@ -7,15 +7,11 @@ const userId = computed(() => user.value?.id || '')
 
 const fileInput = ref<HTMLInputElement>()
 const selectedFile = ref<File | null>(null)
+const convex = useConvexClient()
 
 // Upload composable
 const { upload, isUploading, progress, error: uploadError } = useConvexUpload({
-  generateUploadUrl: { mutate: async () => {
-    const convex = useConvex()
-    return await convex.mutation(api._hub.storage.generateUploadUrl, {})
-  } },
   onSuccess: async (storageId, file) => {
-    const convex = useConvex()
     await convex.mutation(api._hub.storage.saveFile, { storageId, name: file.name, type: file.type, userId: userId.value })
     toast.add({ title: 'File uploaded', description: file.name, color: 'success' })
     selectedFile.value = null
@@ -26,7 +22,7 @@ const { upload, isUploading, progress, error: uploadError } = useConvexUpload({
 })
 
 // Query uploads
-const { data: uploads } = await useConvexQuery(api._hub.storage.list, computed(() => ({ userId: userId.value })))
+const { data: uploads } = useConvexQuery(api._hub.storage.list, computed(() => ({ userId: userId.value })))
 
 // Delete mutation
 const { mutate: deleteUpload } = useConvexMutation(api._hub.storage.remove)
@@ -135,7 +131,7 @@ async function handleUpload() {
       </template>
 
       <div class="text-sm text-muted mb-4">
-        <code class="bg-muted px-1 rounded">useConvexStorage().getUrl()</code> returns reactive URLs.
+        <code class="bg-muted px-1 rounded">useConvexStorage().getUrl()</code> is zero-argument and returns reactive URLs.
       </div>
 
       <div v-if="uploads?.length" class="grid grid-cols-2 md:grid-cols-3 gap-4">

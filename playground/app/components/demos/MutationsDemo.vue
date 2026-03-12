@@ -9,26 +9,25 @@ const userId = computed(() => user.value?.id || '')
 const newTaskTitle = ref('')
 
 // Basic mutation
-const { mutate: addTask, isLoading: isAdding, error: addError } = useConvexMutation(api.tasks.add, {
-  onSuccess: () => {
-    newTaskTitle.value = ''
-    toast.add({ title: 'Task added', color: 'success' })
-  },
-  onError: (err) => {
-    toast.add({ title: 'Failed to add task', description: err.message, color: 'error' })
-  },
-})
+const { mutate: addTask, isPending: isAdding, error: addError } = useConvexMutation(api.tasks.add)
 
 // Query for list
-const { data: tasks } = await useConvexQuery(api.tasks.list, computed(() => ({ userId: userId.value })))
+const { data: tasks } = useConvexQuery(api.tasks.list, computed(() => ({ userId: userId.value })))
 
 // Delete mutation
-const { mutate: deleteTask, isLoading: isDeleting } = useConvexMutation(api.tasks.remove)
+const { mutate: deleteTask, isPending: isDeleting } = useConvexMutation(api.tasks.remove)
 
 async function handleAdd() {
   if (!newTaskTitle.value.trim())
     return
-  await addTask({ title: newTaskTitle.value, userId: userId.value })
+  try {
+    await addTask({ title: newTaskTitle.value, userId: userId.value })
+    newTaskTitle.value = ''
+    toast.add({ title: 'Task added', color: 'success' })
+  }
+  catch (err) {
+    toast.add({ title: 'Failed to add task', description: (err as Error).message, color: 'error' })
+  }
 }
 
 async function handleDelete(id: Id<'tasks'>) {
@@ -36,7 +35,7 @@ async function handleDelete(id: Id<'tasks'>) {
 }
 
 // Mutation with optimistic update
-const { mutate: addOptimistic, isLoading: isAddingOptimistic } = useConvexMutation(api.tasks.add, {
+const { mutate: addOptimistic, isPending: isAddingOptimistic } = useConvexMutation(api.tasks.add, {
   optimisticUpdate: (localStore, args) => {
     const current = localStore.getQuery(api.tasks.list, { userId: args.userId })
     if (current) {
@@ -44,10 +43,17 @@ const { mutate: addOptimistic, isLoading: isAddingOptimistic } = useConvexMutati
       localStore.setQuery(api.tasks.list, { userId: args.userId }, [tempTask, ...current])
     }
   },
-  onSuccess: () => {
-    toast.add({ title: 'Task added (optimistic)', color: 'success' })
-  },
 })
+
+async function handleOptimisticAdd() {
+  try {
+    await addOptimistic({ title: `Optimistic task ${Date.now()}`, userId: userId.value })
+    toast.add({ title: 'Task added (optimistic)', color: 'success' })
+  }
+  catch (err) {
+    toast.add({ title: 'Optimistic update failed', description: (err as Error).message, color: 'error' })
+  }
+}
 </script>
 
 <template>
@@ -87,12 +93,12 @@ const { mutate: addOptimistic, isLoading: isAddingOptimistic } = useConvexMutati
       <template #header>
         <div class="flex items-center gap-2">
           <UIcon name="i-heroicons-exclamation-triangle" class="text-warning" />
-          <span class="font-semibold">isLoading & error States</span>
+          <span class="font-semibold">isPending & error States</span>
         </div>
       </template>
 
       <div class="text-sm text-muted mb-4">
-        Mutations expose <code class="bg-muted px-1 rounded">isLoading</code> and <code class="bg-muted px-1 rounded">error</code> refs for UI feedback.
+        Mutations expose <code class="bg-muted px-1 rounded">isPending</code> and <code class="bg-muted px-1 rounded">error</code> refs for UI feedback.
       </div>
 
       <div class="flex gap-4 text-sm">
@@ -124,7 +130,7 @@ const { mutate: addOptimistic, isLoading: isAddingOptimistic } = useConvexMutati
         Update UI immediately before server confirms. If mutation fails, changes roll back automatically.
       </div>
 
-      <UButton :loading="isAddingOptimistic" @click="addOptimistic({ title: `Optimistic task ${Date.now()}`, userId })">
+      <UButton :loading="isAddingOptimistic" @click="handleOptimisticAdd">
         Add with Optimistic Update
       </UButton>
     </UCard>
@@ -139,7 +145,7 @@ const { mutate: addOptimistic, isLoading: isAddingOptimistic } = useConvexMutati
       </template>
 
       <div class="text-sm text-muted">
-        <code class="bg-muted px-1 rounded">mutate()</code> returns a Promise with the mutation result. Use <code class="bg-muted px-1 rounded">onSuccess</code> callback or <code class="bg-muted px-1 rounded">await mutate()</code> to handle return values.
+        <code class="bg-muted px-1 rounded">mutate()</code> returns a Promise with the mutation result. Handle follow-up UI by awaiting the call and catching errors directly.
       </div>
     </UCard>
   </div>

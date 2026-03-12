@@ -1,8 +1,12 @@
 import process from 'node:process'
-import NuxtConvex from '../src/module'
+import NuxtConvex from '../packages/nuxt/src/module'
 
 export default defineNuxtConfig({
   modules: [NuxtConvex, '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
+
+  alias: {
+    '@onmax/convex-vue': '../packages/vue/src/index.ts',
+  },
 
   hub: {},
 

@@ -1,68 +1,28 @@
 {
-  "name": "nuxt-convex",
+  "name": "convex-monorepo",
   "type": "module",
   "version": "0.0.6",
+  "private": true,
   "packageManager": "pnpm@10.15.1",
-  "description": "Nuxt module for Convex - reactive backend with real-time sync, file storage, and auto-imports",
-  "author": "onmax",
-  "license": "MIT",
-  "homepage": "https://github.com/onmax/nuxt-convex#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/onmax/nuxt-convex.git"
-  },
-  "bugs": {
-    "url": "https://github.com/onmax/nuxt-convex/issues"
-  },
-  "keywords": [
-    "nuxt",
-    "nuxt-module",
-    "convex",
-    "realtime",
-    "database",
-    "storage",
-    "vue"
-  ],
-  "exports": {
-    ".": {
-      "types": "./dist/types.d.mts",
-      "import": "./dist/module.mjs"
-    }
-  },
-  "main": "./dist/module.mjs",
-  "types": "./dist/types.d.mts",
-  "typesVersions": {
-    "*": {
-      ".": [
-        "./dist/types.d.mts"
-      ]
-    }
-  },
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "prepack": "nuxt-module-build build",
-    "dev": "nuxi dev playground",
-    "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare",
-    "playground:prepare": "nuxi prepare playground",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "typecheck": "nuxt-module-build build",
+    "build": "pnpm --filter @onmax/convex-vue build && pnpm --filter nuxt-convex build",
+    "dev": "pnpm --filter nuxt-convex dev",
+    "dev:vue": "pnpm --filter convex-vue-example dev",
+    "dev:vue:build": "pnpm --filter convex-vue-example build",
+    "dev:build": "pnpm --filter nuxt-convex dev:build",
+    "dev:prepare": "pnpm --filter nuxt-convex dev:prepare",
+    "playground:prepare": "pnpm --filter nuxt-convex playground:prepare",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "typecheck": "pnpm --filter @onmax/convex-vue typecheck && pnpm --filter nuxt-convex typecheck",
+    "test": "pnpm --filter @onmax/convex-vue test && pnpm --filter nuxt-convex test",
+    "validate:packages": "pnpm build && publint packages/vue && publint packages/nuxt",
+    "preview:packages": "mkdir -p .artifacts && pnpm --filter @onmax/convex-vue pack --pack-destination .artifacts && pnpm --filter nuxt-convex pack --pack-destination .artifacts",
+    "prepack": "pnpm validate:packages",
+    "publish:packages": "pnpm --filter @onmax/convex-vue publish --no-git-checks --provenance --access public && pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public",
     "release": "bumpp && git push --follow-tags"
-  },
-  "peerDependencies": {
-    "convex": ">=1.0.0"
-  },
-  "dependencies": {
-    "@nuxt/kit": "catalog:prod",
-    "consola": "catalog:prod",
-    "convex-vue": "^0.1.5",
-    "defu": "catalog:prod",
-    "pathe": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -71,13 +31,18 @@
     "@nuxt/module-builder": "catalog:build",
     "@nuxt/test-utils": "catalog:test",
     "@types/node": "catalog:types",
+    "@vitejs/plugin-vue": "catalog:vite",
     "@vue/test-utils": "catalog:test",
     "bumpp": "catalog:",
     "convex": "catalog:convex",
     "eslint": "catalog:lint",
     "eslint-plugin-format": "catalog:lint",
+    "jsdom": "catalog:test",
     "nuxt": "catalog:",
+    "publint": "catalog:build",
+    "tsdown": "catalog:build",
     "typescript": "catalog:build",
+    "vite": "catalog:vite",
     "vitest": "catalog:test",
     "vitest-package-exports": "catalog:test",
     "vue": "catalog:nuxt",

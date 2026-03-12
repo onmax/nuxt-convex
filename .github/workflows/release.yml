@@ -18,7 +18,7 @@ jobs:
         uses: lewagon/wait-on-check-action@v1.3.4
         with:
           ref: ${{ github.sha }}
-          check-regexp: lint|typecheck|test
+          check-regexp: lint|build|typecheck|test|package-check
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
 
@@ -32,18 +32,21 @@ jobs:
       - run: npm i -g --force corepack && corepack enable
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 22
           cache: pnpm
           registry-url: 'https://registry.npmjs.org'
 
       - run: pnpm install
-      - run: pnpm dev:prepare
-      - run: pnpm prepack
+      - run: pnpm build
+      - run: pnpm validate:packages
 
       - name: GitHub Release
         run: pnpm dlx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to npm
-        run: pnpm publish --no-git-checks --provenance --access public
+      - name: Publish @onmax/convex-vue
+        run: pnpm --filter @onmax/convex-vue publish --no-git-checks --provenance --access public
+
+      - name: Publish nuxt-convex
+        run: pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public

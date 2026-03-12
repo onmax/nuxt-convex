@@ -10,7 +10,5 @@
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
-  },
-  "include": ["src"],
-  "exclude": ["dist", "node_modules", "playground", "**/convex/**"]
+  }
 }
