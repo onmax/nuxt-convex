@@ -1,5 +1,3 @@
-import process from 'node:process'
-
 type EnvSource = Record<string, string | undefined>
 
 const DEFAULT_SITE_URL = 'https://demo-nuxt-convex.onmax.me'
