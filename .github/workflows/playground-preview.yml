@@ -1,0 +1,110 @@
+name: playground-preview
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: playground-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      preview_url: ${{ steps.preview.outputs.preview_url }}
+      worker_name: ${{ steps.preview.outputs.worker_name }}
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_WORKERS_SUBDOMAIN: ${{ vars.CLOUDFLARE_WORKERS_SUBDOMAIN }}
+      PREVIEW_CONVEX_SITE_URL: ${{ vars.PLAYGROUND_PREVIEW_CONVEX_SITE_URL }}
+      PREVIEW_CONVEX_URL: ${{ vars.PLAYGROUND_PREVIEW_CONVEX_URL }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - run: npm i -g --force corepack && corepack enable
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Detect preview configuration
+        id: preview-config
+        run: |
+          missing_keys=""
+          for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN CLOUDFLARE_WORKERS_SUBDOMAIN PREVIEW_CONVEX_URL PREVIEW_CONVEX_SITE_URL; do
+            if [ -z "${!key}" ]; then
+              missing_keys="${missing_keys} ${key}"
+            fi
+          done
+
+          if [ -n "${missing_keys}" ]; then
+            message="Skipping playground preview: missing${missing_keys}"
+            echo "::warning::${message}"
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "message=${message}" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Compute preview metadata
+        id: preview
+        if: steps.preview-config.outputs.enabled == 'true'
+        run: |
+          worker_name="nuxt-convex-playground-pr-${{ github.event.pull_request.number }}"
+          preview_url="https://${worker_name}.${CLOUDFLARE_WORKERS_SUBDOMAIN}.workers.dev"
+          echo "worker_name=${worker_name}" >> "$GITHUB_OUTPUT"
+          echo "preview_url=${preview_url}" >> "$GITHUB_OUTPUT"
+
+      - if: steps.preview-config.outputs.enabled == 'true'
+        run: pnpm install
+
+      - name: Build playground
+        if: steps.preview-config.outputs.enabled == 'true'
+        env:
+          CONVEX_URL: ${{ env.PREVIEW_CONVEX_URL }}
+          NUXT_PLAYGROUND_WORKER_NAME: ${{ steps.preview.outputs.worker_name }}
+          NUXT_PUBLIC_CONVEX_URL: ${{ env.PREVIEW_CONVEX_URL }}
+          NUXT_PUBLIC_ENABLE_GITHUB_AUTH: 'false'
+          NUXT_PUBLIC_SITE_URL: ${{ steps.preview.outputs.preview_url }}
+          PLAYGROUND_ENABLE_GITHUB_AUTH: 'false'
+          SITE_URL: ${{ steps.preview.outputs.preview_url }}
+          VITE_CONVEX_SITE_URL: ${{ env.PREVIEW_CONVEX_SITE_URL }}
+        run: pnpm --dir playground build
+
+      - name: Deploy preview worker
+        if: steps.preview-config.outputs.enabled == 'true'
+        run: |
+          pnpm --dir playground exec wrangler --cwd .output deploy \
+            --var "CONVEX_URL:${PREVIEW_CONVEX_URL}" \
+            --var "NUXT_PUBLIC_CONVEX_URL:${PREVIEW_CONVEX_URL}" \
+            --var "NUXT_PUBLIC_ENABLE_GITHUB_AUTH:false" \
+            --var "NUXT_PUBLIC_SITE_URL:${{ steps.preview.outputs.preview_url }}" \
+            --var "PLAYGROUND_ENABLE_GITHUB_AUTH:false" \
+            --var "SITE_URL:${{ steps.preview.outputs.preview_url }}" \
+            --var "VITE_CONVEX_SITE_URL:${PREVIEW_CONVEX_SITE_URL}"
+
+      - name: Publish preview summary
+        if: steps.preview-config.outputs.enabled == 'true'
+        run: |
+          {
+            echo "## Playground Preview"
+            echo
+            echo "- Worker: \`${{ steps.preview.outputs.worker_name }}\`"
+            echo "- URL: [${{ steps.preview.outputs.preview_url }}](${{ steps.preview.outputs.preview_url }})"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish skipped preview summary
+        if: steps.preview-config.outputs.enabled != 'true'
+        run: |
+          {
+            echo "## Playground Preview"
+            echo
+            echo "${{ steps.preview-config.outputs.message }}"
+          } >> "$GITHUB_STEP_SUMMARY"
