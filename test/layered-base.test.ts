@@ -1,12 +1,14 @@
-import { existsSync, rmSync } from 'node:fs'
+import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { resolve } from 'pathe'
 import { $fetch, setup } from '@nuxt/test-utils/e2e'
 import { describe, expect, it } from 'vitest'
 
 const baseDir = fileURLToPath(new URL('./fixtures/layered-base', import.meta.url))
 const rootDir = fileURLToPath(new URL('./fixtures/layered-app', import.meta.url))
 const storagePath = join(baseDir, 'convex/_hub/storage.ts')
+const generatedServerPath = join(baseDir, 'convex/_generated/server.ts')
 
 rmSync(storagePath, { force: true })
 
@@ -21,5 +23,14 @@ describe('nuxt-convex layered defaults', async () => {
 
   it('scaffolds storage into a safe local base layer', () => {
     expect(existsSync(storagePath)).toBe(true)
+  })
+
+  it('keeps scaffolded storage imports aligned with the authoritative generated server file', () => {
+    const storageSource = readFileSync(storagePath, 'utf8')
+    const match = storageSource.match(/from '([^']+)'/)
+
+    expect(match?.[1]).toBeDefined()
+    expect(resolve(join(baseDir, 'convex/_hub'), match![1])).toBe(join(baseDir, 'convex/_generated/server'))
+    expect(existsSync(generatedServerPath)).toBe(true)
   })
 })

@@ -8,6 +8,7 @@ export interface ResolvedConvexRoot {
   projectDir: string
   readDir: string
   writeDir: string
+  generatedDir: string
   usesProjectDefault: boolean
   fallsBackToProjectWrite: boolean
 }
@@ -26,25 +27,26 @@ export function resolveConvexRoot(nuxt: Nuxt, input = 'convex'): ResolvedConvexR
 
   if (isAbsolute(input)) {
     const readDir = input
+    const generatedDir = join(readDir, '_generated')
     const fallsBackToProjectWrite = hasNodeModulesSegment(readDir)
     return {
       input,
       projectDir,
       readDir,
       writeDir: fallsBackToProjectWrite ? projectDir : readDir,
+      generatedDir,
       usesProjectDefault: !existsSync(readDir),
       fallsBackToProjectWrite,
     }
   }
 
   const layerDirs = getLayerDirectories(nuxt)
-  const existingDir = layerDirs
+  const authoritativeDir = layerDirs
     .map(layer => join(layer.root, input))
     .find(candidate => existsSync(candidate))
-  const generatedDir = layerDirs
-    .map(layer => join(layer.root, input))
-    .find(candidate => existsSync(join(candidate, '_generated')))
-  const readDir = generatedDir || existingDir || projectDir
+    || projectDir
+  const readDir = authoritativeDir
+  const generatedDir = join(readDir, '_generated')
 
   const fallsBackToProjectWrite = hasNodeModulesSegment(readDir)
 
@@ -53,9 +55,14 @@ export function resolveConvexRoot(nuxt: Nuxt, input = 'convex'): ResolvedConvexR
     projectDir,
     readDir,
     writeDir: fallsBackToProjectWrite ? projectDir : readDir,
+    generatedDir,
     usesProjectDefault: readDir === projectDir && !existsSync(readDir),
     fallsBackToProjectWrite,
   }
+}
+
+export function resolveStorageServerImportPath(convexRoot: ResolvedConvexRoot): string {
+  return toImportPath(join(convexRoot.writeDir, '_hub'), join(convexRoot.generatedDir, 'server'))
 }
 
 export function toImportPath(fromDir: string, target: string): string {

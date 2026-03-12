@@ -1,9 +1,10 @@
 import type { Nuxt } from '@nuxt/schema'
-import { existsSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { resolve } from 'pathe'
 import { describe, expect, it } from 'vitest'
-import { resolveConvexRoot } from '../src/internal/convex-paths'
+import { resolveConvexRoot, resolveStorageServerImportPath } from '../src/internal/convex-paths'
 
 function createNuxt(projectRoot: string, layers: string[]): Nuxt {
   return {
@@ -47,6 +48,7 @@ describe('resolveConvexRoot', () => {
 
     expect(resolved.readDir).toBe(join(projectRoot, 'convex'))
     expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
+    expect(resolved.generatedDir).toBe(join(projectRoot, 'convex', '_generated'))
     expect(resolved.usesProjectDefault).toBe(false)
   }))
 
@@ -57,6 +59,7 @@ describe('resolveConvexRoot', () => {
 
     expect(resolved.readDir).toBe(join(baseRoot, 'backend', 'convex'))
     expect(resolved.writeDir).toBe(join(baseRoot, 'backend', 'convex'))
+    expect(resolved.generatedDir).toBe(join(baseRoot, 'backend', 'convex', '_generated'))
     expect(resolved.projectDir).toBe(join(projectRoot, 'backend', 'convex'))
   }))
 
@@ -65,11 +68,12 @@ describe('resolveConvexRoot', () => {
 
     expect(resolved.readDir).toBe(join(projectRoot, 'convex'))
     expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
+    expect(resolved.generatedDir).toBe(join(projectRoot, 'convex', '_generated'))
     expect(resolved.usesProjectDefault).toBe(true)
     expect(existsSync(resolved.readDir)).toBe(false)
   }))
 
-  it('falls back writes to the project layer when the resolved layer lives in node_modules', () => withTempLayers((projectRoot) => {
+  it('falls back writes to the project layer when the authoritative layer lives in node_modules', () => withTempLayers((projectRoot) => {
     const dependencyLayer = join(projectRoot, 'node_modules', 'acme-layer')
     mkdirSync(join(dependencyLayer, 'convex', '_generated'), { recursive: true })
 
@@ -77,18 +81,33 @@ describe('resolveConvexRoot', () => {
 
     expect(resolved.readDir).toBe(join(dependencyLayer, 'convex'))
     expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
+    expect(resolved.generatedDir).toBe(join(dependencyLayer, 'convex', '_generated'))
     expect(resolved.fallsBackToProjectWrite).toBe(true)
   }))
 
-  it('keeps reading from the generated layer when the project directory only exists for scaffolding', () => withTempLayers((projectRoot) => {
+  it('keeps the app layer authoritative even when only the base layer has generated files', () => withTempLayers((projectRoot, baseRoot) => {
+    mkdirSync(join(projectRoot, 'convex'), { recursive: true })
+    mkdirSync(join(baseRoot, 'convex', '_generated'), { recursive: true })
+
+    const resolved = resolveConvexRoot(createNuxt(projectRoot, [projectRoot, baseRoot]), 'convex')
+
+    expect(resolved.readDir).toBe(join(projectRoot, 'convex'))
+    expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
+    expect(resolved.generatedDir).toBe(join(projectRoot, 'convex', '_generated'))
+    expect(resolved.fallsBackToProjectWrite).toBe(false)
+  }))
+
+  it('computes storage imports relative to the authoritative generated server path', () => withTempLayers((projectRoot) => {
     const dependencyLayer = join(projectRoot, 'node_modules', 'acme-layer')
-    mkdirSync(join(projectRoot, 'convex', '_hub'), { recursive: true })
+    const generatedServerPath = join(dependencyLayer, 'convex', '_generated', 'server.ts')
     mkdirSync(join(dependencyLayer, 'convex', '_generated'), { recursive: true })
+    writeFileSync(generatedServerPath, 'export const mutation = null\nexport const query = null\n')
 
     const resolved = resolveConvexRoot(createNuxt(projectRoot, [projectRoot, dependencyLayer]), 'convex')
+    const importPath = resolveStorageServerImportPath(resolved)
+    const resolvedImportPath = resolve(join(resolved.writeDir, '_hub'), importPath)
 
-    expect(resolved.readDir).toBe(join(dependencyLayer, 'convex'))
-    expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
-    expect(resolved.fallsBackToProjectWrite).toBe(true)
+    expect(resolvedImportPath).toBe(join(dependencyLayer, 'convex', '_generated', 'server'))
+    expect(existsSync(`${resolvedImportPath}.ts`)).toBe(true)
   }))
 })
