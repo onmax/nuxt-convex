@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineProps<{ showUser?: boolean }>()
 
-const { user, signOut } = useUserSession()
+const { user, signOut, ready } = useUserSession()
 </script>
 
 <template>
@@ -29,7 +29,7 @@ const { user, signOut } = useUserSession()
       </UButton>
       <UButton to="https://github.com/onmax/nuxt-convex" target="_blank" icon="i-simple-icons-github" variant="ghost" color="neutral" size="sm" />
       <UColorModeButton />
-      <template v-if="showUser && user">
+      <template v-if="showUser && ready && user">
         <USeparator orientation="vertical" class="h-6" />
         <UAvatar :src="user.image" :alt="user.name" size="sm" />
         <span class="text-sm text-muted hidden sm:block">{{ user.name }}</span>
