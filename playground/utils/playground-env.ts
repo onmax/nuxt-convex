@@ -1,4 +1,7 @@
+import process from 'node:process'
+
 type EnvSource = Record<string, string | undefined>
+type BooleanSource = boolean | string | undefined
 
 const DEFAULT_SITE_URL = 'https://demo-nuxt-convex.onmax.me'
 const DEFAULT_WORKER_NAME = 'demo-nuxt-convex'
@@ -12,7 +15,10 @@ function getEnvValue(env: EnvSource, ...keys: string[]): string | undefined {
   }
 }
 
-function parseBoolean(value: string | undefined, fallback: boolean): boolean {
+export function parseBooleanFlag(value: BooleanSource, fallback: boolean): boolean {
+  if (typeof value === 'boolean')
+    return value
+
   if (value == null || value === '')
     return fallback
 
@@ -37,7 +43,7 @@ export function getPlaygroundWorkerName(env: EnvSource = process.env): string {
 }
 
 export function isGitHubAuthEnabled(env: EnvSource = process.env): boolean {
-  return parseBoolean(
+  return parseBooleanFlag(
     getEnvValue(env, 'NUXT_PUBLIC_ENABLE_GITHUB_AUTH', 'PLAYGROUND_ENABLE_GITHUB_AUTH'),
     hasGitHubCredentials(env),
   )

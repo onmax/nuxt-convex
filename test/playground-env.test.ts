@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getPlaygroundSiteUrl, getPlaygroundWorkerName, hasGitHubCredentials, isGitHubAuthEnabled } from '../playground/utils/playground-env'
+import { getPlaygroundSiteUrl, getPlaygroundWorkerName, hasGitHubCredentials, isGitHubAuthEnabled, parseBooleanFlag } from '../playground/utils/playground-env'
 
 describe('playground env helpers', () => {
   it('uses stable defaults when preview env is unset', () => {
@@ -26,5 +26,13 @@ describe('playground env helpers', () => {
     expect(isGitHubAuthEnabled(env)).toBe(true)
     expect(isGitHubAuthEnabled({ ...env, NUXT_PUBLIC_ENABLE_GITHUB_AUTH: 'false' })).toBe(false)
     expect(isGitHubAuthEnabled({ ...env, PLAYGROUND_ENABLE_GITHUB_AUTH: '0' })).toBe(false)
+  })
+
+  it('parses runtime boolean overrides consistently', () => {
+    expect(parseBooleanFlag(true, false)).toBe(true)
+    expect(parseBooleanFlag(false, true)).toBe(false)
+    expect(parseBooleanFlag('false', true)).toBe(false)
+    expect(parseBooleanFlag('off', true)).toBe(false)
+    expect(parseBooleanFlag(undefined, true)).toBe(true)
   })
 })

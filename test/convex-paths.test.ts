@@ -1,5 +1,5 @@
 import type { Nuxt } from '@nuxt/schema'
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { resolve } from 'pathe'
@@ -75,7 +75,9 @@ describe('resolveConvexRoot', () => {
 
   it('falls back writes to the project layer when the authoritative layer lives in node_modules', () => withTempLayers((projectRoot) => {
     const dependencyLayer = join(projectRoot, 'node_modules', 'acme-layer')
+    mkdirSync(join(projectRoot, 'convex'), { recursive: true })
     mkdirSync(join(dependencyLayer, 'convex', '_generated'), { recursive: true })
+    writeFileSync(join(dependencyLayer, 'convex', '_generated', 'api.ts'), 'export const api = {}\n')
 
     const resolved = resolveConvexRoot(createNuxt(projectRoot, [projectRoot, dependencyLayer]), 'convex')
 
@@ -85,16 +87,32 @@ describe('resolveConvexRoot', () => {
     expect(resolved.fallsBackToProjectWrite).toBe(true)
   }))
 
-  it('keeps the app layer authoritative even when only the base layer has generated files', () => withTempLayers((projectRoot, baseRoot) => {
+  it('keeps reading generated types from the nearest layer that provides them', () => withTempLayers((projectRoot, baseRoot) => {
     mkdirSync(join(projectRoot, 'convex'), { recursive: true })
     mkdirSync(join(baseRoot, 'convex', '_generated'), { recursive: true })
+    writeFileSync(join(baseRoot, 'convex', '_generated', 'api.ts'), 'export const api = {}\n')
 
     const resolved = resolveConvexRoot(createNuxt(projectRoot, [projectRoot, baseRoot]), 'convex')
 
-    expect(resolved.readDir).toBe(join(projectRoot, 'convex'))
-    expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
-    expect(resolved.generatedDir).toBe(join(projectRoot, 'convex', '_generated'))
+    expect(resolved.readDir).toBe(join(baseRoot, 'convex'))
+    expect(resolved.writeDir).toBe(join(baseRoot, 'convex'))
+    expect(resolved.generatedDir).toBe(join(baseRoot, 'convex', '_generated'))
     expect(resolved.fallsBackToProjectWrite).toBe(false)
+  }))
+
+  it('falls back writes to the project layer when the resolved base layer is read-only', () => withTempLayers((projectRoot, baseRoot) => {
+    const baseConvexDir = join(baseRoot, 'convex')
+    mkdirSync(join(baseConvexDir, '_generated'), { recursive: true })
+    writeFileSync(join(baseConvexDir, '_generated', 'api.ts'), 'export const api = {}\n')
+    chmodSync(baseConvexDir, 0o555)
+
+    const resolved = resolveConvexRoot(createNuxt(projectRoot, [projectRoot, baseRoot]), 'convex')
+
+    expect(resolved.readDir).toBe(baseConvexDir)
+    expect(resolved.writeDir).toBe(join(projectRoot, 'convex'))
+    expect(resolved.fallsBackToProjectWrite).toBe(true)
+
+    chmodSync(baseConvexDir, 0o755)
   }))
 
   it('computes storage imports relative to the authoritative generated server path', () => withTempLayers((projectRoot) => {

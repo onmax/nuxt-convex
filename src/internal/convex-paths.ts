@@ -1,7 +1,7 @@
 import type { Nuxt } from '@nuxt/schema'
-import { existsSync } from 'node:fs'
+import { accessSync, constants, existsSync } from 'node:fs'
 import { getLayerDirectories } from '@nuxt/kit'
-import { isAbsolute, join, normalize, relative } from 'pathe'
+import { dirname, isAbsolute, join, normalize, relative } from 'pathe'
 
 export interface ResolvedConvexRoot {
   input: string
@@ -17,6 +17,39 @@ function hasNodeModulesSegment(path: string): boolean {
   return normalize(path).split('/').includes('node_modules')
 }
 
+function hasGeneratedApiTypes(path: string): boolean {
+  const generatedDir = join(path, '_generated')
+  return ['api.ts', 'api.js', 'api.d.ts', 'api.mjs']
+    .some(file => existsSync(join(generatedDir, file)))
+}
+
+function findNearestExistingParent(path: string): string | undefined {
+  let current = path
+
+  while (!existsSync(current)) {
+    const parent = dirname(current)
+    if (parent === current)
+      return
+    current = parent
+  }
+
+  return current
+}
+
+function isWritablePath(path: string): boolean {
+  const target = findNearestExistingParent(path)
+  if (!target)
+    return false
+
+  try {
+    accessSync(target, constants.W_OK)
+    return true
+  }
+  catch {
+    return false
+  }
+}
+
 function toProjectConvexDir(nuxt: Nuxt, input: string): string {
   const projectRoot = getLayerDirectories(nuxt)[0]?.root || nuxt.options.rootDir
   return join(projectRoot, isAbsolute(input) ? 'convex' : input)
@@ -28,7 +61,7 @@ export function resolveConvexRoot(nuxt: Nuxt, input = 'convex'): ResolvedConvexR
   if (isAbsolute(input)) {
     const readDir = input
     const generatedDir = join(readDir, '_generated')
-    const fallsBackToProjectWrite = hasNodeModulesSegment(readDir)
+    const fallsBackToProjectWrite = hasNodeModulesSegment(readDir) || !isWritablePath(readDir)
     return {
       input,
       projectDir,
@@ -41,14 +74,19 @@ export function resolveConvexRoot(nuxt: Nuxt, input = 'convex'): ResolvedConvexR
   }
 
   const layerDirs = getLayerDirectories(nuxt)
-  const authoritativeDir = layerDirs
+  const candidates = layerDirs
     .map(layer => join(layer.root, input))
-    .find(candidate => existsSync(candidate))
-    || projectDir
+  const generatedDirCandidate = candidates.find(candidate => hasGeneratedApiTypes(candidate))
+  const authoritativeDir = (
+    generatedDirCandidate
+    || candidates
+      .find(candidate => existsSync(candidate))
+      || projectDir
+  )
   const readDir = authoritativeDir
   const generatedDir = join(readDir, '_generated')
 
-  const fallsBackToProjectWrite = hasNodeModulesSegment(readDir)
+  const fallsBackToProjectWrite = hasNodeModulesSegment(readDir) || !isWritablePath(readDir)
 
   return {
     input,

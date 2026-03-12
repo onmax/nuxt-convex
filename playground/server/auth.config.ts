@@ -1,7 +1,8 @@
 import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
+import { parseBooleanFlag } from '../utils/playground-env'
 
 export default defineServerAuth(({ runtimeConfig }) => {
-  const enableGitHubAuth = Boolean(runtimeConfig.public.enableGitHubAuth)
+  const enableGitHubAuth = parseBooleanFlag(runtimeConfig.public.enableGitHubAuth, false)
 
   return {
     appName: 'nuxt-convex Playground',

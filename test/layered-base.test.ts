@@ -1,8 +1,8 @@
 import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { resolve } from 'pathe'
 import { $fetch, setup } from '@nuxt/test-utils/e2e'
+import { resolve } from 'pathe'
 import { describe, expect, it } from 'vitest'
 
 const baseDir = fileURLToPath(new URL('./fixtures/layered-base', import.meta.url))

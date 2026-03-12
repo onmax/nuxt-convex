@@ -42,4 +42,4 @@ jobs:
       - name: Delete preview worker
         run: |
           worker_name="nuxt-convex-playground-pr-${{ github.event.pull_request.number }}"
-          pnpm exec wrangler delete "${worker_name}" --force
+          pnpm --dir playground exec wrangler delete "${worker_name}" --force

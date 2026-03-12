@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { parseBooleanFlag } from '../../utils/playground-env'
+
 definePageMeta({ middleware: 'guest' })
 
 type AuthTab = 'sign-in' | 'sign-up'
@@ -9,7 +11,7 @@ const { user, waitForSession } = useUserSession()
 const signInWithEmail = useSignIn('email')
 const signUpWithEmail = useSignUp('email')
 const signInWithSocial = useSignIn('social')
-const enableGitHubAuth = Boolean(runtimeConfig.public.enableGitHubAuth)
+const enableGitHubAuth = parseBooleanFlag(runtimeConfig.public.enableGitHubAuth, false)
 
 const authTabs: Array<{ label: string, value: AuthTab, icon: string }> = [
   { label: 'Sign in', value: 'sign-in', icon: 'i-heroicons-arrow-right-end-on-rectangle' },
