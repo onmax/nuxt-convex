@@ -1,8 +1,21 @@
 diff --git a/dist/module.mjs b/dist/module.mjs
-index a1d2cf1c1d332dd8a2d2e3ec80d51a4c6b0665ef..abc8edebf8ee376a53c41ddc6cdbe6c7099c9fa3 100644
+index a1d2cf1c1d332dd8a2d2e3ec80d51a4c6b0665ef..7e5399f799dc578060f2bbf0fffa6b7fc76b6af4 100644
 --- a/dist/module.mjs
 +++ b/dist/module.mjs
-@@ -251,10 +251,8 @@ async function initiateValidatorsContext() {
+@@ -166,11 +166,7 @@ async function getLocalGitRemote(dir) {
+ 
+ const nuxtContentContext$1 = {
+   zod3: {
+-    toJSONSchema: (_schema, _name) => {
+-      throw new Error(
+-        "It seems you are using Zod version 3 for collection schema, but Zod is not installed, Nuxt Content does not ship with zod, install `zod` and `zod-to-json-schema` and it will work."
+-      );
+-    }
++    toJSONSchema: (_schema, _name) => toJSONSchema(_schema, _name)
+   },
+   zod4: {
+     toJSONSchema: (_schema, _name) => {
+@@ -251,10 +247,8 @@ async function initiateValidatorsContext() {
    if (await isPackageInstalled("valibot") && await isPackageInstalled("@valibot/to-json-schema")) {
      nuxtContentContext().set("valibot", await import('./chunks/valibot.mjs'));
    }

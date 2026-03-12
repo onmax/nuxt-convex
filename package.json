@@ -4,10 +4,6 @@
   "version": "0.0.6",
   "private": true,
   "packageManager": "pnpm@10.15.1",
-  "dependencies": {
-    "zod": "catalog:",
-    "zod-to-json-schema": "catalog:"
-  },
   "scripts": {
     "build": "pnpm --filter @onmax/convex-vue build && pnpm --filter nuxt-convex build",
     "dev": "pnpm --filter nuxt-convex dev",
@@ -27,6 +23,10 @@
     "prepack": "pnpm validate:packages",
     "publish:packages": "pnpm --filter @onmax/convex-vue publish --no-git-checks --provenance --access public && pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public",
     "release": "bumpp && git push --follow-tags"
+  },
+  "dependencies": {
+    "zod": "catalog:",
+    "zod-to-json-schema": "catalog:"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
