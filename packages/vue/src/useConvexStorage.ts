@@ -1,7 +1,6 @@
 import type { Ref } from 'vue'
-import { readonly, ref } from 'vue'
+import { onScopeDispose, readonly, ref, watch } from 'vue'
 import { useConvexContext } from './internal/useConvexContext'
-import { useRealtimeQuery } from './internal/useRealtimeQuery'
 
 export interface ConvexStorageReturn {
   generateUploadUrl: () => Promise<string>
@@ -32,10 +31,30 @@ export function useConvexStorage(): ConvexStorageReturn {
     getUrl(storageId) {
       if (!storage?.getUrl)
         return readonly(ref<string | null>(null))
-      if (typeof window === 'undefined' || !context.clientRef.value)
-        return readonly(ref<string | null>(null))
+      const data = ref<string | null>(null)
+      let unsubscribe: (() => void) | null = null
 
-      const { data } = useRealtimeQuery(storage.getUrl, () => ({ storageId }))
+      const subscribe = (): void => {
+        unsubscribe?.()
+        unsubscribe = null
+
+        if (typeof window === 'undefined' || !context.clientRef.value) {
+          data.value = null
+          return
+        }
+
+        unsubscribe = context.clientRef.value.onUpdate(
+          storage.getUrl,
+          { storageId },
+          (result) => {
+            data.value = result
+          },
+          () => {},
+        )
+      }
+
+      watch(() => context.clientRef.value, subscribe, { immediate: true })
+      onScopeDispose(() => unsubscribe?.())
       return readonly(data) as Ref<string | null>
     },
     async remove(storageId) {

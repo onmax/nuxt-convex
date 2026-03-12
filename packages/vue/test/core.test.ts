@@ -123,6 +123,17 @@ describe('@onmax/convex-vue', () => {
     harness.stop()
   })
 
+  it('keeps server-disabled queries pending during SSR until the client can subscribe', () => {
+    vi.stubGlobal('window', undefined)
+
+    const harness = createHarness({ httpClient: { query: vi.fn() } })
+    const state = harness.run(() => useConvexQuery(queryRef, { userId: '1' }, { server: false }))
+
+    expect(state.isPending.value).toBe(true)
+
+    harness.stop()
+  })
+
   it('runs mutations and actions with Vue-native pending state', async () => {
     const client = {
       mutation: vi.fn(async () => 'created-id'),
@@ -225,6 +236,30 @@ describe('@onmax/convex-vue', () => {
 
     expect(fileUrl.value).toBeNull()
     await expect(storage.generateUploadUrl()).rejects.toThrow('[convex-vue] Convex client is not initialized')
+
+    harness.stop()
+  })
+
+  it('re-subscribes storage urls after deferred client init', async () => {
+    const deferredClient = {
+      onUpdate: vi.fn((_query, _args, onResult, onError) => {
+        listeners.push({ onResult, onError })
+        return () => {}
+      }),
+    }
+    const harness = createHarness({ storage: storageRefs })
+    const storage = harness.run(() => useConvexStorage())
+    const fileUrl = harness.run(() => storage.getUrl('storage-1'))
+
+    expect(fileUrl.value).toBeNull()
+
+    harness.context.clientRef.value = deferredClient as unknown as ConvexVueContext['clientRef']['value']
+    await nextTick()
+
+    listeners[0].onResult('https://cdn.convex.dev/deferred.png')
+    await nextTick()
+
+    expect(fileUrl.value).toBe('https://cdn.convex.dev/deferred.png')
 
     harness.stop()
   })

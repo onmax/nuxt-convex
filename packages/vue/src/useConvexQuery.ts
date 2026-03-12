@@ -50,7 +50,7 @@ export function useConvexQuery<Query extends QueryReference>(
     return {
       data,
       error,
-      isPending: computed(() => serverEnabled && data.value === undefined && !error.value),
+      isPending: computed(() => data.value === undefined && !error.value),
       suspense,
     }
   }
