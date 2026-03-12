@@ -4,7 +4,7 @@ type EnvSource = Record<string, string | undefined>
 type BooleanSource = boolean | string | undefined
 
 const DEFAULT_SITE_URL = 'https://demo-nuxt-convex.onmax.me'
-const DEFAULT_WORKER_NAME = 'demo-nuxt-convex'
+const DEFAULT_WORKER_NAME = 'nuxt-convex-playground'
 const DISABLED_VALUES = new Set(['0', 'false', 'no', 'off'])
 
 function getEnvValue(env: EnvSource, ...keys: string[]): string | undefined {

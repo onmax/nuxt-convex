@@ -3,7 +3,7 @@ import { getPlaygroundSiteUrl, getPlaygroundWorkerName, hasGitHubCredentials, is
 
 describe('playground env helpers', () => {
   it('uses stable defaults when preview env is unset', () => {
-    expect(getPlaygroundWorkerName({})).toBe('demo-nuxt-convex')
+    expect(getPlaygroundWorkerName({})).toBe('nuxt-convex-playground')
     expect(getPlaygroundSiteUrl({})).toBe('https://demo-nuxt-convex.onmax.me')
     expect(isGitHubAuthEnabled({})).toBe(false)
   })
