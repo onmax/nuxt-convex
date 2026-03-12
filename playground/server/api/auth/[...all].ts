@@ -1,4 +1,4 @@
-import { getProxyRequestHeaders, getRequestURL, sendProxy } from 'h3'
+import { getMethod, getRequestHeaders, getRequestURL, isMethod, readRawBody } from 'h3'
 
 function toConvexSiteUrl(convexUrl: string): string {
   const url = new URL(convexUrl)
@@ -6,7 +6,7 @@ function toConvexSiteUrl(convexUrl: string): string {
   return url.toString()
 }
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const requestUrl = getRequestURL(event)
   const convexUrl = (useRuntimeConfig().public.convex as { url?: string })?.url
 
@@ -17,10 +17,19 @@ export default defineEventHandler((event) => {
     })
   }
 
-  const target = new URL(`${requestUrl.pathname}${requestUrl.search}`, toConvexSiteUrl(convexUrl)).toString()
+  const targetUrl = new URL(`${requestUrl.pathname}${requestUrl.search}`, toConvexSiteUrl(convexUrl))
+  const target = targetUrl.toString()
+  const headers = new Headers(getRequestHeaders(event))
 
-  return sendProxy(event, target, {
-    headers: getProxyRequestHeaders(event, { host: false }),
-    fetchOptions: { redirect: 'manual' },
+  headers.delete('content-length')
+  headers.delete('host')
+  headers.set('origin', targetUrl.origin)
+  headers.set('referer', `${targetUrl.origin}/`)
+
+  return fetch(target, {
+    method: getMethod(event),
+    headers,
+    body: isMethod(event, ['PATCH', 'POST', 'PUT', 'DELETE']) ? await readRawBody(event, false) : undefined,
+    redirect: 'manual',
   })
 })
