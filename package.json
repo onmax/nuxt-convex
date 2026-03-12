@@ -47,6 +47,8 @@
     "vitest": "catalog:test",
     "vitest-package-exports": "catalog:test",
     "vue": "catalog:nuxt",
-    "yaml": "catalog:"
+    "yaml": "catalog:",
+    "zod": "catalog:",
+    "zod-to-json-schema": "catalog:"
   }
 }

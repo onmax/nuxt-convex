@@ -217,6 +217,12 @@ importers:
       yaml:
         specifier: 'catalog:'
         version: 2.8.2
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.76
+      zod-to-json-schema:
+        specifier: 'catalog:'
+        version: 3.25.1(zod@3.25.76)
 
   docs:
     dependencies:
@@ -11496,7 +11502,7 @@ snapshots:
       '@better-auth/utils': 0.3.1
       '@better-fetch/fetch': 1.1.21
       '@standard-schema/spec': 1.1.0
-      better-call: 1.3.2(zod@4.3.6)
+      better-call: 1.3.2(zod@3.25.76)
       jose: 6.1.3
       kysely: 0.28.11
       nanostores: 1.1.1
@@ -16885,7 +16891,7 @@ snapshots:
       '@better-fetch/fetch': 1.1.21
       '@noble/ciphers': 2.1.1
       '@noble/hashes': 2.0.1
-      better-call: 1.3.2(zod@4.3.6)
+      better-call: 1.3.2(zod@3.25.76)
       defu: 6.1.4
       jose: 6.1.3
       kysely: 0.28.11
@@ -16923,6 +16929,15 @@ snapshots:
       set-cookie-parser: 2.7.2
     optionalDependencies:
       zod: 4.3.6
+
+  better-call@1.3.2(zod@3.25.76):
+    dependencies:
+      '@better-auth/utils': 0.3.1
+      '@better-fetch/fetch': 1.1.21
+      rou3: 0.7.12
+      set-cookie-parser: 3.0.1
+    optionalDependencies:
+      zod: 3.25.76
 
   better-call@1.3.2(zod@4.3.6):
     dependencies:
