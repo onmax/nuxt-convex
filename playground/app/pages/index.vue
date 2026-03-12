@@ -4,10 +4,12 @@ definePageMeta({ middleware: 'guest' })
 type AuthTab = 'sign-in' | 'sign-up'
 
 const toast = useToast()
+const runtimeConfig = useRuntimeConfig()
 const { user, waitForSession } = useUserSession()
 const signInWithEmail = useSignIn('email')
 const signUpWithEmail = useSignUp('email')
 const signInWithSocial = useSignIn('social')
+const enableGitHubAuth = Boolean(runtimeConfig.public.enableGitHubAuth)
 
 const authTabs: Array<{ label: string, value: AuthTab, icon: string }> = [
   { label: 'Sign in', value: 'sign-in', icon: 'i-heroicons-arrow-right-end-on-rectangle' },
@@ -30,6 +32,9 @@ const signUpForm = reactive({
 const isSignInPending = computed(() => signInWithEmail.status.value === 'pending')
 const isSignUpPending = computed(() => signUpWithEmail.status.value === 'pending')
 const isGitHubPending = computed(() => signInWithSocial.status.value === 'pending')
+const authDescription = computed(() => enableGitHubAuth
+  ? 'Use email/password first. GitHub stays available as a secondary provider.'
+  : 'Use email/password to access this preview environment.')
 
 const features = [
   { icon: 'i-heroicons-bolt', title: 'Realtime', description: 'Live subscriptions sync data instantly across all clients' },
@@ -152,7 +157,7 @@ async function signInWithGitHub() {
                   Access the dashboard
                 </h2>
                 <p class="text-sm text-muted">
-                  Use email/password first. GitHub stays available as a secondary provider.
+                  {{ authDescription }}
                 </p>
               </div>
 
@@ -200,23 +205,25 @@ async function signInWithGitHub() {
                 </template>
               </UTabs>
 
-              <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-dimmed">
-                <span class="h-px flex-1 bg-default" />
-                <span>Secondary</span>
-                <span class="h-px flex-1 bg-default" />
-              </div>
+              <template v-if="enableGitHubAuth">
+                <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-dimmed">
+                  <span class="h-px flex-1 bg-default" />
+                  <span>Secondary</span>
+                  <span class="h-px flex-1 bg-default" />
+                </div>
 
-              <UButton
-                size="lg"
-                color="neutral"
-                variant="soft"
-                block
-                icon="i-simple-icons-github"
-                :loading="isGitHubPending"
-                @click="signInWithGitHub"
-              >
-                Continue with GitHub
-              </UButton>
+                <UButton
+                  size="lg"
+                  color="neutral"
+                  variant="soft"
+                  block
+                  icon="i-simple-icons-github"
+                  :loading="isGitHubPending"
+                  @click="signInWithGitHub"
+                >
+                  Continue with GitHub
+                </UButton>
+              </template>
             </div>
           </UCard>
         </section>
