@@ -3,7 +3,7 @@ import { api } from '#convex/api'
 
 const toast = useToast()
 
-type R2Api = {
+interface R2Api {
   generateUploadUrl: any
   syncMetadata: any
   listMetadata: any
@@ -49,19 +49,18 @@ const { upload, isUploading, progress, error: uploadError } = useConvexR2Upload(
 
 function handleFileSelect(event: Event) {
   const file = (event.target as HTMLInputElement).files?.[0]
-  if (file) {
+  if (file)
     selectedFile.value = file
-  }
 }
 
 async function handleUpload() {
-  if (selectedFile.value) {
+  if (selectedFile.value)
     await upload(selectedFile.value)
-  }
 }
 
 async function handleDelete(key: string) {
-  if (deletingKey.value) return
+  if (deletingKey.value)
+    return
   deletingKey.value = key
   try {
     await deleteObject({ key })
@@ -73,9 +72,12 @@ async function handleDelete(key: string) {
 }
 
 function formatSize(bytes?: number) {
-  if (!bytes && bytes !== 0) return '—'
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  if (!bytes && bytes !== 0)
+    return '—'
+  if (bytes < 1024)
+    return `${bytes} B`
+  if (bytes < 1024 * 1024)
+    return `${(bytes / 1024).toFixed(1)} KB`
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 </script>

@@ -55,7 +55,13 @@
     "release": "bumpp && git push --follow-tags"
   },
   "peerDependencies": {
+    "@convex-dev/r2": ">=0.9.1",
     "convex": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@convex-dev/r2": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@nuxt/kit": "catalog:prod",
