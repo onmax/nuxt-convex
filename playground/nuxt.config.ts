@@ -1,5 +1,10 @@
 import process from 'node:process'
 import NuxtConvex from '../packages/nuxt/src/module'
+import { getPlaygroundSiteUrl, getPlaygroundWorkerName, isGitHubAuthEnabled } from './utils/playground-env'
+
+const siteUrl = getPlaygroundSiteUrl()
+const workerName = getPlaygroundWorkerName()
+const enableGitHubAuth = isGitHubAuthEnabled()
 
 export default defineNuxtConfig({
   modules: [NuxtConvex, '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
@@ -19,11 +24,12 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     github: {
-      clientId: process.env.NUXT_GITHUB_CLIENT_ID || '',
-      clientSecret: process.env.NUXT_GITHUB_SECRET || '',
+      clientId: enableGitHubAuth ? process.env.NUXT_GITHUB_CLIENT_ID || '' : '',
+      clientSecret: enableGitHubAuth ? process.env.NUXT_GITHUB_SECRET || '' : '',
     },
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://demo-nuxt-convex.onmax.me',
+      enableGitHubAuth,
+      siteUrl,
     },
   },
   compatibilityDate: '2025-01-01',
@@ -33,7 +39,7 @@ export default defineNuxtConfig({
     cloudflare: {
       nodeCompat: true,
       wrangler: {
-        name: 'demo-nuxt-convex',
+        name: workerName,
         observability: { enabled: true },
       },
     },
@@ -48,6 +54,8 @@ export default defineNuxtConfig({
   },
 
   convex: {
+    server: false,
     storage: true,
+    r2: true,
   },
 })

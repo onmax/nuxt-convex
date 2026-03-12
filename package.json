@@ -33,6 +33,7 @@
     "@types/node": "catalog:types",
     "@vitejs/plugin-vue": "catalog:vite",
     "@vue/test-utils": "catalog:test",
+    "better-auth": "catalog:playground",
     "bumpp": "catalog:",
     "convex": "catalog:convex",
     "eslint": "catalog:lint",

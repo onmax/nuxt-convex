@@ -28,6 +28,10 @@
     ".": {
       "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs"
+    },
+    "./better-auth": {
+      "types": "./dist/runtime/better-auth/adapter.d.ts",
+      "import": "./dist/runtime/better-auth/adapter.js"
     }
   },
   "main": "./dist/module.mjs",
@@ -54,7 +58,17 @@
     "typecheck": "nuxt-module-build build"
   },
   "peerDependencies": {
+    "@convex-dev/r2": ">=0.9.1",
+    "better-auth": ">=1.4.9 <1.6.0",
     "convex": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@convex-dev/r2": {
+      "optional": true
+    },
+    "better-auth": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@nuxt/kit": "catalog:prod",
