@@ -12,45 +12,22 @@ Start in the track that matches your app. Nuxt docs stay module-first, Vue docs 
 :u-button{to="/vue" label="Open Vue docs" color="neutral" variant="outline"}
 :u-button{to="/api-reference" label="Browse the API reference" color="neutral" variant="ghost"}
 
-::u-page-grid
+::card-group
 
-## ::u-page-card
-
-title: Nuxt module
-description: Work in a Nuxt-first track with installation, guides, integrations, and the module-aware API surface grouped together.
-icon: i-lucide-layers-3
-to: /nuxt
-highlight: true
-highlightColor: primary
-spotlight: true
-
----
+::card{title="Nuxt module" icon="i-lucide-layers-3" to="/nuxt" color="primary"}
+Work in a Nuxt-first track with installation, guides, integrations, and the module-aware API surface grouped together.
 
 :u-button{to="/nuxt" label="Open Nuxt docs" trailing-icon="i-lucide-arrow-right"}
 ::
 
-## ::u-page-card
-
-title: Vue core
-description: Work in a Vue-first track with plugin setup, manual initialization, and composable-oriented documentation.
-icon: i-lucide-component
-to: /vue
-spotlight: true
-
----
+::card{title="Vue core" icon="i-lucide-component" to="/vue"}
+Work in a Vue-first track with plugin setup, manual initialization, and composable-oriented documentation.
 
 :u-button{to="/vue" label="Open Vue docs" color="neutral" variant="outline" trailing-icon="i-lucide-arrow-right"}
 ::
 
-## ::u-page-card
-
-title: API reference
-description: Review every shipped composable, renderless component, module option, and virtual module from the current public surface.
-icon: i-lucide-book-open-text
-to: /api-reference
-spotlight: true
-
----
+::card{title="API reference" icon="i-lucide-book-open-text" to="/api-reference"}
+Review every shipped composable, renderless component, module option, and virtual module from the current public surface.
 
 :u-button{to="/api-reference" label="Open the reference" color="neutral" variant="ghost" trailing-icon="i-lucide-arrow-right"}
 ::

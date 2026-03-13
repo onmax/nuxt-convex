@@ -11,48 +11,22 @@ Build Convex into Nuxt with a docs flow that stays Nuxt-first. Start with module
 :u-button{to="/getting-started" label="Start with installation" trailing-icon="i-lucide-arrow-right"}
 :u-button{to="/nuxt-module" label="Open module guide" color="neutral" variant="outline"}
 
-::u-page-grid
+::card-group
 
-## ::u-page-card
-
-title: Get Started
-description: Install `nuxt-convex`, connect Convex, and verify the generated API and runtime config.
-icon: i-lucide-rocket
-to: /getting-started
-highlight: true
-highlightColor: primary
-spotlight: true
-
+::card{title="Get Started" icon="i-lucide-rocket" to="/getting-started" color="primary"}
+Install `nuxt-convex`, connect Convex, and verify the generated API and runtime config.
 ::
 
-## ::u-page-card
-
-title: Guide
-description: Learn what the module adds on top of the shared Vue package, including auto-imports and layer-aware resolution.
-icon: i-lucide-book-open
-to: /nuxt-module
-spotlight: true
-
+::card{title="Guide" icon="i-lucide-book-open" to="/nuxt-module"}
+Learn what the module adds on top of the shared Vue package, including auto-imports and layer-aware resolution.
 ::
 
-## ::u-page-card
-
-title: Integrations
-description: Add Better Auth and Cloudflare R2 without leaving the Nuxt track.
-icon: i-lucide-plug-zap
-to: /integrations
-spotlight: true
-
+::card{title="Integrations" icon="i-lucide-plug-zap" to="/integrations"}
+Add Better Auth and Cloudflare R2 without leaving the Nuxt track.
 ::
 
-## ::u-page-card
-
-title: Shared API
-description: Jump into the composables and renderless APIs used by the module runtime.
-icon: i-lucide-code-xml
-to: /api-reference
-spotlight: true
-
+::card{title="Shared API" icon="i-lucide-code-xml" to="/api-reference"}
+Jump into the composables and renderless APIs used by the module runtime.
 ::
 
 ::

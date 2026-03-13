@@ -11,48 +11,22 @@ Work directly with the shared Convex Vue package. This track stays focused on pl
 :u-button{to="/vue-core/installation" label="Install the Vue package" trailing-icon="i-lucide-arrow-right"}
 :u-button{to="/vue-core/manual-initialization" label="Read manual initialization" color="neutral" variant="outline"}
 
-::u-page-grid
+::card-group
 
-## ::u-page-card
-
-title: Get Started
-description: Install `@onmax/convex-vue`, register the plugin, and connect a deployment URL in app startup.
-icon: i-lucide-rocket
-to: /vue-core/installation
-highlight: true
-highlightColor: primary
-spotlight: true
-
+::card{title="Get Started" icon="i-lucide-rocket" to="/vue-core/installation" color="primary"}
+Install `@onmax/convex-vue`, register the plugin, and connect a deployment URL in app startup.
 ::
 
-## ::u-page-card
-
-title: Manual Initialization
-description: Delay client creation when the deployment URL or auth state only exists after app startup.
-icon: i-lucide-play-circle
-to: /vue-core/manual-initialization
-spotlight: true
-
+::card{title="Manual Initialization" icon="i-lucide-play-circle" to="/vue-core/manual-initialization"}
+Delay client creation when the deployment URL or auth state only exists after app startup.
 ::
 
-## ::u-page-card
-
-title: Composables
-description: Browse the shared composables exposed by `@onmax/convex-vue`.
-icon: i-lucide-function-square
-to: /api-reference
-spotlight: true
-
+::card{title="Composables" icon="i-lucide-function-square" to="/api-reference"}
+Browse the shared composables exposed by `@onmax/convex-vue`.
 ::
 
-## ::u-page-card
-
-title: Convex Patterns
-description: Revisit schema, functions, and realtime behavior from the perspective of the underlying shared layer.
-icon: i-lucide-sparkles
-to: /convex-patterns
-spotlight: true
-
+::card{title="Convex Patterns" icon="i-lucide-sparkles" to="/convex-patterns"}
+Revisit schema, functions, and realtime behavior from the perspective of the underlying shared layer.
 ::
 
 ::

@@ -5,30 +5,14 @@ description: Choose between the Nuxt module and the standalone Vue package, then
 
 Nuxt Convex ships as two packages in one repo. `nuxt-convex` is the Nuxt-specific integration layer. `@onmax/convex-vue` is the shared Vue plugin and composables that power both tracks.
 
-::u-page-grid
+::card-group
 
-## ::u-page-card
-
-title: Start with `nuxt-convex`
-description: Pick this track for Nuxt apps that need auto-imports, virtual modules, SSR-aware queries, storage scaffolding, and renderless components.
-icon: i-lucide-layers-3
-to: /nuxt-module
-highlight: true
-highlightColor: primary
-
----
-
+::card{title="Start with `nuxt-convex`" icon="i-lucide-layers-3" to="/nuxt-module" color="primary"}
+Pick this track for Nuxt apps that need auto-imports, virtual modules, SSR-aware queries, storage scaffolding, and renderless components.
 ::
 
-## ::u-page-card
-
-title: Start with `@onmax/convex-vue`
-description: Pick this track for standalone Vue 3 apps, custom runtimes, or setups where you want to install the plugin yourself.
-icon: i-lucide-component
-to: /vue-core
-
----
-
+::card{title="Start with `@onmax/convex-vue`" icon="i-lucide-component" to="/vue-core"}
+Pick this track for standalone Vue 3 apps, custom runtimes, or setups where you want to install the plugin yourself.
 ::
 
 ::
