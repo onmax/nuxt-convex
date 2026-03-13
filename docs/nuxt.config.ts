@@ -1,6 +1,8 @@
 export default defineNuxtConfig({
   extends: ['docus'],
 
+  modules: ['nuxt-skill-hub'],
+
   ogImage: { enabled: false },
 
   css: ['~/assets/css/main.css'],

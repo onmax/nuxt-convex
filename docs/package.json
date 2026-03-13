@@ -16,6 +16,7 @@
     "@vercel/speed-insights": "catalog:",
     "docus": "catalog:",
     "nuxt": "catalog:",
+    "nuxt-skill-hub": "github:onmax/nuxt-skill-hub#3506fed",
     "tailwindcss": "catalog:"
   }
 }
