@@ -3,7 +3,6 @@ name: ci
 on:
   push:
     branches: [main]
-    tags: ['v*']
   pull_request:
     branches: [main]
 
@@ -12,65 +11,21 @@ concurrency:
   cancel-in-progress: ${{ github.event_name != 'push' }}
 
 jobs:
-  lint:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: npm i -g --force corepack && corepack enable
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install
+      - uses: ./.github/actions/setup-pnpm
       - run: pnpm lint
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - run: npm i -g --force corepack && corepack enable
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install
       - run: pnpm build
-
-  typecheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - run: npm i -g --force corepack && corepack enable
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install
       - run: pnpm typecheck
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - run: npm i -g --force corepack && corepack enable
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install
       - run: pnpm test
 
   package-check:
-    needs: [build, typecheck, test]
+    needs: verify
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - run: npm i -g --force corepack && corepack enable
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install
-      - run: pnpm build
+      - uses: ./.github/actions/setup-pnpm
       - run: pnpm validate:packages
       - run: pnpm preview:packages

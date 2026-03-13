@@ -1,0 +1,22 @@
+name: setup-pnpm
+description: Enable corepack, set up Node.js with pnpm cache, and install dependencies
+
+inputs:
+  node-version:
+    description: Node.js version to use
+    required: false
+    default: '22'
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: npm i -g --force corepack && corepack enable
+
+    - uses: actions/setup-node@v5
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+
+    - shell: bash
+      run: pnpm install

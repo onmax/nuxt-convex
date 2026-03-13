@@ -3,7 +3,7 @@ name: playground-preview
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, closed]
 
 concurrency:
   group: playground-preview-${{ github.event.pull_request.number }}
@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,8 +26,6 @@ jobs:
       PREVIEW_CONVEX_URL: ${{ vars.PLAYGROUND_PREVIEW_CONVEX_URL }}
     steps:
       - uses: actions/checkout@v5
-
-      - run: npm i -g --force corepack && corepack enable
 
       - name: Detect preview configuration
         id: preview-config
@@ -48,11 +46,8 @@ jobs:
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/setup-node@v5
+      - uses: ./.github/actions/setup-pnpm
         if: steps.preview-config.outputs.enabled == 'true'
-        with:
-          node-version: 22
-          cache: pnpm
 
       - name: Compute preview metadata
         id: preview
@@ -62,9 +57,6 @@ jobs:
           preview_url="https://${worker_name}.${CLOUDFLARE_WORKERS_SUBDOMAIN}.workers.dev"
           echo "worker_name=${worker_name}" >> "$GITHUB_OUTPUT"
           echo "preview_url=${preview_url}" >> "$GITHUB_OUTPUT"
-
-      - if: steps.preview-config.outputs.enabled == 'true'
-        run: pnpm install
 
       - name: Build playground
         if: steps.preview-config.outputs.enabled == 'true'
@@ -108,4 +100,52 @@ jobs:
             echo "## Playground Preview"
             echo
             echo "${{ steps.preview-config.outputs.message }}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  cleanup:
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Detect cleanup configuration
+        id: cleanup-config
+        run: |
+          missing_keys=""
+          for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN; do
+            if [ -z "${!key}" ]; then
+              missing_keys="${missing_keys} ${key}"
+            fi
+          done
+
+          if [ -n "${missing_keys}" ]; then
+            message="Skipping preview cleanup: missing${missing_keys}"
+            echo "::warning::${message}"
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "message=${message}" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: ./.github/actions/setup-pnpm
+        if: steps.cleanup-config.outputs.enabled == 'true'
+
+      - name: Delete preview worker
+        if: steps.cleanup-config.outputs.enabled == 'true'
+        run: |
+          worker_name="nuxt-convex-playground-pr-${{ github.event.pull_request.number }}"
+          pnpm --dir playground exec wrangler delete "${worker_name}" --force
+
+      - name: Publish skipped cleanup summary
+        if: steps.cleanup-config.outputs.enabled != 'true'
+        run: |
+          {
+            echo "## Playground Preview Cleanup"
+            echo
+            echo "${{ steps.cleanup-config.outputs.message }}"
           } >> "$GITHUB_STEP_SUMMARY"

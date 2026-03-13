@@ -3,7 +3,6 @@ name: release
 permissions:
   id-token: write
   contents: write
-  actions: read
 
 on:
   push:
@@ -11,33 +10,13 @@ on:
       - 'v*'
 
 jobs:
-  wait-for-ci:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait for CI to complete
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with:
-          ref: ${{ github.sha }}
-          check-regexp: lint|build|typecheck|test|package-check
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
-
   release:
-    needs: wait-for-ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - run: npm i -g --force corepack && corepack enable
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-          cache: pnpm
-          registry-url: 'https://registry.npmjs.org'
-
-      - run: pnpm install
-      - run: pnpm build
+      - uses: ./.github/actions/setup-pnpm
       - run: pnpm validate:packages
 
       - name: GitHub Release
@@ -46,7 +25,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish @onmax/convex-vue
+        env:
+          NPM_CONFIG_PROVENANCE: true
+          NPM_CONFIG_ACCESS: public
         run: pnpm --filter @onmax/convex-vue publish --no-git-checks --provenance --access public
 
       - name: Publish nuxt-convex
+        env:
+          NPM_CONFIG_PROVENANCE: true
+          NPM_CONFIG_ACCESS: public
         run: pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public
