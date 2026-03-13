@@ -5,7 +5,7 @@
   "private": true,
   "packageManager": "pnpm@10.15.1",
   "scripts": {
-    "build": "pnpm --filter @onmax/convex-vue build && pnpm --filter nuxt-convex build",
+    "build": "node scripts/build.mjs",
     "dev": "pnpm --filter nuxt-convex dev",
     "dev:vue": "pnpm --filter convex-vue-example dev",
     "dev:vue:build": "pnpm --filter convex-vue-example build",
