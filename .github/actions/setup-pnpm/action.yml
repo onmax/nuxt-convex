@@ -13,6 +13,11 @@ runs:
     - shell: bash
       run: npm i -g --force corepack && corepack enable
 
+    - shell: bash
+      run: |
+        git config --global url."https://github.com/".insteadOf git@github.com:
+        git config --global url."https://github.com/".insteadOf ssh://git@github.com/
+
     - uses: actions/setup-node@v5
       with:
         node-version: ${{ inputs.node-version }}
