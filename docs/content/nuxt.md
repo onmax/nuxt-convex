@@ -4,25 +4,12 @@ description: The Nuxt-focused track for nuxt-convex, with setup, guides, integra
 navigation: false
 ---
 
-## ::u-page-hero
+# Nuxt Docs
 
-orientation: vertical
-headline: Nuxt Track
-title: Build Convex into Nuxt with a docs flow that stays Nuxt-first.
-description: Start with module setup, move into storage and integrations, and keep the shared Vue API available when you need to understand the lower layer.
-links:
+Build Convex into Nuxt with a docs flow that stays Nuxt-first. Start with module setup, move into storage and integrations, and keep the shared Vue API available when you need to understand the lower layer.
 
-- label: Start with installation
-  to: /getting-started
-  trailingIcon: i-lucide-arrow-right
-- label: Open module guide
-  to: /nuxt-module
-  color: neutral
-  variant: outline
-
----
-
-::
+:u-button{to="/getting-started" label="Start with installation" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/nuxt-module" label="Open module guide" color="neutral" variant="outline"}
 
 ::u-page-grid
 
@@ -70,38 +57,8 @@ spotlight: true
 
 ::
 
-## ::u-page-section
+## Work in this track
 
-title: Work In This Track
-description: These are the areas that matter most when you are integrating Convex into a Nuxt application.
-orientation: vertical
-
----
-
-::u-page-grid
-
-## ::u-page-feature
-
-title: Module setup
-description: `nuxt-convex` handles aliases, auto-imports, generated API access, and runtime wiring.
-icon: i-lucide-layers-3
-
-::
-
-## ::u-page-feature
-
-title: Storage and deploy concerns
-description: File storage and Cloudflare R2 live in the Nuxt track because they depend on module scaffolding and runtime behavior.
-icon: i-lucide-cloud-upload
-
-::
-
-## ::u-page-feature
-
-title: Shared composables
-description: The data layer stays shared with `@onmax/convex-vue`, but the Nuxt track documents how the module exposes it.
-icon: i-lucide-component
-
-::
-
-::
+- `nuxt-convex` handles aliases, auto-imports, generated API access, and runtime wiring.
+- file storage and Cloudflare R2 live here because they depend on module scaffolding and runtime behavior.
+- the data layer stays shared with `@onmax/convex-vue`, but this track documents how the Nuxt module exposes it.

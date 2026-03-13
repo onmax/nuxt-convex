@@ -4,29 +4,13 @@ description: Build with Convex in Nuxt or Vue with typed queries, SSR-aware real
 navigation: false
 ---
 
-## ::u-page-hero
+# Split the docs by runtime
 
-orientation: vertical
-headline: Convex for Nuxt and Vue
-title: Split the docs by runtime, not by package internals.
-description: Start in the track that matches your app. Nuxt docs stay module-first, Vue docs stay plugin-first, and the shared API stays available when you need to cross the boundary.
-links:
+Start in the track that matches your app. Nuxt docs stay module-first, Vue docs stay plugin-first, and the shared API stays available when you need to cross the boundary.
 
-- label: Open Nuxt docs
-  to: /nuxt
-  trailingIcon: i-lucide-arrow-right
-- label: Open Vue docs
-  to: /vue
-  color: neutral
-  variant: outline
-- label: Browse the API reference
-  to: /api-reference
-  color: neutral
-  variant: ghost
-
----
-
-::
+:u-button{to="/nuxt" label="Open Nuxt docs" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/vue" label="Open Vue docs" color="neutral" variant="outline"}
+:u-button{to="/api-reference" label="Browse the API reference" color="neutral" variant="ghost"}
 
 ::u-page-grid
 
@@ -73,47 +57,11 @@ spotlight: true
 
 ::
 
-## ::u-page-section
+## What ships in this repo
 
-title: What ships in this repo
-description: The documentation follows the actual monorepo layout so examples stay aligned with the published packages.
-orientation: vertical
-
----
-
-::u-page-grid
-
-## ::u-page-feature
-
-title: `packages/nuxt`
-description: The Nuxt module resolves `#convex`, `#convex/api`, optional storage and R2 helpers, and auto-imports the composables you use in app code.
-icon: i-lucide-box
-
----
-
-::
-
-## ::u-page-feature
-
-title: `packages/vue`
-description: The Vue package owns the shared composables, plugin state, SSR query behavior, and storage helpers that both tracks document.
-icon: i-lucide-file-code-2
-
----
-
-::
-
-## ::u-page-feature
-
-title: Repo-backed guides
-description: Storage, R2, Better Auth, and renderless component guides now reference the real behavior exposed by this repository instead of placeholder examples.
-icon: i-lucide-badge-check
-
----
-
-::
-
-::
+- `packages/nuxt` owns the Nuxt module, aliases, auto-imports, renderless components, and runtime wiring.
+- `packages/vue` owns the shared Vue plugin, composables, SSR query behavior, and storage helpers.
+- the guides in this site stay tied to the real repo behavior instead of placeholder examples.
 
 ::important
 The Nuxt module and the Vue package are equally supported. Start with the track that matches your runtime, then move into the shared Convex patterns and API reference.

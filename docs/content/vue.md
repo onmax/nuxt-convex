@@ -4,25 +4,12 @@ description: The Vue-focused track for @onmax/convex-vue, centered on plugin set
 navigation: false
 ---
 
-## ::u-page-hero
+# Vue Docs
 
-orientation: vertical
-headline: Vue Track
-title: Work directly with the shared Convex Vue package.
-description: This track stays focused on plugin setup, runtime control, and the composables you use in standalone Vue applications.
-links:
+Work directly with the shared Convex Vue package. This track stays focused on plugin setup, runtime control, and the composables you use in standalone Vue applications.
 
-- label: Install the Vue package
-  to: /vue-core/installation
-  trailingIcon: i-lucide-arrow-right
-- label: Read manual initialization
-  to: /vue-core/manual-initialization
-  color: neutral
-  variant: outline
-
----
-
-::
+:u-button{to="/vue-core/installation" label="Install the Vue package" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/vue-core/manual-initialization" label="Read manual initialization" color="neutral" variant="outline"}
 
 ::u-page-grid
 
@@ -70,38 +57,8 @@ spotlight: true
 
 ::
 
-## ::u-page-section
+## Work in this track
 
-title: Work In This Track
-description: The Vue track stays close to the plugin and composable layer without pulling in Nuxt-specific conventions.
-orientation: vertical
-
----
-
-::u-page-grid
-
-## ::u-page-feature
-
-title: Plugin ownership
-description: Vue apps install and configure `convexVue` directly, which makes runtime control explicit.
-icon: i-lucide-plug
-
-::
-
-## ::u-page-feature
-
-title: Manual lifecycle
-description: You can defer client initialization when your deployment URL is not known up front.
-icon: i-lucide-sliders-horizontal
-
-::
-
-## ::u-page-feature
-
-title: Shared API surface
-description: The composables and helpers documented here are the same lower-level primitives used by the Nuxt module.
-icon: i-lucide-code-2
-
-::
-
-::
+- Vue apps install and configure `convexVue` directly, which makes runtime control explicit.
+- you can defer client initialization when your deployment URL is not known up front.
+- the composables and helpers here are the same lower-level primitives used by the Nuxt module.
