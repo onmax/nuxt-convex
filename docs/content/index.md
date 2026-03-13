@@ -8,15 +8,15 @@ navigation: false
 
 orientation: vertical
 headline: Convex for Nuxt and Vue
-title: Ship realtime apps without rebuilding the same integration twice.
-description: nuxt-convex adds Nuxt-specific wiring on top of @onmax/convex-vue, while the Vue package stays available for standalone apps and custom runtimes.
+title: Split the docs by runtime, not by package internals.
+description: Start in the track that matches your app. Nuxt docs stay module-first, Vue docs stay plugin-first, and the shared API stays available when you need to cross the boundary.
 links:
 
-- label: Use the Nuxt module
-  to: /nuxt-module
+- label: Open Nuxt docs
+  to: /nuxt
   trailingIcon: i-lucide-arrow-right
-- label: Use the standalone Vue package
-  to: /vue-core
+- label: Open Vue docs
+  to: /vue
   color: neutral
   variant: outline
 - label: Browse the API reference
@@ -33,29 +33,29 @@ links:
 ## ::u-page-card
 
 title: Nuxt module
-description: Add auto-imports, virtual modules, SSR-aware queries, storage scaffolding, and DevTools integration to a Nuxt app.
+description: Work in a Nuxt-first track with installation, guides, integrations, and the module-aware API surface grouped together.
 icon: i-lucide-layers-3
-to: /nuxt-module
+to: /nuxt
 highlight: true
 highlightColor: primary
 spotlight: true
 
 ---
 
-:u-button{to="/getting-started/installation" label="Install nuxt-convex" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/nuxt" label="Open Nuxt docs" trailing-icon="i-lucide-arrow-right"}
 ::
 
 ## ::u-page-card
 
 title: Vue core
-description: Use the same Convex composables directly in Vue 3 with manual or automatic client initialization.
+description: Work in a Vue-first track with plugin setup, manual initialization, and composable-oriented documentation.
 icon: i-lucide-component
-to: /vue-core
+to: /vue
 spotlight: true
 
 ---
 
-:u-button{to="/vue-core/installation" label="Install @onmax/convex-vue" color="neutral" variant="outline" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/vue" label="Open Vue docs" color="neutral" variant="outline" trailing-icon="i-lucide-arrow-right"}
 ::
 
 ## ::u-page-card

@@ -5,9 +5,9 @@ export default defineAppConfig({
   header: {
     title: 'Nuxt Convex',
     links: [
-      { label: 'Nuxt Module', to: '/nuxt-module', color: 'primary', variant: 'soft' },
-      { label: 'Vue Core', to: '/vue-core', color: 'neutral', variant: 'ghost' },
-      { label: 'API Reference', to: '/api-reference', color: 'neutral', variant: 'ghost' },
+      { label: 'Nuxt Docs', to: '/nuxt' },
+      { label: 'Vue Docs', to: '/vue' },
+      { label: 'Shared API', to: '/api-reference' },
     ],
   },
   github: {
