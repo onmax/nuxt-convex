@@ -48,6 +48,8 @@ jobs:
 
       - uses: ./.github/actions/setup-pnpm
         if: steps.preview-config.outputs.enabled == 'true'
+        with:
+          install-command: pnpm install --filter nuxt-convex-playground... --filter @onmax/convex-vue... --filter nuxt-convex...
 
       - name: Compute preview metadata
         id: preview
@@ -134,6 +136,8 @@ jobs:
 
       - uses: ./.github/actions/setup-pnpm
         if: steps.cleanup-config.outputs.enabled == 'true'
+        with:
+          install-command: pnpm install --filter nuxt-convex-playground...
 
       - name: Delete preview worker
         if: steps.cleanup-config.outputs.enabled == 'true'

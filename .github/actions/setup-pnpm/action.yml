@@ -6,6 +6,10 @@ inputs:
     description: Node.js version to use
     required: false
     default: '22'
+  install-command:
+    description: Command used to install dependencies
+    required: false
+    default: pnpm install
 
 runs:
   using: composite
@@ -24,4 +28,4 @@ runs:
         cache: pnpm
 
     - shell: bash
-      run: pnpm install
+      run: ${{ inputs.install-command }}

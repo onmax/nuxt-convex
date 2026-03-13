@@ -17,6 +17,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup-pnpm
+        with:
+          install-command: pnpm install --filter @onmax/convex-vue... --filter nuxt-convex...
       - run: pnpm validate:packages
 
       - name: GitHub Release
