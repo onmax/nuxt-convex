@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "nuxt-convex-playground",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "no_nodejs_compat_v2"
+  ],
+  "main": "playground/.output/server/index.mjs",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "playground/.output/public"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
