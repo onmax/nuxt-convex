@@ -18,7 +18,6 @@ catalog:
   bumpp: ^10.3.2
   docus: ^5.8.0
   nuxt: ^4.2.2
-  nuxt-skill-hub: github:onmax/nuxt-skill-hub#3506fed
   tailwindcss: ^4.2.1
   yaml: ^2.8.2
   zod: ^3.25.76

@@ -248,9 +248,6 @@ importers:
       nuxt:
         specifier: 'catalog:'
         version: 4.3.0(de278a8e3350c744becf4b5af353d856)
-      nuxt-skill-hub:
-        specifier: 'catalog:'
-        version: git+https://git@github.com:onmax/nuxt-skill-hub.git#3506fed(ai@6.0.116(zod@4.3.6))(magicast@0.5.1)(pg@8.17.2)(unstorage@1.17.4(db0@0.3.4(@electric-sql/pglite@0.3.15)(better-sqlite3@12.6.2)(drizzle-orm@0.41.0(@cloudflare/workers-types@4.20260123.0)(@electric-sql/pglite@0.3.15)(@opentelemetry/api@1.9.0)(@prisma/client@5.22.0(prisma@7.3.0(@types/react@19.2.9)(better-sqlite3@12.6.2)(magicast@0.5.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)))(@types/pg@8.16.0)(better-sqlite3@12.6.2)(kysely@0.28.11)(mysql2@3.15.3)(pg@8.17.2)(postgres@3.4.7)(prisma@7.3.0(@types/react@19.2.9)(better-sqlite3@12.6.2)(magicast@0.5.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)))(mysql2@3.15.3))(ioredis@5.9.2))
       tailwindcss:
         specifier: 'catalog:'
         version: 4.2.1
