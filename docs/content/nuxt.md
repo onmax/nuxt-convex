@@ -4,12 +4,12 @@ description: The Nuxt-focused track for nuxt-convex, with setup, guides, integra
 navigation: false
 ---
 
-# Nuxt Docs
-
 Build Convex into Nuxt with a docs flow that stays Nuxt-first. Start with module setup, move into storage and integrations, and keep the shared Vue API available when you need to understand the lower layer.
 
+::div{class="flex flex-wrap gap-3"}
 :u-button{to="/getting-started" label="Start with installation" trailing-icon="i-lucide-arrow-right"}
 :u-button{to="/nuxt-module" label="Open module guide" color="neutral" variant="outline"}
+::
 
 ::card-group
 

@@ -4,12 +4,12 @@ description: The Vue-focused track for @onmax/convex-vue, centered on plugin set
 navigation: false
 ---
 
-# Vue Docs
-
 Work directly with the shared Convex Vue package. This track stays focused on plugin setup, runtime control, and the composables you use in standalone Vue applications.
 
+::div{class="flex flex-wrap gap-3"}
 :u-button{to="/vue-core/installation" label="Install the Vue package" trailing-icon="i-lucide-arrow-right"}
 :u-button{to="/vue-core/manual-initialization" label="Read manual initialization" color="neutral" variant="outline"}
+::
 
 ::card-group
 

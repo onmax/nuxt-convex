@@ -4,25 +4,18 @@ export default defineAppConfig({
   },
   docsModules: [
     {
+      id: 'vue',
+      label: 'Vue',
+      to: '/vue',
+      match: ['/vue', '/vue-core', '/api-reference', '/convex-patterns'],
+      sidebarRoots: ['/vue-core', '/api-reference', '/convex-patterns'],
+    },
+    {
       id: 'nuxt',
       label: 'Nuxt',
       to: '/nuxt',
       match: ['/nuxt', '/getting-started', '/nuxt-module', '/integrations'],
       sidebarRoots: ['/getting-started', '/nuxt-module', '/integrations'],
-    },
-    {
-      id: 'vue',
-      label: 'Vue',
-      to: '/vue',
-      match: ['/vue', '/vue-core'],
-      sidebarRoots: ['/vue-core'],
-    },
-    {
-      id: 'shared-api',
-      label: 'Shared API',
-      to: '/api-reference',
-      match: ['/api-reference', '/convex-patterns'],
-      sidebarRoots: ['/api-reference', '/convex-patterns'],
     },
   ],
   header: {

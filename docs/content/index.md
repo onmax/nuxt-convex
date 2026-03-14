@@ -6,30 +6,25 @@ navigation: false
 
 # Split the docs by runtime
 
-Start in the track that matches your app. Nuxt docs stay module-first, Vue docs stay plugin-first, and the shared API stays available when you need to cross the boundary.
+Start in the track that matches your app. Nuxt docs stay module-first, while the Vue track also carries the shared composables and Convex patterns that both runtimes build on.
 
-:u-button{to="/nuxt" label="Open Nuxt docs" trailing-icon="i-lucide-arrow-right"}
-:u-button{to="/vue" label="Open Vue docs" color="neutral" variant="outline"}
-:u-button{to="/api-reference" label="Browse the API reference" color="neutral" variant="ghost"}
+::div{class="flex flex-wrap gap-3"}
+:u-button{to="/vue" label="Open Vue docs" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/nuxt" label="Open Nuxt docs" color="neutral" variant="outline"}
+::
 
 ::card-group
 
-::card{title="Nuxt module" icon="i-lucide-layers-3" to="/nuxt" color="primary"}
-Work in a Nuxt-first track with installation, guides, integrations, and the module-aware API surface grouped together.
+::card{title="Vue core + shared API" icon="i-lucide-component" to="/vue" color="primary"}
+Work in a Vue-first track with plugin setup, manual initialization, composables, and the shared Convex patterns that the Nuxt module builds on.
 
-:u-button{to="/nuxt" label="Open Nuxt docs" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/vue" label="Open Vue docs" trailing-icon="i-lucide-arrow-right"}
 ::
 
-::card{title="Vue core" icon="i-lucide-component" to="/vue"}
-Work in a Vue-first track with plugin setup, manual initialization, and composable-oriented documentation.
+::card{title="Nuxt module" icon="i-lucide-layers-3" to="/nuxt"}
+Work in a Nuxt-first track with installation, guides, integrations, and module-specific behavior layered on top of the shared Vue package.
 
-:u-button{to="/vue" label="Open Vue docs" color="neutral" variant="outline" trailing-icon="i-lucide-arrow-right"}
-::
-
-::card{title="API reference" icon="i-lucide-book-open-text" to="/api-reference"}
-Review every shipped composable, renderless component, module option, and virtual module from the current public surface.
-
-:u-button{to="/api-reference" label="Open the reference" color="neutral" variant="ghost" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/nuxt" label="Open Nuxt docs" color="neutral" variant="outline" trailing-icon="i-lucide-arrow-right"}
 ::
 
 ::
@@ -41,5 +36,5 @@ Review every shipped composable, renderless component, module option, and virtua
 - the guides in this site stay tied to the real repo behavior instead of placeholder examples.
 
 ::important
-The Nuxt module and the Vue package are equally supported. Start with the track that matches your runtime, then move into the shared Convex patterns and API reference.
+The Nuxt module wraps the shared Vue package. Start with the track that matches your runtime, then use the Vue docs for the shared composables and Convex patterns available to both.
 ::
