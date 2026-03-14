@@ -3,7 +3,7 @@ const appConfig = useAppConfig()
 const site = useSiteConfig()
 
 const { localePath, isEnabled, locales } = useDocusI18n()
-const { activeModule, activeTabs, isTabActive } = useDocsModules()
+const { modules, isModuleActive } = useDocsModules()
 
 const links = computed(() => appConfig.github && appConfig.github.url
   ? [
@@ -31,8 +31,6 @@ const links = computed(() => appConfig.github && appConfig.github.url
       </template>
 
       <template #right>
-        <AppHeaderCTA />
-
         <template v-if="isEnabled && locales.length > 1">
           <ClientOnly>
             <LanguageSelect />
@@ -81,18 +79,18 @@ const links = computed(() => appConfig.github && appConfig.github.url
     </UHeader>
 
     <div
-      v-if="activeModule && activeTabs.length"
+      v-if="modules.length"
       class="hidden border-t border-default lg:block"
     >
       <UContainer class="flex items-center gap-1 overflow-x-auto py-2">
         <UButton
-          v-for="tab in activeTabs"
-          :key="tab.to"
-          :to="tab.to"
+          v-for="module in modules"
+          :key="module.id"
+          :to="module.to"
           size="sm"
-          :label="tab.label"
-          :color="isTabActive(tab) ? 'primary' : 'neutral'"
-          :variant="isTabActive(tab) ? 'soft' : 'ghost'"
+          :label="module.label"
+          :color="isModuleActive(module) ? 'primary' : 'neutral'"
+          :variant="isModuleActive(module) ? 'soft' : 'ghost'"
         />
       </UContainer>
     </div>

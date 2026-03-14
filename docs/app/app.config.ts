@@ -9,11 +9,6 @@ export default defineAppConfig({
       to: '/nuxt',
       match: ['/nuxt', '/getting-started', '/nuxt-module', '/integrations'],
       sidebarRoots: ['/getting-started', '/nuxt-module', '/integrations'],
-      tabs: [
-        { label: 'Get Started', to: '/getting-started' },
-        { label: 'Guide', to: '/nuxt-module' },
-        { label: 'Integrations', to: '/integrations' },
-      ],
     },
     {
       id: 'vue',
@@ -21,11 +16,6 @@ export default defineAppConfig({
       to: '/vue',
       match: ['/vue', '/vue-core'],
       sidebarRoots: ['/vue-core'],
-      tabs: [
-        { label: 'Overview', to: '/vue' },
-        { label: 'Installation', to: '/vue-core/installation' },
-        { label: 'Manual Init', to: '/vue-core/manual-initialization' },
-      ],
     },
     {
       id: 'shared-api',
@@ -33,10 +23,6 @@ export default defineAppConfig({
       to: '/api-reference',
       match: ['/api-reference', '/convex-patterns'],
       sidebarRoots: ['/api-reference', '/convex-patterns'],
-      tabs: [
-        { label: 'Composables', to: '/api-reference' },
-        { label: 'Patterns', to: '/convex-patterns' },
-      ],
     },
   ],
   header: {

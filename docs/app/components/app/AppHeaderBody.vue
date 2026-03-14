@@ -2,7 +2,7 @@
 import type { ContentNavigationItem } from '@nuxt/content'
 
 const navigation = inject<Ref<ContentNavigationItem[]>>('navigation')
-const { activeModule, activeTabs, filterNavigation, isModuleActive, isTabActive, modules } = useDocsModules()
+const { filterNavigation, isModuleActive, modules } = useDocsModules()
 
 const filteredNavigation = computed(() => filterNavigation(navigation?.value))
 </script>
@@ -18,21 +18,6 @@ const filteredNavigation = computed(() => filterNavigation(navigation?.value))
         :label="module.label"
         :color="isModuleActive(module) ? 'primary' : 'neutral'"
         :variant="isModuleActive(module) ? 'soft' : 'ghost'"
-      />
-    </div>
-
-    <div
-      v-if="activeModule && activeTabs.length"
-      class="flex flex-wrap gap-2 border-t border-default pt-4"
-    >
-      <UButton
-        v-for="tab in activeTabs"
-        :key="tab.to"
-        :to="tab.to"
-        size="sm"
-        :label="tab.label"
-        :color="isTabActive(tab) ? 'primary' : 'neutral'"
-        :variant="isTabActive(tab) ? 'soft' : 'ghost'"
       />
     </div>
 
