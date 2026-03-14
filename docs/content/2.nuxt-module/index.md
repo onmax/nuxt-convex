@@ -3,7 +3,51 @@ title: Nuxt Module
 description: Understand what nuxt-convex adds on top of the shared Vue package, including auto-imports, virtual modules, storage helpers, and renderless components.
 ---
 
-`nuxt-convex` is the Nuxt-specific layer in this monorepo. It re-exports the shared Vue composables through `#convex`, wires them into Nuxt auto-imports, resolves the generated API alias, and optionally scaffolds storage helpers.
+`nuxt-convex` is the Nuxt-specific layer in this monorepo. It re-exports the shared Vue composables through `#convex`, wires them into Nuxt auto-imports, resolves the generated API alias, and can scaffold storage helpers.
+
+::u-page-section
+#title
+Open the Nuxt-specific guides
+
+  :::u-page-grid
+    ::::u-page-card
+    ---
+    class: col-span-2 lg:col-span-1
+    to: /nuxt-module/file-storage
+    spotlight: true
+    ---
+    #title
+    Set up file storage
+
+    #description
+    Enable scaffolded storage helpers and understand where generated files live.
+    ::::
+
+    ::::u-page-card
+    ---
+    class: col-span-2 lg:col-span-1
+    to: /api-reference/module-configuration
+    ---
+    #title
+    Review module options
+
+    #description
+    Inspect the public configuration surface exposed by the module.
+    ::::
+
+    ::::u-page-card
+    ---
+    class: col-span-2
+    to: /vue
+    ---
+    #title
+    Continue in the shared Vue track
+
+    #description
+    Move there when you want shared composable behavior or Convex backend guidance instead of wrapper-specific setup.
+    ::::
+  :::
+::
 
 ## What the module adds
 
@@ -27,7 +71,7 @@ export default defineNuxtConfig({
 })
 ```
 
-## How the layer resolves files
+## How the module resolves files
 
 The module resolves `convex.dir` across Nuxt layers. It prefers a layer that already contains generated Convex files. If the resolved layer is not writable, storage scaffolding falls back to the project layer and keeps imports pointed at the authoritative generated directory.
 
@@ -36,6 +80,10 @@ That behavior matters in layered Nuxt apps, starter kits, and modules that ship 
 ## What stays shared with Vue core
 
 The module does not reimplement the data layer. `useConvexQuery`, `useConvexMutation`, `useConvexAction`, `useConvexClient`, `useConvexPaginatedQuery`, `useConvexStorage`, and `useConvexUpload` still come from `@onmax/convex-vue`.
+
+::tip
+Read the Vue track for the shared composables and backend patterns. Read this section for Nuxt-specific configuration, aliases, and integration behavior.
+::
 
 ## Next steps
 

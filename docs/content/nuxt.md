@@ -1,38 +1,79 @@
 ---
-title: Nuxt Docs
+title: Nuxt
 description: The Nuxt-focused track for nuxt-convex, with setup, guides, integrations, and module-specific API references.
 navigation: false
 ---
 
-Build Convex into Nuxt with a docs flow that stays Nuxt-first. Start with module setup, move into storage and integrations, and keep the shared Vue API available when you need to understand the lower layer.
+Use this track when your app runs on Nuxt. It covers the `nuxt-convex` module, the runtime wiring it adds, and the integrations that depend on Nuxt-specific behavior.
 
-::div{class="flex flex-wrap gap-3"}
-:u-button{to="/getting-started" label="Start with installation" trailing-icon="i-lucide-arrow-right"}
-:u-button{to="/nuxt-module" label="Open module guide" color="neutral" variant="outline"}
+The module wraps `@onmax/convex-vue`. When you need the shared composables or the backend patterns they rely on, continue into the Vue track.
+
+::u-page-section
+#title
+Start in the Nuxt layer
+
+#description
+Follow these pages when you want module setup, runtime helpers, and Nuxt-specific integrations.
+
+  :::u-page-grid
+    ::::u-page-card
+    ---
+    class: col-span-2 lg:col-span-1
+    spotlight: true
+    to: /getting-started
+    ---
+    #title
+    Install the module
+
+    #description
+    Install `nuxt-convex`, connect Convex, and generate the API used throughout the module and examples.
+    ::::
+
+    ::::u-page-card
+    ---
+    class: col-span-2 lg:col-span-1
+    spotlight: true
+    to: /nuxt-module
+    ---
+    #title
+    Configure the wrapper
+
+    #description
+    Learn what the module adds on top of the shared Vue package, including aliases, auto-imports, runtime setup, and layer-aware resolution.
+    ::::
+
+    ::::u-page-card
+    ---
+    class: col-span-2 lg:col-span-1
+    to: /integrations
+    ---
+    #title
+    Add integrations
+
+    #description
+    Add Better Auth and Cloudflare R2 where the Nuxt module provides the surrounding wiring.
+    ::::
+
+    ::::u-page-card
+    ---
+    class: col-span-2 lg:col-span-1
+    to: /vue
+    ---
+    #title
+    Open the shared Vue layer
+
+    #description
+    Move into the shared package when you want composable details, manual plugin setup, or backend patterns that apply outside Nuxt.
+    ::::
+  :::
 ::
 
-::card-group
-
-::card{title="Get Started" icon="i-lucide-rocket" to="/getting-started" color="primary"}
-Install `nuxt-convex`, connect Convex, and verify the generated API and runtime config.
-::
-
-::card{title="Guide" icon="i-lucide-book-open" to="/nuxt-module"}
-Learn what the module adds on top of the shared Vue package, including auto-imports and layer-aware resolution.
-::
-
-::card{title="Integrations" icon="i-lucide-plug-zap" to="/integrations"}
-Add Better Auth and Cloudflare R2 without leaving the Nuxt track.
-::
-
-::card{title="Shared API" icon="i-lucide-code-xml" to="/api-reference"}
-Jump into the composables and renderless APIs used by the module runtime.
-::
-
-::
-
-## Work in this track
+## Understand what the Nuxt layer adds
 
 - `nuxt-convex` handles aliases, auto-imports, generated API access, and runtime wiring.
-- file storage and Cloudflare R2 live here because they depend on module scaffolding and runtime behavior.
-- the data layer stays shared with `@onmax/convex-vue`, but this track documents how the Nuxt module exposes it.
+- File storage and Cloudflare R2 live here because they depend on module scaffolding and runtime behavior.
+- The data layer stays shared with `@onmax/convex-vue`, but this track explains how the Nuxt module exposes it.
+
+::tip
+Use the Vue track for shared composables such as `useConvexQuery` and `useConvexMutation`. Use the Nuxt track for module configuration, auto-imports, and Nuxt-specific integrations.
+::

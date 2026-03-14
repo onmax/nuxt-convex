@@ -4,37 +4,111 @@ description: Build with Convex in Nuxt or Vue with typed queries, SSR-aware real
 navigation: false
 ---
 
-# Split the docs by runtime
+::u-page-hero
+#title
+Nuxt Convex
 
-Start in the track that matches your app. Nuxt docs stay module-first, while the Vue track also carries the shared composables and Convex patterns that both runtimes build on.
+#description
+Build with Convex in Nuxt or Vue with typed queries, SSR-aware realtime data, storage helpers, and integrations. Start in the runtime you are building, then move across tracks when you need lower-level API details or Nuxt-specific behavior.
 
-::div{class="flex flex-wrap gap-3"}
-:u-button{to="/vue" label="Open Vue docs" trailing-icon="i-lucide-arrow-right"}
-:u-button{to="/nuxt" label="Open Nuxt docs" color="neutral" variant="outline"}
+#links
+  :::u-button
+  ---
+  color: neutral
+  size: xl
+  to: /vue
+  trailing-icon: i-lucide-arrow-right
+  ---
+  Open Vue docs
+  :::
+
+  :::u-button
+  ---
+  color: neutral
+  size: xl
+  to: /nuxt
+  variant: outline
+  ---
+  Open Nuxt docs
+  :::
 ::
 
-::card-group
+::u-page-section
+#title
+Choose your track
 
-::card{title="Vue core + shared API" icon="i-lucide-component" to="/vue" color="primary"}
-Work in a Vue-first track with plugin setup, manual initialization, composables, and the shared Convex patterns that the Nuxt module builds on.
+#description
+This repo ships two layers: `@onmax/convex-vue` as the shared core and `nuxt-convex` as the Nuxt wrapper.
 
-:u-button{to="/vue" label="Open Vue docs" trailing-icon="i-lucide-arrow-right"}
+  :::u-page-grid
+    ::::u-page-card
+    ---
+    class: col-span-2 lg:col-span-1
+    spotlight: true
+    to: /vue
+    ---
+    #title
+    Vue core + shared API
+
+    #description
+    Start with the shared package, installation flow, composables, and backend patterns that both runtimes rely on.
+    ::::
+
+    ::::u-page-card
+    ---
+    class: col-span-2 lg:col-span-1
+    spotlight: true
+    to: /nuxt
+    ---
+    #title
+    Nuxt module
+
+    #description
+    Start with the Nuxt-specific module, runtime wiring, storage helpers, and integrations layered on top of the shared Vue package.
+    ::::
+  :::
 ::
 
-::card{title="Nuxt module" icon="i-lucide-layers-3" to="/nuxt"}
-Work in a Nuxt-first track with installation, guides, integrations, and module-specific behavior layered on top of the shared Vue package.
+::u-page-section
+#title
+Understand the monorepo
 
-:u-button{to="/nuxt" label="Open Nuxt docs" color="neutral" variant="outline" trailing-icon="i-lucide-arrow-right"}
+  :::u-page-grid
+    ::::u-page-card
+    ---
+    class: col-span-2 md:col-span-1
+    ---
+    #title
+    `packages/vue`
+
+    #description
+    Owns the shared Vue plugin, composables, SSR query behavior, and storage helpers.
+    ::::
+
+    ::::u-page-card
+    ---
+    class: col-span-2 md:col-span-1
+    ---
+    #title
+    `packages/nuxt`
+
+    #description
+    Owns the Nuxt module, aliases, auto-imports, renderless components, and runtime wiring.
+    ::::
+
+    ::::u-page-card
+    ---
+    class: col-span-2
+    ---
+    #title
+    `docs`
+
+    #description
+    Documents the shipped behavior in this monorepo instead of placeholder examples.
+    ::::
+  :::
 ::
-
-::
-
-## What ships in this repo
-
-- `packages/nuxt` owns the Nuxt module, aliases, auto-imports, renderless components, and runtime wiring.
-- `packages/vue` owns the shared Vue plugin, composables, SSR query behavior, and storage helpers.
-- the guides in this site stay tied to the real repo behavior instead of placeholder examples.
 
 ::important
-The Nuxt module wraps the shared Vue package. Start with the track that matches your runtime, then use the Vue docs for the shared composables and Convex patterns available to both.
+The Nuxt module wraps the shared Vue package. When a Nuxt page points you to shared composables or Convex backend behavior, continue in the Vue track.
 ::
