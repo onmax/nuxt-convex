@@ -3,7 +3,7 @@ title: API Reference
 description: Review the current public API surface for nuxt-convex and @onmax/convex-vue.
 ---
 
-This reference follows the shipped code in `packages/nuxt` and `packages/vue`. It covers the shared composables, Nuxt-only exports, virtual modules, and renderless components.
+This reference follows the shipped code in `packages/nuxt` and `packages/vue`. It covers the shared root composables, the Vue package feature entrypoints, and the Nuxt-only exports that build on top of them.
 
 ::u-page-section
 #title
@@ -26,6 +26,7 @@ Start with the shared API
     ::::u-page-card
     ---
     class: col-span-2 md:col-span-1
+    spotlight: true
     to: /api-reference/use-convex-mutation
     ---
     #title
@@ -38,6 +39,7 @@ Start with the shared API
     ::::u-page-card
     ---
     class: col-span-2
+    spotlight: true
     to: /api-reference/module-configuration
     ---
     #title
@@ -54,8 +56,11 @@ Start with the shared API
 - [`useConvexQuery`](/api-reference/use-convex-query)
 - [`useConvexMutation`](/api-reference/use-convex-mutation)
 - [`useConvexAction`](/api-reference/use-convex-action)
-- [`useConvexClient`](/api-reference/use-convex-client)
 - [`useConvexPaginatedQuery`](/api-reference/use-convex-paginated-query)
+
+## Browse the Vue feature entrypoints
+
+- [`useConvexController`](/api-reference/use-convex-controller)
 - [`useConvexStorage`](/api-reference/use-convex-storage)
 - [`useConvexUpload`](/api-reference/use-convex-upload)
 

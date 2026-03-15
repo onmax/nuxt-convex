@@ -77,6 +77,7 @@ Understand the monorepo
     ::::u-page-card
     ---
     class: col-span-2 md:col-span-1
+    spotlight: true
     ---
     #title
     `packages/vue`
@@ -88,6 +89,7 @@ Understand the monorepo
     ::::u-page-card
     ---
     class: col-span-2 md:col-span-1
+    spotlight: true
     ---
     #title
     `packages/nuxt`
@@ -99,6 +101,7 @@ Understand the monorepo
     ::::u-page-card
     ---
     class: col-span-2
+    spotlight: true
     ---
     #title
     `docs`

@@ -26,18 +26,20 @@ Open the shared guides
     ::::u-page-card
     ---
     class: col-span-2 lg:col-span-1
+    spotlight: true
     to: /api-reference
     ---
     #title
     Browse the shared API
 
     #description
-    Review the composables, helpers, and lower-level surface exposed by this package.
+    Review the root data-layer API plus the `/advanced` and `/storage` feature entrypoints.
     ::::
 
     ::::u-page-card
     ---
     class: col-span-2
+    spotlight: true
     to: /convex-patterns
     ---
     #title
@@ -51,15 +53,9 @@ Open the shared guides
 
 ## What it exposes
 
-- `convexVue`
-- `useConvexContext`
-- `useConvexClient`
-- `useConvexQuery`
-- `useConvexMutation`
-- `useConvexAction`
-- `useConvexPaginatedQuery`
-- `useConvexStorage`
-- `useConvexUpload`
+- Root `@onmax/convex-vue`: `convexVue`, `useConvexQuery`, `useConvexMutation`, `useConvexAction`, `useConvexPaginatedQuery`
+- `@onmax/convex-vue/advanced`: the controller hook and factory for delayed connection and raw client access
+- `@onmax/convex-vue/storage`: the optional storage plugin plus `useConvexStorage` and `useConvexUpload`
 
 ## What it expects from you
 
@@ -93,5 +89,5 @@ This section is also the reference track for the shared API. If you use Nuxt and
 ## Next steps
 
 - Follow the [Vue installation guide](/vue-core/installation).
-- Read [Manual Initialization](/vue-core/manual-initialization) if you need to create the client later.
+- Read [Manual Initialization](/vue-core/manual-initialization) if you need to connect later through `/advanced`.
 - Read [API Reference](/api-reference) for composable details.

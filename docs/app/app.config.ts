@@ -62,29 +62,6 @@ export default defineAppConfig({
   },
   toc: {
     title: 'On This Page',
-    bottom: {
-      title: 'Related Docs',
-      links: [
-        {
-          icon: 'i-lucide-book-open',
-          label: 'Convex documentation',
-          to: 'https://docs.convex.dev',
-          target: '_blank',
-        },
-        {
-          icon: 'i-lucide-book-open',
-          label: 'Nuxt UI documentation',
-          to: 'https://ui.nuxt.com',
-          target: '_blank',
-        },
-        {
-          icon: 'i-lucide-book-open',
-          label: 'Better Auth documentation',
-          to: 'https://www.better-auth.com/docs',
-          target: '_blank',
-        },
-      ],
-    },
   },
   ui: {
     colors: {

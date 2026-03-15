@@ -27,6 +27,7 @@ Open the Nuxt-specific guides
     ---
     class: col-span-2 lg:col-span-1
     to: /api-reference/module-configuration
+    spotlight: true
     ---
     #title
     Review module options
@@ -39,6 +40,7 @@ Open the Nuxt-specific guides
     ---
     class: col-span-2
     to: /vue
+    spotlight: true
     ---
     #title
     Continue in the shared Vue track
@@ -79,7 +81,7 @@ That behavior matters in layered Nuxt apps, starter kits, and modules that ship 
 
 ## What stays shared with Vue core
 
-The module does not reimplement the data layer. `useConvexQuery`, `useConvexMutation`, `useConvexAction`, `useConvexClient`, `useConvexPaginatedQuery`, `useConvexStorage`, and `useConvexUpload` still come from `@onmax/convex-vue`.
+The module does not reimplement the data layer. `useConvexQuery`, `useConvexMutation`, `useConvexAction`, `useConvexPaginatedQuery`, `useConvexStorage`, and `useConvexUpload` still come from `@onmax/convex-vue`.
 
 ::tip
 Read the Vue track for the shared composables and backend patterns. Read this section for Nuxt-specific configuration, aliases, and integration behavior.

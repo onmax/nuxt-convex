@@ -26,6 +26,7 @@ Open an integration guide
     ::::u-page-card
     ---
     class: col-span-2 md:col-span-1
+    spotlight: true
     to: /integrations/r2
     ---
     #title

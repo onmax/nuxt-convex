@@ -45,6 +45,7 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
     ::::u-page-card
     ---
     class: col-span-2 lg:col-span-1
+    spotlight: true
     to: /integrations
     ---
     #title
@@ -57,6 +58,7 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
     ::::u-page-card
     ---
     class: col-span-2 lg:col-span-1
+    spotlight: true
     to: /vue
     ---
     #title

@@ -26,6 +26,7 @@ Open the backend patterns
     ::::u-page-card
     ---
     class: col-span-2 md:col-span-1
+    spotlight: true
     to: /convex-patterns/functions
     ---
     #title
@@ -38,6 +39,7 @@ Open the backend patterns
     ::::u-page-card
     ---
     class: col-span-2
+    spotlight: true
     to: /convex-patterns/realtime-and-ssr
     ---
     #title
