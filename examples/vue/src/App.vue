@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const items = [
-  'Standalone plugin installation',
-  'Vue-native query, mutation, action, and pagination composables',
-  'Zero-argument storage and upload helpers',
+  'Standalone plugin installation for the core data layer',
+  'Advanced controller helpers from @onmax/convex-vue/advanced',
+  'Optional storage and upload helpers from @onmax/convex-vue/storage',
 ]
 </script>
 

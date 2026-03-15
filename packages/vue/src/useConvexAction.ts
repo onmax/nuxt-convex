@@ -1,7 +1,7 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
 import type { ComputedRef, Ref } from 'vue'
 import { computed, ref } from 'vue'
-import { useConvexClient } from './useConvexClient'
+import { normalizeError, requireRealtimeClient, useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 
 type ActionReference = FunctionReference<'action'>
 
@@ -12,7 +12,7 @@ export interface UseConvexActionReturn<Action extends ActionReference> {
 }
 
 export function useConvexAction<Action extends ActionReference>(action: Action): UseConvexActionReturn<Action> {
-  const client = useConvexClient()
+  const { clientRef } = useConvexRuntimeContext()
   const pendingCount = ref(0)
   const error = ref<Error | null>(null)
 
@@ -21,10 +21,10 @@ export function useConvexAction<Action extends ActionReference>(action: Action):
       pendingCount.value += 1
       error.value = null
       try {
-        return await client.action(action, args)
+        return await requireRealtimeClient(clientRef).action(action, args)
       }
       catch (err) {
-        error.value = err instanceof Error ? err : new Error(String(err))
+        error.value = normalizeError(err)
         throw error.value
       }
       finally {

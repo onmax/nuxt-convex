@@ -32,6 +32,26 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
+    },
+    "./advanced": {
+      "import": {
+        "types": "./dist/advanced.d.ts",
+        "default": "./dist/advanced.js"
+      },
+      "require": {
+        "types": "./dist/advanced.d.cts",
+        "default": "./dist/advanced.cjs"
+      }
+    },
+    "./storage": {
+      "import": {
+        "types": "./dist/storage.d.ts",
+        "default": "./dist/storage.js"
+      },
+      "require": {
+        "types": "./dist/storage.d.cts",
+        "default": "./dist/storage.cjs"
+      }
     }
   },
   "main": "./dist/index.cjs",
@@ -43,7 +63,7 @@
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
-    "test": "vitest run --config vitest.config.ts",
+    "test": "pnpm build && vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },

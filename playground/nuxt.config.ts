@@ -7,13 +7,18 @@ const workerName = getPlaygroundWorkerName()
 const enableGitHubAuth = isGitHubAuthEnabled()
 
 export default defineNuxtConfig({
-  modules: [NuxtConvex, '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
+  modules: [NuxtConvex, 'nuxt-skill-hub', '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
 
   alias: {
     '@onmax/convex-vue': '../packages/vue/src/index.ts',
   },
 
   hub: {},
+
+  skillHub: {
+    skillName: 'nuxt',
+    targets: ['codex'],
+  },
 
   icon: {
     customCollections: [{ prefix: 'custom', dir: './app/assets/icons' }],

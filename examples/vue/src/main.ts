@@ -6,7 +6,6 @@ const app = createApp(App)
 
 app.use(convexVue, {
   url: import.meta.env.VITE_CONVEX_URL || 'https://example.convex.cloud',
-  manualInit: true,
 })
 
 app.mount('#app')

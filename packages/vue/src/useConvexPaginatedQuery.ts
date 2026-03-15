@@ -1,8 +1,7 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType, PaginationResult } from 'convex/server'
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
-import { getFunctionName } from 'convex/server'
 import { computed, nextTick, onScopeDispose, ref, toValue, watch } from 'vue'
-import { useConvexClient } from './useConvexClient'
+import { useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 
 type QueryReference = FunctionReference<'query'>
 type PaginatedQueryReference<T> = FunctionReference<'query', any, any, PaginationResult<T>>
@@ -60,8 +59,8 @@ export function useConvexPaginatedQuery<Query extends QueryReference>(
 ): UseConvexPaginatedQueryReturn<
   FunctionReturnType<Query> extends PaginationResult<infer Item> ? Item : never
 > {
-  const client = useConvexClient()
-  const unsubscribers = ref<Array<(() => void) | undefined>>([])
+  const context = useConvexRuntimeContext()
+  let unsubscribers: Array<(() => void) | undefined> = []
   const pages = ref<PaginationResult<any>[]>([])
   const error = ref<Error | null>(null)
   const isDone = ref(false)
@@ -70,8 +69,8 @@ export function useConvexPaginatedQuery<Query extends QueryReference>(
   let suspenseController = createSuspenseController<any[][]>()
 
   function resetState(): void {
-    unsubscribers.value.forEach(unsubscribe => unsubscribe?.())
-    unsubscribers.value = []
+    unsubscribers.forEach(unsubscribe => unsubscribe?.())
+    unsubscribers = []
     pages.value = []
     error.value = null
     isDone.value = false
@@ -86,20 +85,28 @@ export function useConvexPaginatedQuery<Query extends QueryReference>(
   }
 
   function loadPage(index: number): void {
-    unsubscribers.value[index]?.()
+    unsubscribers[index]?.()
+    unsubscribers[index] = undefined
+
+    const client = context.clientRef.value
+    if (!client) {
+      isLoadingMore.value = false
+      return
+    }
+
     if (index > 0)
       isLoadingMore.value = true
 
     const cursor = pages.value[index - 1]?.continueCursor ?? null
     const currentArgs = toValue(args) ?? {}
 
-    unsubscribers.value[index] = client.onUpdate(
+    unsubscribers[index] = client.onUpdate(
       query as PaginatedQueryReference<any>,
       {
         ...(currentArgs as Record<string, unknown>),
         paginationOpts: {
-          numItems: options.numItems,
           cursor,
+          numItems: options.numItems,
         },
       },
       (result) => {
@@ -120,16 +127,12 @@ export function useConvexPaginatedQuery<Query extends QueryReference>(
   }
 
   const serializedArgs = computed(() => JSON.stringify(toValue(args)))
-  const queryName = computed(() => {
-    const name = (query as { _name?: string })._name
-    return name ?? getFunctionName(query)
-  })
 
-  watch(queryName, () => reset(true))
   watch(serializedArgs, (next, prev) => {
     if (next !== prev)
       reset(true)
   })
+  watch(() => context.clientRef.value, () => reset(true))
 
   loadPage(0)
   onScopeDispose(() => reset(false))

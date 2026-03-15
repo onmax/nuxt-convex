@@ -1,5 +1,6 @@
 import type { DeepReadonly, Ref } from 'vue'
 import { readonly, ref } from 'vue'
+import { normalizeError } from './internal/useConvexRuntimeContext'
 import { useConvexStorage } from './useConvexStorage'
 
 export interface UseConvexUploadOptions {
@@ -24,7 +25,7 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
   return {
     async upload(file) {
       if (typeof window === 'undefined') {
-        const serverError = new Error('[convex-vue] Uploads are only available on the client')
+        const serverError = new Error('[convex-vue/storage] Uploads are only available on the client')
         error.value = serverError
         options.onError?.(serverError)
         return null
@@ -43,7 +44,7 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
         })
 
         if (!response.ok)
-          throw new Error(`[convex-vue] Upload failed: ${response.status} ${response.statusText}`)
+          throw new Error(`[convex-vue/storage] Upload failed: ${response.status} ${response.statusText}`)
 
         const { storageId } = await response.json()
         progress.value = 100
@@ -51,7 +52,7 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
         return storageId
       }
       catch (err) {
-        error.value = err instanceof Error ? err : new Error(String(err))
+        error.value = normalizeError(err)
         options.onError?.(error.value)
         return null
       }

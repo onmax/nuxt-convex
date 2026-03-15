@@ -1,4 +1,4 @@
-import type { Nuxt } from '@nuxt/schema'
+import type { Nuxt, NuxtModule } from '@nuxt/schema'
 import type { ConvexConfig, ResolvedConvexConfig } from './types/config'
 import { existsSync } from 'node:fs'
 import { mkdir, writeFile } from 'node:fs/promises'
@@ -19,7 +19,7 @@ interface BetterAuthDatabaseProviderDefinition {
 
 type BetterAuthDatabaseProviders = Record<string, BetterAuthDatabaseProviderDefinition>
 
-export default defineNuxtModule<ConvexConfig>({
+const module: NuxtModule<ConvexConfig> = defineNuxtModule<ConvexConfig>({
   meta: {
     name: 'nuxt-convex',
     version,
@@ -109,6 +109,8 @@ export const db = undefined
     })
   },
 })
+
+export default module
 
 function resolveConfig(options: ConvexConfig): ResolvedConvexConfig {
   const url = options.url

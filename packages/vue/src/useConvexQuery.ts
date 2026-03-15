@@ -3,8 +3,7 @@ import type { Value } from 'convex/values'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import { getFunctionName } from 'convex/server'
 import { computed, onScopeDispose, ref, toValue, watch } from 'vue'
-import { useConvexContext } from './internal/useConvexContext'
-import { useConvexClient } from './useConvexClient'
+import { normalizeError, useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 
 type QueryReference = FunctionReference<'query'>
 
@@ -24,25 +23,29 @@ export function useConvexQuery<Query extends QueryReference>(
   args: MaybeRefOrGetter<FunctionArgs<Query>>,
   options?: UseConvexQueryOptions,
 ): UseConvexQueryReturn<Query> {
-  const context = useConvexContext()
+  const context = useConvexRuntimeContext()
   const isServer = typeof window === 'undefined'
-  const serverEnabled = options?.server ?? context.options.value.server
+  const serverEnabled = options?.server ?? context.optionsRef.value.server
 
   if (isServer) {
     const data = ref<FunctionReturnType<Query> | undefined>(undefined)
     const error = ref<Error | null>(null)
+
     const suspense = async (): Promise<FunctionReturnType<Query> | undefined> => {
       if (!serverEnabled)
         return undefined
 
+      if (!context.httpClientRef.value)
+        throw new Error('[convex-vue] Convex HTTP client is not connected')
+
       try {
-        const result = await context.httpClientRef.value?.query(query, toValue(args))
+        const result = await context.httpClientRef.value.query(query, toValue(args))
         data.value = result
         error.value = null
         return result as FunctionReturnType<Query>
       }
       catch (err) {
-        error.value = err instanceof Error ? err : new Error(String(err))
+        error.value = normalizeError(err)
         throw error.value
       }
     }
@@ -55,7 +58,6 @@ export function useConvexQuery<Query extends QueryReference>(
     }
   }
 
-  const client = useConvexClient()
   const queryArgs = computed(() => toValue(args))
   const data = ref<FunctionReturnType<Query> | undefined>(undefined)
   const error = ref<Error | null>(null)
@@ -69,6 +71,10 @@ export function useConvexQuery<Query extends QueryReference>(
   } | null = null
 
   const seedFromClientCache = (nextArgs: FunctionArgs<Query>): void => {
+    const client = context.clientRef.value
+    if (!client)
+      return
+
     const cached = client.client?.localQueryResult?.(queryName, nextArgs as Record<string, Value>)
     if (cached === undefined)
       return
@@ -78,9 +84,15 @@ export function useConvexQuery<Query extends QueryReference>(
   }
 
   const subscribe = (nextArgs: FunctionArgs<Query>): void => {
+    const client = context.clientRef.value
     const version = ++currentVersion
     seedFromClientCache(nextArgs)
     unsubscribe?.()
+    unsubscribe = null
+
+    if (!client)
+      return
+
     unsubscribe = client.onUpdate(
       query,
       nextArgs,
@@ -108,6 +120,8 @@ export function useConvexQuery<Query extends QueryReference>(
       throw error.value
     if (pendingFetch?.version === currentVersion)
       return await pendingFetch.promise
+    if (!context.httpClientRef.value)
+      return undefined
 
     const version = currentVersion
     const nextArgs = queryArgs.value
@@ -121,7 +135,7 @@ export function useConvexQuery<Query extends QueryReference>(
         return result as FunctionReturnType<Query> | undefined
       }
       catch (err) {
-        const normalizedError = err instanceof Error ? err : new Error(String(err))
+        const normalizedError = normalizeError(err)
         if (version === currentVersion)
           error.value = normalizedError
         throw normalizedError
@@ -136,7 +150,21 @@ export function useConvexQuery<Query extends QueryReference>(
     return await promise
   }
 
-  watch(queryArgs, subscribe, { immediate: true, deep: true })
+  const waitForResult = () => new Promise<FunctionReturnType<Query> | undefined>((resolve, reject) => {
+    const stop = watch([data, error], ([nextData, nextError]) => {
+      if (nextError) {
+        stop()
+        reject(nextError)
+        return
+      }
+      if (nextData !== undefined) {
+        stop()
+        resolve(nextData)
+      }
+    }, { immediate: true })
+  })
+
+  watch([queryArgs, () => context.clientRef.value], ([nextArgs]) => subscribe(nextArgs), { immediate: true, deep: true })
   onScopeDispose(() => unsubscribe?.())
 
   return {
@@ -148,22 +176,10 @@ export function useConvexQuery<Query extends QueryReference>(
         return Promise.resolve(data.value)
       if (error.value)
         return Promise.reject(error.value)
-      if (serverEnabled)
+      if (serverEnabled && context.httpClientRef.value)
         return fetchInitialData()
 
-      return new Promise((resolve, reject) => {
-        const stop = watch([data, error], ([nextData, nextError]) => {
-          if (nextError) {
-            stop()
-            reject(nextError)
-            return
-          }
-          if (nextData !== undefined) {
-            stop()
-            resolve(nextData)
-          }
-        }, { immediate: true })
-      })
+      return waitForResult()
     },
   }
 }
