@@ -3,7 +3,7 @@ title: Nuxt Module
 description: Understand what nuxt-convex adds on top of the shared Vue package, including auto-imports, virtual modules, storage helpers, and renderless components.
 ---
 
-`nuxt-convex` is the Nuxt-specific layer in this monorepo. It re-exports the shared Vue composables through `#convex`, wires them into Nuxt auto-imports, resolves the generated API alias, and can scaffold storage helpers.
+`nuxt-convex` is the Nuxt-specific layer in this monorepo. The module mirrors the shared Vue package through `#convex`, `#convex/storage`, and `#convex/advanced`, wires the supported composables into Nuxt auto-imports, resolves the generated API alias, and can scaffold storage helpers.
 
 ::u-page-section
 #title
@@ -54,7 +54,7 @@ Open the Nuxt-specific guides
 ## What the module adds
 
 - Auto-imports for the shared composables.
-- `#convex` and `#convex/api` aliases.
+- `#convex`, `#convex/api`, and `#convex/advanced` aliases.
 - Optional `#convex/storage` and `#convex/r2` aliases.
 - Global `ConvexQuery` and `ConvexPaginatedQuery` components.
 - Dev-only warnings when the generated Convex API is missing.
@@ -81,7 +81,11 @@ That behavior matters in layered Nuxt apps, starter kits, and modules that ship 
 
 ## What stays shared with Vue core
 
-The module does not reimplement the data layer. `useConvexQuery`, `useConvexMutation`, `useConvexAction`, `useConvexPaginatedQuery`, `useConvexStorage`, and `useConvexUpload` still come from `@onmax/convex-vue`.
+The module does not reimplement the data layer.
+
+- `#convex` mirrors `@onmax/convex-vue`
+- `#convex/storage` mirrors `@onmax/convex-vue/storage`
+- `#convex/advanced` mirrors `@onmax/convex-vue/advanced`
 
 ::tip
 Read the Vue track for the shared composables and backend patterns. Read this section for Nuxt-specific configuration, aliases, and integration behavior.

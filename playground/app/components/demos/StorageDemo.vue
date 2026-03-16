@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { useConvexClient } from '#convex/advanced'
 import { api } from '#convex/api'
+import { useConvexUpload } from '#convex/storage'
 
 const toast = useToast()
 const { user } = useUserSession()

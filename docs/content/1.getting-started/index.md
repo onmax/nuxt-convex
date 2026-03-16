@@ -60,12 +60,17 @@ Both packages read a Convex deployment URL. The Nuxt module can read `CONVEX_URL
 ## What both tracks share
 
 - `useConvexQuery`
+- `useConvexQueries`
 - `useConvexMutation`
 - `useConvexAction`
-- `useConvexClient`
 - `useConvexPaginatedQuery`
-- `useConvexStorage`
-- `useConvexUpload`
+- `useConvexAuth`
+- `useConvexConnectionState`
+
+Optional capabilities stay on explicit entrypoints:
+
+- `@onmax/convex-vue/storage` for `useConvexStorage` and `useConvexUpload`
+- `@onmax/convex-vue/advanced` for `useConvexController`, `useConvexClient`, and `useConvexHttpClient`
 
 The Nuxt module layers aliases, auto-imports, renderless components, and optional integrations on top of that shared core.
 

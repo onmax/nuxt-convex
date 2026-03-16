@@ -1,7 +1,7 @@
 import type { FunctionReference, PaginationResult } from 'convex/server'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createApp, effectScope, nextTick, ref } from 'vue'
-import { createConvexVueController, useConvexController } from '../src/advanced'
+import { createConvexVueController, useConvexClient, useConvexController, useConvexHttpClient } from '../src/advanced'
 import { convexVue, useConvexAction, useConvexMutation, useConvexPaginatedQuery, useConvexQuery } from '../src/index'
 import { convexVueStorage, useConvexStorage, useConvexUpload } from '../src/storage'
 
@@ -149,6 +149,28 @@ describe('@onmax/convex-vue public API', () => {
 
     expect(controller.status.value).toBe('connected')
     expect(controller.getHttpClient()).toBeTruthy()
+  })
+
+  it('exposes raw clients through the advanced entrypoint', () => {
+    const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
+
+    expect(harness.run(() => useConvexClient())).toBe(getLastRealtimeClient())
+    expect(harness.run(() => useConvexHttpClient())).toBe(getLastHttpClient())
+
+    harness.stop()
+  })
+
+  it('throws clear advanced errors when raw clients are unavailable', () => {
+    const harness = createHarness()
+
+    expect(() => harness.run(() => useConvexClient())).toThrow(
+      '[convex-vue/advanced] Convex realtime client is not connected. Use useConvexController() to connect first.',
+    )
+    expect(() => harness.run(() => useConvexHttpClient())).toThrow(
+      '[convex-vue/advanced] Convex HTTP client is not connected. Use useConvexController() to connect first.',
+    )
+
+    harness.stop()
   })
 
   it('reconfigures and disconnects the advanced controller', () => {

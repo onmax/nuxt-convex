@@ -3,7 +3,7 @@ title: API Reference
 description: Review the current public API surface for nuxt-convex and @onmax/convex-vue.
 ---
 
-This reference follows the shipped code in `packages/nuxt` and `packages/vue`. It covers the shared root composables, the Vue package feature entrypoints, and the Nuxt-only exports that build on top of them.
+This reference follows the shipped code in `packages/nuxt` and `packages/vue`. It covers the shared root composables, the explicit storage and advanced entrypoints, and the Nuxt-only exports that build on top of them.
 
 ::u-page-section
 #title
@@ -60,6 +60,8 @@ Start with the shared API
 
 ## Browse the Vue feature entrypoints
 
+- [`useConvexClient`](/api-reference/use-convex-client)
+- [`useConvexHttpClient`](/api-reference/use-convex-http-client)
 - [`useConvexController`](/api-reference/use-convex-controller)
 - [`useConvexStorage`](/api-reference/use-convex-storage)
 - [`useConvexUpload`](/api-reference/use-convex-upload)

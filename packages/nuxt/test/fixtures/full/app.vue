@@ -1,8 +1,10 @@
 <script setup lang="ts">
-// Test auto-imports work
+import { useConvexClient } from '#convex/advanced'
+import { useConvexStorage } from '#convex/storage'
+
 const config = useRuntimeConfig()
 const convex = config.public.convex as { url?: string, server?: boolean, storage?: boolean } | undefined
-const available = [typeof useConvexClient, typeof useConvexQuery, typeof useConvexStorage].join(',')
+const available = [typeof useConvexQuery, typeof useConvexAuth, typeof useConvexStorage, typeof useConvexClient].join(',')
 </script>
 
 <template>

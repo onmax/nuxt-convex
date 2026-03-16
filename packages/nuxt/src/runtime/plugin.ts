@@ -1,11 +1,18 @@
-import type { ConvexStorageReferences, ConvexVueOptions } from 'convex-vue'
+import type { ConvexVueOptions } from 'convex-vue'
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
+import { getStorageRefs } from '#convex/storage-refs'
 import { convexVue } from 'convex-vue'
 
 interface RuntimeConvexConfig {
   url?: string
   storage?: boolean
   server?: boolean
+}
+
+interface RuntimeConvexStorageOptions {
+  generateUploadUrl: unknown
+  getUrl: unknown
+  remove: unknown
 }
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -20,13 +27,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     url: config.url,
     server: config.server ?? true,
   }
+  let storageOptions: RuntimeConvexStorageOptions | undefined
 
   if (config.storage) {
     try {
-      const { getStorageRefs } = await import('#convex/storage-refs')
       const storage = await getStorageRefs()
       if (storage?.generateUploadUrl && storage?.getUrl && storage?.remove)
-        options.storage = storage as ConvexStorageReferences
+        storageOptions = storage as RuntimeConvexStorageOptions
     }
     catch (error) {
       console.warn('[nuxt-convex] Failed to load storage refs from #convex/storage-refs.', error)
@@ -34,4 +41,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   }
 
   nuxtApp.vueApp.use(convexVue, options)
+  if (storageOptions) {
+    const { convexVueStorage } = await import('@onmax/convex-vue/storage')
+    nuxtApp.vueApp.use(convexVueStorage, storageOptions)
+  }
 })

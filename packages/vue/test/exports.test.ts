@@ -27,7 +27,9 @@ describe('@onmax/convex-vue exports', async () => {
     ])
     expect(Object.keys(advancedExports).sort()).toEqual([
       'createConvexVueController',
+      'useConvexClient',
       'useConvexController',
+      'useConvexHttpClient',
     ])
     expect(Object.keys(storageExports).sort()).toEqual([
       'convexVueStorage',
@@ -50,6 +52,8 @@ describe('@onmax/convex-vue exports', async () => {
 
     expect(advancedTypes).not.toContain('CONVEX_VUE_KEY')
     expect(advancedTypes).not.toContain('ConvexRuntimeContext')
+    expect(advancedTypes).toContain('useConvexClient')
+    expect(advancedTypes).toContain('useConvexHttpClient')
 
     expect(storageTypes).not.toContain('CONVEX_STORAGE_KEY')
   })

@@ -5,4 +5,5 @@ export type {
   ConvexVueOptions,
   ResolvedConvexVueOptions,
 } from './internal/runtime'
+export { useConvexClient, useConvexHttpClient } from './useConvexClient'
 export { useConvexController, createConvexVueController } from './useConvexController'
