@@ -9,10 +9,20 @@ describe('@onmax/convex-vue exports', async () => {
     const storageExports = await import('../dist/storage.js')
 
     expect(Object.keys(rootExports).sort()).toEqual([
+      'ConvexAuthLoading',
+      'ConvexAuthenticated',
+      'ConvexUnauthenticated',
       'convexVue',
+      'insertAtBottomIfLoaded',
+      'insertAtPosition',
+      'insertAtTop',
+      'optimisticallyUpdateValueInPaginatedQuery',
       'useConvexAction',
+      'useConvexAuth',
+      'useConvexConnectionState',
       'useConvexMutation',
       'useConvexPaginatedQuery',
+      'useConvexQueries',
       'useConvexQuery',
     ])
     expect(Object.keys(advancedExports).sort()).toEqual([

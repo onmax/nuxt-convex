@@ -31,12 +31,18 @@ export interface ConvexVueController {
   getHttpClient: () => ConvexHttpClient | undefined
 }
 
+export interface ConvexAuthState {
+  isLoading: boolean
+  isAuthenticated: boolean
+}
+
 export interface ConvexRuntimeContext {
   controller: ConvexVueController
   optionsRef: ShallowRef<ResolvedConvexVueOptions>
   statusRef: ShallowRef<ConvexControllerStatus>
   clientRef: ShallowRef<ConvexClient | undefined>
   httpClientRef: ShallowRef<ConvexHttpClient | undefined>
+  authStateRef: ShallowRef<ConvexAuthState>
 }
 
 export const CONVEX_VUE_KEY: InjectionKey<ConvexRuntimeContext> = Symbol('onmax-convex-vue')
@@ -80,10 +86,10 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
   const statusRef = shallowRef<ConvexControllerStatus>('disconnected')
   const clientRef = shallowRef<ConvexClient>()
   const httpClientRef = shallowRef<ConvexHttpClient>()
+  const authStateRef = shallowRef<ConvexAuthState>({ isLoading: false, isAuthenticated: false })
 
   const closeExistingClient = (): void => {
-    // ConvexClient exposes close() to tear down the WebSocket
-    if (clientRef.value && 'close' in clientRef.value)
+    if (clientRef.value && typeof clientRef.value.close === 'function')
       clientRef.value.close()
   }
 
@@ -111,10 +117,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
     },
     disconnect() {
       closeExistingClient()
-      optionsRef.value = resolveOptions({
-        clientOptions: optionsRef.value.clientOptions,
-        server: optionsRef.value.server,
-      })
+      optionsRef.value = resolveOptions({ ...optionsRef.value, url: undefined })
       clientRef.value = undefined
       httpClientRef.value = undefined
       statusRef.value = 'disconnected'
@@ -136,5 +139,6 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
     statusRef,
     clientRef: clientRef as ShallowRef<ConvexClient | undefined>,
     httpClientRef: httpClientRef as ShallowRef<ConvexHttpClient | undefined>,
+    authStateRef,
   }
 }

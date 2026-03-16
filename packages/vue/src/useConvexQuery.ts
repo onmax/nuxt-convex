@@ -1,8 +1,8 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
 import type { Value } from 'convex/values'
-import type { MaybeRefOrGetter, Ref } from 'vue'
+import type { ComputedRef, DeepReadonly, MaybeRefOrGetter, Ref } from 'vue'
 import { getFunctionName } from 'convex/server'
-import { computed, onScopeDispose, ref, toValue, watch } from 'vue'
+import { computed, onScopeDispose, readonly, shallowRef, toValue, watch } from 'vue'
 import { normalizeError, useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 
 type QueryReference = FunctionReference<'query'>
@@ -12,15 +12,16 @@ export interface UseConvexQueryOptions {
 }
 
 export interface UseConvexQueryReturn<Query extends QueryReference> {
-  data: Ref<FunctionReturnType<Query> | undefined>
-  error: Ref<Error | null>
-  isPending: Ref<boolean>
+  data: DeepReadonly<Ref<FunctionReturnType<Query> | undefined>>
+  error: DeepReadonly<Ref<Error | null>>
+  isPending: ComputedRef<boolean>
+  isSkipped: ComputedRef<boolean>
   suspense: () => Promise<FunctionReturnType<Query> | undefined>
 }
 
 export function useConvexQuery<Query extends QueryReference>(
   query: Query,
-  args: MaybeRefOrGetter<FunctionArgs<Query>>,
+  args: MaybeRefOrGetter<FunctionArgs<Query> | 'skip'>,
   options?: UseConvexQueryOptions,
 ): UseConvexQueryReturn<Query> {
   const context = useConvexRuntimeContext()
@@ -28,10 +29,13 @@ export function useConvexQuery<Query extends QueryReference>(
   const serverEnabled = options?.server ?? context.optionsRef.value.server
 
   if (isServer) {
-    const data = ref<FunctionReturnType<Query> | undefined>(undefined)
-    const error = ref<Error | null>(null)
+    const data = shallowRef<FunctionReturnType<Query> | undefined>(undefined)
+    const error = shallowRef<Error | null>(null)
+    const isSkipped = computed(() => toValue(args) === 'skip')
 
     const suspense = async (): Promise<FunctionReturnType<Query> | undefined> => {
+      if (isSkipped.value)
+        return undefined
       if (!serverEnabled)
         return undefined
 
@@ -39,7 +43,7 @@ export function useConvexQuery<Query extends QueryReference>(
         throw new Error('[convex-vue] Convex HTTP client is not connected')
 
       try {
-        const result = await context.httpClientRef.value.query(query, toValue(args))
+        const result = await context.httpClientRef.value.query(query, toValue(args) as FunctionArgs<Query>)
         data.value = result
         error.value = null
         return result as FunctionReturnType<Query>
@@ -51,16 +55,18 @@ export function useConvexQuery<Query extends QueryReference>(
     }
 
     return {
-      data,
-      error,
-      isPending: computed(() => data.value === undefined && !error.value),
+      data: readonly(data),
+      error: readonly(error),
+      isPending: computed(() => !isSkipped.value && data.value === undefined && !error.value),
+      isSkipped,
       suspense,
     }
   }
 
   const queryArgs = computed(() => toValue(args))
-  const data = ref<FunctionReturnType<Query> | undefined>(undefined)
-  const error = ref<Error | null>(null)
+  const isSkipped = computed(() => queryArgs.value === 'skip')
+  const data = shallowRef<FunctionReturnType<Query> | undefined>(undefined)
+  const error = shallowRef<Error | null>(null)
   const queryName = (query as { _name?: string })._name ?? getFunctionName(query)
 
   let unsubscribe: (() => void) | null = null
@@ -83,12 +89,19 @@ export function useConvexQuery<Query extends QueryReference>(
     error.value = null
   }
 
-  const subscribe = (nextArgs: FunctionArgs<Query>): void => {
-    const client = context.clientRef.value
-    const version = ++currentVersion
-    seedFromClientCache(nextArgs)
+  const subscribe = (nextArgs: FunctionArgs<Query> | 'skip'): void => {
     unsubscribe?.()
     unsubscribe = null
+    const version = ++currentVersion
+
+    if (nextArgs === 'skip') {
+      data.value = undefined
+      error.value = null
+      return
+    }
+
+    const client = context.clientRef.value
+    seedFromClientCache(nextArgs)
 
     if (!client)
       return
@@ -127,7 +140,7 @@ export function useConvexQuery<Query extends QueryReference>(
     const nextArgs = queryArgs.value
     const promise = (async () => {
       try {
-        const result = await context.httpClientRef.value?.query(query, nextArgs)
+        const result = await context.httpClientRef.value?.query(query, nextArgs as FunctionArgs<Query>)
         if (version === currentVersion) {
           data.value = result as FunctionReturnType<Query> | undefined
           error.value = null
@@ -168,10 +181,13 @@ export function useConvexQuery<Query extends QueryReference>(
   onScopeDispose(() => unsubscribe?.())
 
   return {
-    data,
-    error,
-    isPending: computed(() => data.value === undefined && !error.value),
+    data: readonly(data),
+    error: readonly(error),
+    isPending: computed(() => !isSkipped.value && data.value === undefined && !error.value),
+    isSkipped,
     suspense: () => {
+      if (isSkipped.value)
+        return Promise.resolve(undefined)
       if (data.value !== undefined)
         return Promise.resolve(data.value)
       if (error.value)

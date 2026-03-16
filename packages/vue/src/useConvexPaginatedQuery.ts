@@ -1,7 +1,7 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType, PaginationResult } from 'convex/server'
-import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
-import { computed, nextTick, onScopeDispose, ref, toValue, watch } from 'vue'
-import { useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
+import type { ComputedRef, DeepReadonly, MaybeRefOrGetter, Ref } from 'vue'
+import { computed, nextTick, onScopeDispose, readonly, shallowRef, toValue, watch } from 'vue'
+import { normalizeError, useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 
 type QueryReference = FunctionReference<'query'>
 type PaginatedQueryReference<T> = FunctionReference<'query', any, any, PaginationResult<T>>
@@ -15,10 +15,11 @@ export interface UseConvexPaginatedQueryReturn<T> {
   pages: ComputedRef<T[][]>
   data: ComputedRef<T[]>
   lastPage: ComputedRef<PaginationResult<T> | undefined>
-  error: Ref<Error | null>
-  isDone: Ref<boolean>
+  error: DeepReadonly<Ref<Error | null>>
+  isDone: DeepReadonly<Ref<boolean>>
   isPending: ComputedRef<boolean>
-  isLoadingMore: Ref<boolean>
+  isSkipped: ComputedRef<boolean>
+  isLoadingMore: DeepReadonly<Ref<boolean>>
   loadMore: () => void
   reset: () => void
 }
@@ -35,38 +36,22 @@ function shouldResetOnError(error: Error): boolean {
   return RESETTABLE_PAGINATION_ERRORS.some(message => error.message.includes(message))
 }
 
-interface SuspenseController<T> {
-  promise: Promise<T>
-  resolve: (value: T) => void
-  reject: (reason?: unknown) => void
-}
-
-function createSuspenseController<T>(): SuspenseController<T> {
-  let resolve!: (value: T) => void
-  let reject!: (reason?: unknown) => void
-  const promise = new Promise<T>((nextResolve, nextReject) => {
-    resolve = nextResolve
-    reject = nextReject
-  })
-
-  return { promise, resolve, reject }
-}
-
 export function useConvexPaginatedQuery<Query extends QueryReference>(
   query: Query,
-  args: MaybeRefOrGetter<Omit<FunctionArgs<Query>, 'paginationOpts'>>,
+  args: MaybeRefOrGetter<Omit<FunctionArgs<Query>, 'paginationOpts'> | 'skip'>,
   options: UseConvexPaginatedQueryOptions,
 ): UseConvexPaginatedQueryReturn<
   FunctionReturnType<Query> extends PaginationResult<infer Item> ? Item : never
 > {
   const context = useConvexRuntimeContext()
   let unsubscribers: Array<(() => void) | undefined> = []
-  const pages = ref<PaginationResult<any>[]>([])
-  const error = ref<Error | null>(null)
-  const isDone = ref(false)
-  const isLoadingMore = ref(false)
+  const pages = shallowRef<PaginationResult<any>[]>([])
+  const error = shallowRef<Error | null>(null)
+  const isDone = shallowRef(false)
+  const isLoadingMore = shallowRef(false)
   const lastPage = computed(() => pages.value.at(-1))
-  let suspenseController = createSuspenseController<any[][]>()
+  const isSkipped = computed(() => toValue(args) === 'skip')
+  let suspenseController = Promise.withResolvers<any[][]>()
 
   function resetState(): void {
     unsubscribers.forEach(unsubscribe => unsubscribe?.())
@@ -75,16 +60,21 @@ export function useConvexPaginatedQuery<Query extends QueryReference>(
     error.value = null
     isDone.value = false
     isLoadingMore.value = false
-    suspenseController = createSuspenseController<any[][]>()
+    suspenseController.promise.catch(() => {})
+    suspenseController.reject(new Error('[convex-vue] Query was reset'))
+    suspenseController = Promise.withResolvers<any[][]>()
   }
 
   function reset(reload: boolean): void {
     resetState()
-    if (reload)
+    if (reload && !isSkipped.value)
       nextTick(() => loadPage(0))
   }
 
   function loadPage(index: number): void {
+    if (isSkipped.value)
+      return
+
     unsubscribers[index]?.()
     unsubscribers[index] = undefined
 
@@ -111,41 +101,48 @@ export function useConvexPaginatedQuery<Query extends QueryReference>(
       },
       (result) => {
         pages.value[index] = result
+        pages.value = pages.value
         error.value = null
         isDone.value = result.isDone
         isLoadingMore.value = false
         suspenseController.resolve(pages.value.map(page => page.page))
       },
       (err) => {
-        error.value = err
+        error.value = normalizeError(err)
         isLoadingMore.value = false
-        suspenseController.reject(err)
+        suspenseController.reject(error.value)
         if (shouldResetOnError(err))
           reset(false)
       },
     )
   }
 
-  const serializedArgs = computed(() => JSON.stringify(toValue(args)))
-
-  watch(serializedArgs, (next, prev) => {
-    if (next !== prev)
-      reset(true)
+  const serializedArgs = computed(() => {
+    const v = toValue(args)
+    return v === 'skip' ? 'skip' : JSON.stringify(v)
   })
+
+  watch(serializedArgs, () => reset(true))
   watch(() => context.clientRef.value, () => reset(true))
 
-  loadPage(0)
+  if (!isSkipped.value)
+    loadPage(0)
   onScopeDispose(() => reset(false))
 
   return {
-    suspense: () => suspenseController.promise,
+    suspense: () => {
+      if (isSkipped.value)
+        return Promise.resolve([])
+      return suspenseController.promise
+    },
     pages: computed(() => pages.value.map(page => page.page)),
     data: computed(() => pages.value.flatMap(page => page.page)),
     lastPage,
-    error,
-    isDone,
-    isPending: computed(() => pages.value.length === 0 && !error.value),
-    isLoadingMore,
+    error: readonly(error),
+    isDone: readonly(isDone),
+    isPending: computed(() => !isSkipped.value && pages.value.length === 0 && !error.value),
+    isSkipped,
+    isLoadingMore: readonly(isLoadingMore),
     loadMore: () => loadPage(pages.value.length),
     reset: () => reset(true),
   }
