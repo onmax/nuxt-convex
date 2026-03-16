@@ -1,19 +1,13 @@
 ---
-title: Vue
-description: Use @onmax/convex-vue directly in any Vue 3 app for realtime data, mutations, pagination, and file storage.
-navigation: false
+title: Guide
+description: Use @onmax/convex-vue directly in any Vue 3 app with full control over plugin installation and composable imports.
 ---
 
-Use this track when you want the `@onmax/convex-vue` package directly. It covers plugin setup, data fetching, mutations, pagination, file storage, and the advanced controller.
-
-This is also the reference track for the shared API surface. Nuxt users can follow these guides to understand the lower layer beneath the module.
+`@onmax/convex-vue` is the shared package behind the Nuxt module. Install it directly when you build a standalone Vue app or need full control over plugin wiring.
 
 ::u-page-section
 #title
-Start with the Vue package
-
-#description
-Follow the guides in order, or jump to the topic you need.
+Get started with the Vue package
 
   :::u-page-grid
     ::::u-page-card
@@ -26,7 +20,7 @@ Follow the guides in order, or jump to the topic you need.
     Installation
 
     #description
-    Install `@onmax/convex-vue`, register the plugin, and verify with a first query.
+    Install the package, register the plugin, and verify the setup with a first query.
     ::::
 
     ::::u-page-card
@@ -65,7 +59,7 @@ Follow the guides in order, or jump to the topic you need.
     Pagination
 
     #description
-    Load data page by page with cursor-based pagination and infinite scroll.
+    Load data page by page with cursor-based pagination and infinite scroll patterns.
     ::::
 
     ::::u-page-card
@@ -78,7 +72,7 @@ Follow the guides in order, or jump to the topic you need.
     File Storage
 
     #description
-    Upload files and display them with reactive URL subscriptions.
+    Upload files to Convex storage and display them with reactive URL subscriptions.
     ::::
 
     ::::u-page-card
@@ -91,7 +85,7 @@ Follow the guides in order, or jump to the topic you need.
     Controller
 
     #description
-    Connect, reconfigure, or disconnect the Convex client at runtime.
+    Connect, reconfigure, or disconnect the Convex client at runtime for multi-tenant setups.
     ::::
 
     ::::u-page-card
@@ -104,7 +98,7 @@ Follow the guides in order, or jump to the topic you need.
     API Reference
 
     #description
-    Browse composable signatures, return types, and options for every export.
+    Browse the full composable signatures, return types, and options for every export.
     ::::
 
     ::::u-page-card
@@ -117,11 +111,7 @@ Follow the guides in order, or jump to the topic you need.
     Convex Patterns
 
     #description
-    Review schema, function, and realtime patterns that both runtimes share.
+    Review schema, function, and realtime patterns that the composables expect on the backend.
     ::::
   :::
-::
-
-::important
-If you use Nuxt, you still need this track for the shared API and Convex backend patterns. The Nuxt docs focus on the wrapper layer.
 ::

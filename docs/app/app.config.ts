@@ -7,8 +7,8 @@ export default defineAppConfig({
       id: 'vue',
       label: 'Vue',
       to: '/vue',
-      match: ['/vue', '/vue-core', '/api-reference', '/convex-patterns'],
-      sidebarRoots: ['/vue-core', '/api-reference', '/convex-patterns'],
+      match: ['/vue', '/vue-guide', '/api-reference', '/convex-patterns'],
+      sidebarRoots: ['/vue-guide', '/api-reference', '/convex-patterns'],
     },
     {
       id: 'nuxt',

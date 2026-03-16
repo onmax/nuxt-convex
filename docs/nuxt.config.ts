@@ -54,7 +54,10 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/getting-started/introduction': { redirect: '/getting-started' },
-    '/vue-core/introduction': { redirect: '/vue-core' },
+    '/vue-core/introduction': { redirect: '/vue-guide' },
+    '/vue-core': { redirect: '/vue-guide' },
+    '/vue-core/installation': { redirect: '/vue-guide/installation' },
+    '/vue-core/manual-initialization': { redirect: '/vue-guide/controller' },
     '/backend/schema': { redirect: '/convex-patterns/schema' },
     '/backend/queries': { redirect: '/convex-patterns/functions' },
     '/backend/mutations': { redirect: '/convex-patterns/functions' },

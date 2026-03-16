@@ -27,7 +27,7 @@ Choose your runtime
     ---
     class: col-span-2 lg:col-span-1
     spotlight: true
-    to: /vue-core
+    to: /vue-guide
     ---
     #title
     Start with `@onmax/convex-vue`
@@ -73,4 +73,4 @@ The Nuxt module layers aliases, auto-imports, renderless components, and optiona
 
 - Follow the [installation guide](/getting-started/installation) to install the right package.
 - Read [Nuxt Module](/nuxt-module) if you are working in Nuxt.
-- Read [Vue Core](/vue-core) if you are wiring Convex into a standalone Vue app.
+- Read [Vue Guide](/vue-guide) if you are wiring Convex into a standalone Vue app.
