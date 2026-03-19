@@ -71,11 +71,12 @@ describe('docs contract', () => {
     expect(virtualModulesDoc).toContain('| `#convex/storage`')
   })
 
-  it('does not freeze Better Auth docs to pkg.pr.new installs', () => {
+  it('pins the Better Auth docs to the tested integration stack', () => {
     const betterAuthDoc = read('docs/content/6.integrations/1.better-auth.md')
 
-    expect(search('pkg.pr.new')).toBe('')
     expect(betterAuthDoc).toContain('dependency-constrained')
-    expect(betterAuthDoc).not.toContain('prerelease or PR-built packages')
+    expect(betterAuthDoc).toContain('https://pkg.pr.new/nuxt-modules/better-auth/@onmax/nuxt-better-auth@f5f9350')
+    expect(betterAuthDoc).toContain('https://pkg.pr.new/get-convex/better-auth/@convex-dev/better-auth@292')
+    expect(betterAuthDoc).toContain('better-auth@1.5.5')
   })
 })
