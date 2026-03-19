@@ -8,6 +8,8 @@ Use this track when your app runs on Nuxt. It covers the `nuxt-convex` module, t
 
 Move into the Vue track when you need the shared composable semantics or the backend patterns that both runtimes consume.
 
+The Nuxt playground is the canonical validation harness for this track. Its `Tasks`, `Convex Storage`, `Cloudflare R2`, and `Session & Diagnostics` sections are the reference flows that these docs describe.
+
 ::u-page-section
 #title
 Start in the Nuxt layer
@@ -74,6 +76,7 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
 
 - `nuxt-convex` owns aliases, auto-imports, generated API access, and runtime wiring.
 - File storage and Cloudflare R2 live here because they depend on module scaffolding and Nuxt runtime behavior.
+- Better Auth lives here because the provider hook and session wiring depend on the Nuxt server.
 - The shared query, mutation, pagination, auth, and controller behavior still lives in the Vue package.
 
 ::tip

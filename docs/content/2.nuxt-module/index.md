@@ -5,6 +5,8 @@ description: Understand what nuxt-convex adds on top of the shared Vue package, 
 
 `nuxt-convex` is the Nuxt-specific layer in this monorepo. It exposes the shared runtime to Nuxt app code through `#convex`, `#convex/advanced`, `#convex/api`, and optional `#convex/storage`. It also wires the supported composables into Nuxt auto-imports, registers the renderless components, and can scaffold storage helpers.
 
+Use the Nuxt playground dashboard as the validation reference for this layer. The `Tasks`, `Convex Storage`, `Cloudflare R2`, and `Session & Diagnostics` sections are the concrete flows that these docs describe.
+
 ::u-page-section
 #title
 Open the Nuxt-specific guides
@@ -66,6 +68,15 @@ The module adds the Nuxt-facing entrypoints and registrations around the shared 
 Advanced helpers such as `useConvexClient` and `useConvexHttpClient` stay available through `#convex/advanced`, but they are not auto-imported.
 
 The module does not expose internal runtime helpers or compatibility aliases as part of the public contract.
+
+## What the playground validates
+
+The canonical playground keeps the module contract grounded in a few real flows instead of broad demos.
+
+- `Tasks` validates query, mutation, and pagination against one data model.
+- `Convex Storage` validates the scaffolded storage path, metadata persistence, and reactive file URLs.
+- `Cloudflare R2` validates `useConvexR2Upload(api.r2)` plus metadata listing and deletion.
+- `Session & Diagnostics` validates the supported email/password auth boundary and the current runtime config.
 
 ## Minimal setup
 

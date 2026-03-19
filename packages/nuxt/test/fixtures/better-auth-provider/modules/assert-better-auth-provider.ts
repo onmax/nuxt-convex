@@ -23,6 +23,15 @@ export default defineNuxtModule({
       if (!code.includes(`from 'nuxt-convex/better-auth'`) || !code.includes(`from '#convex/api'`)) {
         throw new Error('[nuxt-convex:test] Expected generated DB code to import nuxt-convex/better-auth and #convex/api')
       }
+
+      ;(nuxt.options.runtimeConfig.public as any).providerCheck = {
+        generatedCodeUsesAdapterImport: code.includes(`from 'nuxt-convex/better-auth'`),
+        generatedCodeUsesApiImport: code.includes(`from '#convex/api'`),
+        generatedCodeUsesConvexUrlOverride: code.includes('config.betterAuth?.convexUrl || config.public?.convex?.url'),
+        providerRegistered: true,
+        publicConvexUrl: (nuxt.options.runtimeConfig.public as any).convex?.url,
+        runtimeConvexUrl,
+      }
     })
   },
 })

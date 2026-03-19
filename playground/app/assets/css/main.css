@@ -5,3 +5,14 @@
   --color-nuxt: #00dc82;
   --color-convex: #ee5533;
 }
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgb(0 220 130 / 0.1), transparent 28%),
+    radial-gradient(circle at top right, rgb(238 85 51 / 0.08), transparent 30%), var(--ui-bg);
+}
+
+code {
+  font-size: 0.95em;
+}

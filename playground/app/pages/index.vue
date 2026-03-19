@@ -35,13 +35,14 @@ const isSignInPending = computed(() => signInWithEmail.status.value === 'pending
 const isSignUpPending = computed(() => signUpWithEmail.status.value === 'pending')
 const isGitHubPending = computed(() => signInWithSocial.status.value === 'pending')
 const authDescription = computed(() => enableGitHubAuth
-  ? 'Use email/password first. GitHub stays available as a secondary provider.'
-  : 'Use email/password to access this preview environment.')
+  ? 'Use email/password for the supported path. GitHub stays available as an optional secondary provider.'
+  : 'Use email/password to access the canonical validation dashboard.')
 
 const features = [
-  { icon: 'i-heroicons-bolt', title: 'Realtime', description: 'Live subscriptions sync data instantly across all clients' },
-  { icon: 'i-heroicons-cloud-arrow-up', title: 'File Storage', description: 'Upload files directly to Convex with NuxtHub' },
-  { icon: 'i-heroicons-shield-check', title: 'Email + Password', description: 'Basic Better Auth flows on top of Convex' },
+  { icon: 'i-heroicons-list-bullet', title: 'Tasks', description: 'Create, delete, and paginate one task workflow that exercises the shared data layer.' },
+  { icon: 'i-heroicons-cloud-arrow-up', title: 'Convex Storage', description: 'Upload, preview, and delete stored files through the supported Nuxt helpers.' },
+  { icon: 'i-simple-icons-cloudflare', title: 'Cloudflare R2', description: 'Validate the supported `useConvexR2Upload(api.r2)` path with real metadata sync.' },
+  { icon: 'i-heroicons-shield-check', title: 'Session Diagnostics', description: 'Confirm the supported email/password auth path and inspect the current runtime state.' },
 ]
 
 async function finishAuthFlow() {
@@ -120,17 +121,17 @@ async function signInWithGitHub() {
 
           <div class="space-y-4">
             <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
-              Better Auth Playground
+              Canonical Playground
             </p>
             <h1 class="max-w-xl text-5xl font-bold text-highlighted sm:text-6xl">
-              Email and password on top of Convex.
+              Validate Nuxt + Convex through one real app.
             </h1>
             <p class="max-w-xl text-lg text-muted">
-              This playground tracks the current branch setup: layer-aware module defaults, Convex-backed Better Auth, and a basic credential flow that works out of the box.
+              Sign in with the supported email/password flow, then move through the task, storage, R2, and diagnostics sections that define the shipped product today.
             </p>
           </div>
 
-          <div class="grid gap-4 sm:grid-cols-3">
+          <div class="grid gap-4 sm:grid-cols-2">
             <UCard v-for="feature in features" :key="feature.title" class="border-default/60 bg-default/70">
               <div class="flex flex-col gap-3">
                 <div class="flex size-10 items-center justify-center rounded-xl bg-primary/10">
@@ -147,7 +148,7 @@ async function signInWithGitHub() {
           </div>
 
           <p class="text-xs text-dimmed">
-            Demo data auto-deletes after 24h.
+            Demo data auto-deletes after 24h. The dashboard sections are the source of truth for the current supported flows.
           </p>
         </section>
 
