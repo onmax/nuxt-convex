@@ -9,16 +9,37 @@ const rootDir = fileURLToPath(new URL('./fixtures/full', import.meta.url))
 describe('nuxt-convex', () => {
   const fixture = setupSubprocessE2E({ rootDir })
 
-  it('exposes convexUrl via runtime config', async () => {
-    const res = await fixture.fetch<{ url: string, hasUrl: boolean }>('/api/config')
-    expect(res.url).toBe('https://test.convex.cloud')
-    expect(res.hasUrl).toBe(true)
+  it('exposes the resolved public runtime config', async () => {
+    const res = await fixture.fetch<{
+      convex: {
+        dir: string
+        r2: boolean
+        server: boolean
+        storage: boolean
+        url: string
+      }
+    }>('/api/config')
+    expect(res.convex).toEqual({
+      dir: 'convex',
+      r2: false,
+      server: true,
+      storage: true,
+      url: 'https://test.convex.cloud',
+    })
   })
 
   it('renders config in SSR', async () => {
     const html = await fixture.fetch<string>('/', { responseType: 'text' })
     expect(html).toContain('https://test.convex.cloud')
     expect(html).toContain('function,function,function,function')
+  })
+
+  it('registers the public Nuxt aliases for app code', () => {
+    expect(fixture.alias('#convex')).toBeTruthy()
+    expect(fixture.alias('#convex/api')).toBeTruthy()
+    expect(fixture.alias('#convex/advanced')).toBeTruthy()
+    expect(fixture.alias('#convex/storage')).toBeTruthy()
+    expect(fixture.alias('#convex/r2')).toBeUndefined()
   })
 
   it('scaffolds storage functions when storage: true', () => {
@@ -42,9 +63,18 @@ describe('nuxt-convex', () => {
 
     expect(sharedImports).toContain('useConvexQuery')
     expect(sharedImports).toContain('useConvexAuth')
+    expect(sharedImports).toContain('useConvexConnectionState')
     expect(sharedImports).toContain('useConvexStorage')
     expect(sharedImports).toContain('useConvexUpload')
+    expect(sharedImports).not.toContain('useConvexR2Upload')
     expect(sharedImports).not.toContain('useConvexClient')
     expect(sharedImports).not.toContain('useConvexHttpClient')
+  })
+
+  it('registers the Nuxt-only global renderless components', () => {
+    const components = readFileSync(join(fixture.buildDir(), 'components.d.ts'), 'utf8')
+
+    expect(components).toContain('ConvexQuery')
+    expect(components).toContain('ConvexPaginatedQuery')
   })
 })
