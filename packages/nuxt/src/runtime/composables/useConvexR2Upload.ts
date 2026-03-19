@@ -1,6 +1,6 @@
 import type { FunctionReference } from 'convex/server'
 import type { DeepReadonly, Ref } from 'vue'
-import { useConvexClient } from '@onmax/convex-vue/advanced'
+import { useConvexClient } from 'convex-vue/advanced'
 import { readonly, ref } from 'vue'
 
 export interface ConvexR2Api {

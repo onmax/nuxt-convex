@@ -1,7 +1,7 @@
 import type { ConvexVueOptions } from '@onmax/convex-vue'
 import { getStorageRefs } from '#convex/storage-refs'
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
-import { convexVue } from '@onmax/convex-vue'
+import { convexVue } from 'convex-vue'
 
 interface RuntimeConvexConfig {
   url?: string
