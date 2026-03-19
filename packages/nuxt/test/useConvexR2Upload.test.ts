@@ -7,7 +7,7 @@ const { mutation, useConvexClient } = vi.hoisted(() => {
   return { mutation, useConvexClient }
 })
 
-vi.mock('convex-vue/advanced', () => {
+vi.mock('@onmax/convex-vue/advanced', () => {
   return {
     useConvexClient,
   }

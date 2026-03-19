@@ -44,11 +44,8 @@ describe('docs contract', () => {
     expect(search(`import { useUploadFile } from '#convex/r2'`)).toBe('')
   })
 
-  it('keeps #convex/storage-refs internal-only in Nuxt docs', () => {
-    const virtualModulesDoc = read('docs/content/5.api-reference/2.virtual-modules.md')
-
-    expect(virtualModulesDoc).not.toContain('| `#convex/storage-refs` |')
-    expect(virtualModulesDoc).toContain('`#convex/storage-refs` stays internal')
+  it('does not document internal storage runtime helpers', () => {
+    expect(search('#convex/storage-refs')).toBe('')
   })
 
   it('does not recommend direct @onmax/convex-vue runtime imports in Nuxt-facing docs', () => {
@@ -61,13 +58,24 @@ describe('docs contract', () => {
 
   it('documents the public Nuxt alias matrix consistently', () => {
     const nuxtModuleDoc = read('docs/content/2.nuxt-module/index.md')
+    const moduleConfigurationDoc = read('docs/content/5.api-reference/1.module-configuration.md')
     const virtualModulesDoc = read('docs/content/5.api-reference/2.virtual-modules.md')
 
     expect(nuxtModuleDoc).toContain('`#convex`, `#convex/api`, and `#convex/advanced` aliases')
     expect(nuxtModuleDoc).toContain('Optional `#convex/storage` alias')
+    expect(moduleConfigurationDoc).toContain('`#convex`, `#convex/api`, `#convex/advanced`')
+    expect(moduleConfigurationDoc).toContain('The module does not create an R2-specific alias')
     expect(virtualModulesDoc).toContain('| `#convex`')
     expect(virtualModulesDoc).toContain('| `#convex/advanced`')
     expect(virtualModulesDoc).toContain('| `#convex/api`')
     expect(virtualModulesDoc).toContain('| `#convex/storage`')
+  })
+
+  it('does not freeze Better Auth docs to pkg.pr.new installs', () => {
+    const betterAuthDoc = read('docs/content/6.integrations/1.better-auth.md')
+
+    expect(search('pkg.pr.new')).toBe('')
+    expect(betterAuthDoc).toContain('dependency-constrained')
+    expect(betterAuthDoc).not.toContain('prerelease or PR-built packages')
   })
 })

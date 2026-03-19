@@ -1,6 +1,6 @@
 ---
 title: Nuxt Convex
-description: Build with Convex in Nuxt or Vue with typed queries, SSR-aware realtime data, storage helpers, and integrations.
+description: Build with Convex in Nuxt or Vue with typed queries, SSR-aware realtime data, storage helpers, and documented integration paths.
 navigation: false
 ---
 
@@ -9,7 +9,7 @@ navigation: false
 Nuxt Convex
 
 #description
-Build with Convex in Nuxt or Vue with typed queries, SSR-aware realtime data, storage helpers, and integrations. Start in the runtime you are building, then move across tracks when you need lower-level API details or Nuxt-specific behavior.
+Build with Convex in Nuxt or Vue with typed queries, SSR-aware realtime data, storage helpers, and documented integration paths. Start in the runtime you are shipping, then cross into the other track only when you need the shared lower layer or a Nuxt-specific wrapper detail.
 
 #links
   :::u-button
@@ -38,7 +38,7 @@ Build with Convex in Nuxt or Vue with typed queries, SSR-aware realtime data, st
 Choose your track
 
 #description
-This repo ships two layers: `@onmax/convex-vue` as the shared core and `nuxt-convex` as the Nuxt wrapper.
+This repo ships two product layers: `@onmax/convex-vue` as the standalone Vue package and `nuxt-convex` as the Nuxt wrapper around that shared runtime.
 
   :::u-page-grid
     ::::u-page-card
@@ -51,7 +51,7 @@ This repo ships two layers: `@onmax/convex-vue` as the shared core and `nuxt-con
     Vue core + shared API
 
     #description
-    Start with the shared package, installation flow, composables, and backend patterns that both runtimes rely on.
+    Start here for the standalone Vue package, shared composables, and backend patterns that both runtimes rely on.
     ::::
 
     ::::u-page-card
@@ -64,7 +64,7 @@ This repo ships two layers: `@onmax/convex-vue` as the shared core and `nuxt-con
     Nuxt module
 
     #description
-    Start with the Nuxt-specific module, runtime wiring, storage helpers, and integrations layered on top of the shared Vue package.
+    Start here for the Nuxt-specific module, public `#convex*` aliases, auto-imports, storage helpers, and integrations.
     ::::
   :::
 ::
@@ -107,11 +107,11 @@ Understand the monorepo
     `docs`
 
     #description
-    Documents the shipped behavior in this monorepo instead of placeholder examples.
+    Documents the shipped behavior in this monorepo instead of placeholder or speculative examples.
     ::::
   :::
 ::
 
 ::important
-The Nuxt module wraps the shared Vue package. When a Nuxt page points you to shared composables or Convex backend behavior, continue in the Vue track.
+The Nuxt track documents the wrapper contract. The Vue track documents the shared runtime and backend patterns underneath it.
 ::

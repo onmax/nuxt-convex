@@ -3,7 +3,7 @@ title: API Reference
 description: Review the current public API surface for nuxt-convex and @onmax/convex-vue.
 ---
 
-This reference follows the shipped code in `packages/nuxt` and `packages/vue`. It covers the shared root composables, the explicit storage and advanced entrypoints, and the Nuxt-only exports that build on top of them.
+This reference follows the shipped code in `packages/nuxt` and `packages/vue`. It covers the shared root composables, the explicit storage and advanced entrypoints, and the Nuxt-only exports that the wrapper adds on top.
 
 ::u-page-section
 #title
@@ -75,5 +75,5 @@ Start with the shared API
 - [`ConvexPaginatedQuery`](/api-reference/convex-paginated-query)
 
 ::note
-This section belongs to the shared Vue track because it documents the lower-level API surface that the Nuxt module wraps.
+This section belongs to the shared API reference because it documents both the shared runtime and the smaller Nuxt-only surface layered on top of it.
 ::

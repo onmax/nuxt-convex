@@ -15,6 +15,9 @@ describe('nuxt-convex r2', () => {
     expect(fixture.alias('#convex/advanced')).toBeTruthy()
     expect(fixture.alias('#convex/storage')).toBeUndefined()
     expect(fixture.alias('#convex/r2')).toBeUndefined()
+    expect(fixture.alias('convex-vue')).toBeUndefined()
+    expect(fixture.alias('convex-vue/advanced')).toBeUndefined()
+    expect(fixture.alias('convex-vue/storage')).toBeUndefined()
   })
 
   it('auto-imports useConvexR2Upload without generating an r2 virtual module', () => {

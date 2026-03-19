@@ -4,9 +4,9 @@ description: Use @onmax/convex-vue directly in any Vue 3 app for realtime data, 
 navigation: false
 ---
 
-Use this track when you want the `@onmax/convex-vue` package directly. It covers plugin setup, data fetching, mutations, pagination, file storage, and the advanced controller.
+Use this track when you install `@onmax/convex-vue` directly in a Vue 3 app. It covers plugin setup, data fetching, mutations, pagination, file storage, and the advanced controller.
 
-This is also the reference track for the shared API surface. Nuxt users can follow these guides to understand the lower layer beneath the module.
+This track also serves as the reference for the shared runtime that the Nuxt module wraps. Nuxt users can read it to understand lower-level composable behavior without changing their Nuxt import paths.
 
 ::u-page-section
 #title
@@ -104,7 +104,7 @@ Follow the guides in order, or jump to the topic you need.
     API Reference
 
     #description
-    Browse composable signatures, return types, and options for every export.
+    Browse composable signatures, return types, and options for every shared export.
     ::::
 
     ::::u-page-card
@@ -123,5 +123,5 @@ Follow the guides in order, or jump to the topic you need.
 ::
 
 ::important
-If you use Nuxt, you still need this track for the shared API and Convex backend patterns. The Nuxt docs focus on the wrapper layer.
+If you use Nuxt, keep the `#convex*` aliases and Nuxt auto-imports in app code. Use this track to understand the shared runtime behavior underneath them.
 ::

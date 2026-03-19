@@ -3,7 +3,7 @@ title: Getting Started
 description: Choose between the Nuxt module and the standalone Vue package, then generate the Convex API your app consumes.
 ---
 
-Start here when you are choosing between the two runtime tracks. `nuxt-convex` is the Nuxt wrapper, while `@onmax/convex-vue` is the shared package underneath it.
+Start here when you are choosing between the two runtime tracks. `nuxt-convex` is the Nuxt wrapper, while `@onmax/convex-vue` is the standalone Vue package and shared lower layer.
 
 ::u-page-section
 #title
@@ -67,12 +67,12 @@ Both packages read a Convex deployment URL. The Nuxt module can read `CONVEX_URL
 - `useConvexAuth`
 - `useConvexConnectionState`
 
-Optional capabilities stay on explicit entrypoints:
+Optional capabilities stay on explicit Vue entrypoints:
 
 - `@onmax/convex-vue/storage` for `useConvexStorage` and `useConvexUpload`
 - `@onmax/convex-vue/advanced` for `useConvexController`, `useConvexClient`, and `useConvexHttpClient`
 
-The Nuxt module layers aliases, auto-imports, renderless components, and optional integrations on top of that shared core.
+In Nuxt, the module exposes that same core through `#convex`, `#convex/advanced`, optional `#convex/storage`, and Nuxt auto-imports.
 
 ## Next steps
 

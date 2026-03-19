@@ -163,7 +163,6 @@ declare module '#convex' {
   }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex'] = template.dst
-  nuxt.options.alias['convex-vue'] = template.dst
 
   addImports(rootAutoImports.map(name => ({ name, from: '#convex' })))
 
@@ -192,7 +191,6 @@ declare module '#convex/advanced' {
   }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex/advanced'] = template.dst
-  nuxt.options.alias['convex-vue/advanced'] = template.dst
 }
 
 function setupConvexApiAlias(nuxt: Nuxt): void {
@@ -262,7 +260,6 @@ declare module '#convex/storage' {
   }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex/storage'] = template.dst
-  nuxt.options.alias['convex-vue/storage'] = template.dst
   addImports(storageAutoImports.map(name => ({ name, from: '#convex/storage' })))
 }
 
