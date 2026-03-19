@@ -1,8 +1,9 @@
 import type { FetchOptions } from 'ofetch'
 import { spawn } from 'node:child_process'
-import { createServer } from 'node:net'
 import { access } from 'node:fs/promises'
+import { createServer } from 'node:net'
 import { join } from 'node:path'
+import process from 'node:process'
 import { loadNuxt } from '@nuxt/kit'
 import { $fetch } from 'ofetch'
 import { joinURL } from 'ufo'
@@ -17,6 +18,12 @@ interface LoadedFixtureState {
   aliases: Record<string, string>
   buildDir: string
   outputDir: string
+}
+
+interface SubprocessE2EFixture {
+  alias: (key: string) => string | undefined
+  buildDir: () => string
+  fetch: <T>(path: string, requestOptions?: FetchOptions<'json'>) => Promise<T>
 }
 
 function assertState<T>(value: T | undefined, message: string): T {
@@ -50,7 +57,7 @@ async function getFreePort(): Promise<number> {
   })
 }
 
-async function runCommand(command: string, args: string[], options: { cwd: string, env?: NodeJS.ProcessEnv }) {
+async function runCommand(command: string, args: string[], options: { cwd: string, env?: NodeJS.ProcessEnv }): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     const child = spawn(command, args, {
       cwd: options.cwd,
@@ -73,7 +80,7 @@ async function runCommand(command: string, args: string[], options: { cwd: strin
   })
 }
 
-async function waitForServer(url: string) {
+async function waitForServer(url: string): Promise<void> {
   let lastError: unknown
 
   for (let index = 0; index < 100; index++) {
@@ -90,7 +97,7 @@ async function waitForServer(url: string) {
   throw lastError ?? new Error(`Timed out waiting for ${url}`)
 }
 
-export function setupSubprocessE2E(options: SubprocessE2EOptions) {
+export function setupSubprocessE2E(options: SubprocessE2EOptions): SubprocessE2EFixture {
   let state: LoadedFixtureState | undefined
   let serverProcess: ReturnType<typeof spawn> | undefined
   let serverUrl: string | undefined
