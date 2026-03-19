@@ -16,6 +16,7 @@ export interface QueryListener {
 
 export interface MockRealtimeClient {
   action: ReturnType<typeof vi.fn>
+  authListeners: Array<(isAuthenticated: boolean) => void>
   client: { localQueryResult: ReturnType<typeof vi.fn> }
   close: ReturnType<typeof vi.fn>
   connectionListeners: Array<(state: ConnectionState) => void>
@@ -25,6 +26,7 @@ export interface MockRealtimeClient {
   mutation: ReturnType<typeof vi.fn>
   onUpdate: ReturnType<typeof vi.fn>
   options: unknown
+  setAuth: ReturnType<typeof vi.fn>
   subscribeToConnectionState: ReturnType<typeof vi.fn>
   url: string
 }
@@ -42,8 +44,10 @@ vi.mock('convex/browser', () => {
   function MockConvexClient(url: string, options: unknown): MockRealtimeClient {
     const listeners: QueryListener[] = []
     const connectionListeners: Array<(state: ConnectionState) => void> = []
+    const authListeners: Array<(isAuthenticated: boolean) => void> = []
     const client: MockRealtimeClient = {
       action: vi.fn(),
+      authListeners,
       client: {
         localQueryResult: vi.fn(() => undefined),
       },
@@ -65,6 +69,9 @@ vi.mock('convex/browser', () => {
         }
       }),
       options,
+      setAuth: vi.fn((_fetchToken, onChange) => {
+        authListeners.push(onChange)
+      }),
       subscribeToConnectionState: vi.fn((onState) => {
         connectionListeners.push(onState)
         return () => {
@@ -126,6 +133,11 @@ export function emitConnectionState(client: MockRealtimeClient, state: Partial<C
     listener(client.connectionStateValue)
 }
 
+export function emitAuthState(client: MockRealtimeClient, isAuthenticated: boolean): void {
+  for (const listener of client.authListeners)
+    listener(isAuthenticated)
+}
+
 export function createHarness({
   options = {},
   storageOptions,
@@ -168,6 +180,12 @@ export const secondQueryRef = { _name: 'tasks:detail' } as unknown as FunctionRe
   'public',
   { id: string },
   { _id: string }
+>
+export const alternateQueryRef = { _name: 'tasks:summary' } as unknown as FunctionReference<
+  'query',
+  'public',
+  { userId: string },
+  { total: number }
 >
 export const mutationRef = { _name: 'tasks:create' } as unknown as FunctionReference<
   'mutation',

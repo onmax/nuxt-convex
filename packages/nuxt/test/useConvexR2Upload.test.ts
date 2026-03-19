@@ -37,7 +37,7 @@ describe('useConvexR2Upload', () => {
     vi.stubGlobal('XMLHttpRequest', MockXMLHttpRequest)
   })
 
-  it('does not resolve the Convex client during setup', () => {
+  it('captures the Convex client during setup', () => {
     const api = {
       generateUploadUrl: { _name: 'r2:generateUploadUrl' },
       syncMetadata: { _name: 'r2:syncMetadata' },
@@ -45,7 +45,7 @@ describe('useConvexR2Upload', () => {
 
     useConvexR2Upload(api)
 
-    expect(useConvexClient).not.toHaveBeenCalled()
+    expect(useConvexClient).toHaveBeenCalledTimes(1)
   })
 
   it('uploads via the Convex client and syncs metadata', async () => {
@@ -62,6 +62,8 @@ describe('useConvexR2Upload', () => {
     }
 
     const { error, isUploading, progress, upload } = useConvexR2Upload(api, { onProgress, onSuccess })
+    expect(useConvexClient).toHaveBeenCalledTimes(1)
+
     const key = await upload(file)
 
     expect(key).toBe('file-key')

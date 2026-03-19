@@ -47,6 +47,9 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
           throw new Error(`[convex-vue/storage] Upload failed: ${response.status} ${response.statusText}`)
 
         const { storageId } = await response.json()
+        if (typeof storageId !== 'string' || storageId.length === 0)
+          throw new Error('[convex-vue/storage] Upload response did not include a storageId')
+
         progress.value = 100
         await options.onSuccess?.(storageId, file)
         return storageId

@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import {
   actionRef,
   createHarness,
+  emitAuthState,
   getLastHttpClient,
   getLastRealtimeClient,
   mutationRef,
@@ -79,6 +80,20 @@ describe('@onmax/convex-vue public API', () => {
     expect(controller.options.value.url).toBeUndefined()
     expect(controller.getClient()).toBeUndefined()
     expect(controller.getHttpClient()).toBeUndefined()
+  })
+
+  it('replaces the realtime client when connecting again', () => {
+    const controller = advanced.createConvexVueController({ url: 'https://initial.convex.cloud' })
+    const initialClient = getLastRealtimeClient()
+
+    controller.connect({ url: 'https://next.convex.cloud' })
+
+    const nextClient = getLastRealtimeClient()
+    expect(nextClient).not.toBe(initialClient)
+    expect(initialClient.close).toHaveBeenCalledTimes(1)
+
+    controller.disconnect()
+    expect(nextClient.close).toHaveBeenCalledTimes(1)
   })
 
   it('keeps read helpers wired through the public entrypoints', async () => {
@@ -166,6 +181,122 @@ describe('@onmax/convex-vue public API', () => {
     expect(() => harness.run(() => storage.useConvexStorage())).toThrow(
       '[convex-vue/storage] Storage feature is not configured. Install convexVueStorage first.',
     )
+
+    harness.stop()
+  })
+
+  it('tracks auth state through the root entrypoint', () => {
+    const fetchToken = vi.fn(async () => 'token')
+    const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
+    const auth = harness.run(() => root.useConvexAuth({ fetchToken }))
+    const client = getLastRealtimeClient()
+
+    expect(client.setAuth).toHaveBeenCalledTimes(1)
+    expect(auth.isLoading.value).toBe(true)
+
+    emitAuthState(client, true)
+
+    expect(auth.isLoading.value).toBe(false)
+    expect(auth.isAuthenticated.value).toBe(true)
+    harness.stop()
+  })
+
+  it('returns null and reports an error when upload url generation fails', async () => {
+    const onError = vi.fn()
+    const harness = createHarness({
+      options: { url: 'https://test.convex.cloud' },
+      storageOptions: storageRefs,
+    })
+    const client = getLastRealtimeClient()
+    client.mutation.mockRejectedValueOnce(new Error('missing upload url'))
+
+    const upload = harness.run(() => storage.useConvexUpload({ onError }))
+    const file = new globalThis.File(['hello'], 'hello.txt', { type: 'text/plain' })
+
+    await expect(upload.upload(file)).resolves.toBeNull()
+    expect(upload.error.value?.message).toBe('missing upload url')
+    expect(onError).toHaveBeenCalledTimes(1)
+
+    harness.stop()
+  })
+
+  it('returns null and reports an error when the upload response is invalid', async () => {
+    const onError = vi.fn()
+    const harness = createHarness({
+      options: { url: 'https://test.convex.cloud' },
+      storageOptions: storageRefs,
+    })
+    const client = getLastRealtimeClient()
+    client.mutation.mockResolvedValue('https://upload.convex.dev')
+
+    originalFetch = globalThis.fetch
+    globalThis.fetch = vi.fn(async () => ({
+      json: async () => ({}),
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+    })) as unknown as typeof fetch
+
+    const upload = harness.run(() => storage.useConvexUpload({ onError }))
+    const file = new globalThis.File(['hello'], 'hello.txt', { type: 'text/plain' })
+
+    await expect(upload.upload(file)).resolves.toBeNull()
+    expect(upload.error.value?.message).toBe('[convex-vue/storage] Upload response did not include a storageId')
+    expect(onError).toHaveBeenCalledTimes(1)
+
+    harness.stop()
+  })
+
+  it('returns null and reports an error when the upload request fails', async () => {
+    const onError = vi.fn()
+    const harness = createHarness({
+      options: { url: 'https://test.convex.cloud' },
+      storageOptions: storageRefs,
+    })
+    const client = getLastRealtimeClient()
+    client.mutation.mockResolvedValue('https://upload.convex.dev')
+
+    originalFetch = globalThis.fetch
+    globalThis.fetch = vi.fn(async () => ({
+      json: async () => ({ storageId: 'storage-1' }),
+      ok: false,
+      status: 500,
+      statusText: 'Server Error',
+    })) as unknown as typeof fetch
+
+    const upload = harness.run(() => storage.useConvexUpload({ onError }))
+    const file = new globalThis.File(['hello'], 'hello.txt', { type: 'text/plain' })
+
+    await expect(upload.upload(file)).resolves.toBeNull()
+    expect(upload.error.value?.message).toBe('[convex-vue/storage] Upload failed: 500 Server Error')
+    expect(onError).toHaveBeenCalledTimes(1)
+
+    harness.stop()
+  })
+
+  it('awaits the upload success callback before resolving', async () => {
+    const onSuccess = vi.fn(async () => {})
+    const harness = createHarness({
+      options: { url: 'https://test.convex.cloud' },
+      storageOptions: storageRefs,
+    })
+    const client = getLastRealtimeClient()
+    client.mutation.mockResolvedValue('https://upload.convex.dev')
+
+    originalFetch = globalThis.fetch
+    globalThis.fetch = vi.fn(async () => ({
+      json: async () => ({ storageId: 'storage-1' }),
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+    })) as unknown as typeof fetch
+
+    const upload = harness.run(() => storage.useConvexUpload({ onSuccess }))
+    const file = new globalThis.File(['hello'], 'hello.txt', { type: 'text/plain' })
+
+    await expect(upload.upload(file)).resolves.toBe('storage-1')
+    expect(onSuccess).toHaveBeenCalledWith('storage-1', file)
+    expect(upload.progress.value).toBe(100)
 
     harness.stop()
   })

@@ -2,6 +2,7 @@ import type { PaginationResult } from 'convex/server'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { computed, nextTick, ref } from 'vue'
 import {
+  alternateQueryRef,
   createHarness,
   emitConnectionState,
   getLastHttpClient,
@@ -135,6 +136,73 @@ describe('internal runtime facade', () => {
     harness.stop()
   })
 
+  it('re-subscribes keyed queries after reconnects and query identity changes', async () => {
+    const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
+    const queriesRef = ref<{
+      list: { query: typeof queryRef | typeof alternateQueryRef, args: { userId: string } }
+    }>({
+      list: { query: queryRef, args: { userId: '1' } },
+    })
+    const state = harness.run(() => harness.facade.queries(queriesRef))
+    const initialClient = getLastRealtimeClient()
+
+    initialClient.listeners[0].onResult([{ _id: 'task-1' }])
+    await nextTick()
+    expect(state.data.value.list).toEqual([{ _id: 'task-1' }])
+
+    queriesRef.value = {
+      list: { query: alternateQueryRef, args: { userId: '1' } },
+    }
+    await nextTick()
+
+    initialClient.listeners.at(-1)!.onResult({ total: 4 })
+    await nextTick()
+    expect(state.data.value.list).toEqual({ total: 4 })
+
+    harness.controller.connect({ url: 'https://reconnected.convex.cloud' })
+    await nextTick()
+
+    const reconnectedClient = getLastRealtimeClient()
+    reconnectedClient.listeners[0].onResult({ total: 7 })
+    await nextTick()
+
+    expect(state.data.value.list).toEqual({ total: 7 })
+    harness.stop()
+  })
+
+  it('removes stale keyed query state when a query is removed', async () => {
+    const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
+    const queriesRef = ref<
+      | {
+        list: { query: typeof queryRef, args: { userId: string } }
+        detail: { query: typeof secondQueryRef, args: { id: string } }
+      }
+      | {
+        list: { query: typeof queryRef, args: { userId: string } }
+      }
+    >({
+      list: { query: queryRef, args: { userId: '1' } },
+      detail: { query: secondQueryRef, args: { id: 'task-1' } },
+    })
+    const state = harness.run(() => harness.facade.queries(queriesRef))
+    const client = getLastRealtimeClient()
+
+    client.listeners[0].onResult([{ _id: 'task-1' }])
+    client.listeners[1].onResult({ _id: 'task-1' })
+    await nextTick()
+
+    queriesRef.value = {
+      list: { query: queryRef, args: { userId: '1' } },
+    }
+    await nextTick()
+
+    expect(state.data.value.list).toEqual([{ _id: 'task-1' }])
+    expect('detail' in state.data.value).toBe(false)
+    expect('detail' in state.errors.value).toBe(false)
+
+    harness.stop()
+  })
+
   it('recreates paginated suspense after reset', async () => {
     const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
     const client = getLastRealtimeClient()
@@ -158,6 +226,27 @@ describe('internal runtime facade', () => {
     } satisfies PaginationResult<{ _id: string }>)
 
     await expect(pagination.suspense()).resolves.toEqual([[{ _id: 'page-2' }]])
+    harness.stop()
+  })
+
+  it('reloads pagination after recoverable cursor errors', async () => {
+    const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
+    const pagination = harness.run(() => harness.facade.pagination(paginatedRef, { userId: '1' }, { numItems: 2 }))
+    const client = getLastRealtimeClient()
+
+    client.listeners[0].onError(new Error('InvalidCursor: cursor expired'))
+    await nextTick()
+    await nextTick()
+
+    client.listeners.at(-1)!.onResult({
+      continueCursor: '',
+      isDone: true,
+      page: [{ _id: 'page-recovered' }],
+    } satisfies PaginationResult<{ _id: string }>)
+    await nextTick()
+
+    expect(pagination.error.value).toBeNull()
+    expect(pagination.data.value).toEqual([{ _id: 'page-recovered' }])
     harness.stop()
   })
 

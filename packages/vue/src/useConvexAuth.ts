@@ -1,6 +1,7 @@
 import type { AuthTokenFetcher } from 'convex/browser'
 import type { ComputedRef } from 'vue'
 import { computed, onScopeDispose, watch } from 'vue'
+import { DISCONNECTED_AUTH_STATE } from './internal/runtime'
 import { useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 
 export interface UseConvexAuthOptions {
@@ -17,17 +18,24 @@ export function useConvexAuth(options?: UseConvexAuthOptions): UseConvexAuthRetu
 
   if (options?.fetchToken) {
     const fetchToken = options.fetchToken
-    const applyAuth = (client: typeof clientRef.value): void => {
+    watch(clientRef, (client, _, onCleanup) => {
+      authStateRef.value = { ...DISCONNECTED_AUTH_STATE }
       if (!client)
         return
+
+      let isActive = true
       authStateRef.value = { isLoading: true, isAuthenticated: false }
       client.setAuth(fetchToken, (isAuthenticated) => {
+        if (!isActive)
+          return
         authStateRef.value = { isLoading: false, isAuthenticated }
       })
-    }
-    watch(clientRef, applyAuth, { immediate: true })
+      onCleanup(() => {
+        isActive = false
+      })
+    }, { flush: 'sync', immediate: true })
     onScopeDispose(() => {
-      authStateRef.value = { isLoading: false, isAuthenticated: false }
+      authStateRef.value = { ...DISCONNECTED_AUTH_STATE }
     })
   }
 
