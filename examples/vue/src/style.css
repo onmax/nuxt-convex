@@ -7,14 +7,10 @@
   --line: hsla(20, 24%, 34%, 0.16);
   --accent: hsl(14 78% 59%);
   --accent-strong: hsl(23 74% 42%);
-  --display-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  --body-font: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
-  --shadow-sm:
-    0 6px 16px hsla(18, 26%, 32%, 0.08),
-    0 1px 0 hsla(0, 0%, 100%, 0.68);
-  --shadow-lg:
-    0 28px 60px hsla(18, 26%, 24%, 0.12),
-    0 2px 0 hsla(0, 0%, 100%, 0.82);
+  --display-font: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --body-font: 'IBM Plex Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  --shadow-sm: 0 6px 16px hsla(18, 26%, 32%, 0.08), 0 1px 0 hsla(0, 0%, 100%, 0.68);
+  --shadow-lg: 0 28px 60px hsla(18, 26%, 24%, 0.12), 0 2px 0 hsla(0, 0%, 100%, 0.82);
 }
 
 * {
@@ -24,8 +20,7 @@
 html {
   background:
     radial-gradient(circle at top left, hsla(14, 85%, 70%, 0.18), transparent 24rem),
-    radial-gradient(circle at bottom right, hsla(44, 72%, 64%, 0.16), transparent 22rem),
-    var(--page);
+    radial-gradient(circle at bottom right, hsla(44, 72%, 64%, 0.16), transparent 22rem), var(--page);
   color: var(--ink);
   font-family: var(--body-font);
   line-height: 1.5;

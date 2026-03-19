@@ -173,7 +173,7 @@ const connectionLabel = computed(() => {
 }
 
 .meta-card__value--mono {
-  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-family: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
   font-size: 0.92rem;
 }
 

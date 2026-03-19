@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import UploadPreviewCard from './UploadPreviewCard.vue'
 import { useUploadWorkspace } from '../composables/useUploadWorkspace'
 import { formatBytes } from '../lib/format'
+import UploadPreviewCard from './UploadPreviewCard.vue'
 
 const props = defineProps<{
   userId: string

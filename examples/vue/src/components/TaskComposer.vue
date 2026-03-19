@@ -5,10 +5,10 @@ const props = defineProps<{
   disabled: boolean
 }>()
 
-const model = defineModel<string>({ required: true })
 const emit = defineEmits<{
   submit: []
 }>()
+const model = defineModel<string>({ required: true })
 
 const canSubmit = computed(() => !props.disabled && model.value.trim().length > 0)
 
@@ -90,7 +90,9 @@ function handleSubmit() {
   justify-content: center;
   min-height: 3rem;
   padding: 0 1.25rem;
-  transition: transform 160ms ease, opacity 160ms ease;
+  transition:
+    transform 160ms ease,
+    opacity 160ms ease;
 }
 
 .task-composer__button:hover:enabled {

@@ -1,10 +1,24 @@
+import type { UseConvexUploadReturn } from '@onmax/convex-vue/storage'
+import type { ComputedRef, ShallowRef } from 'vue'
+import type { StorageId, UploadDoc, UploadId } from '../lib/model'
 import { useConvexMutation, useConvexQuery } from '@onmax/convex-vue'
 import { useConvexUpload } from '@onmax/convex-vue/storage'
 import { computed, shallowRef } from 'vue'
 import { api } from '../lib/convex'
-import type { StorageId, UploadId } from '../lib/model'
 
-export function useUploadWorkspace(userId: string) {
+interface UseUploadWorkspaceReturn {
+  deletingId: ShallowRef<UploadId | null>
+  error: ComputedRef<Error | null>
+  isPending: ComputedRef<boolean>
+  removeUploadById: (id: UploadId) => Promise<void>
+  selectFile: (event: Event) => void
+  selectedFile: ShallowRef<File | null>
+  uploadSelectedFile: () => Promise<void>
+  uploadState: UseConvexUploadReturn
+  uploads: ComputedRef<UploadDoc[]>
+}
+
+export function useUploadWorkspace(userId: string): UseUploadWorkspaceReturn {
   const selectedFile = shallowRef<File | null>(null)
   const deletingId = shallowRef<UploadId | null>(null)
   const { data, error: queryError, isPending } = useConvexQuery(
@@ -29,19 +43,19 @@ export function useUploadWorkspace(userId: string) {
   const uploads = computed(() => data.value ?? [])
   const error = computed(() => upload.error.value ?? saveError.value ?? deleteError.value ?? queryError.value)
 
-  function selectFile(event: Event) {
+  function selectFile(event: Event): void {
     const input = event.target as HTMLInputElement
     selectedFile.value = input.files?.[0] ?? null
   }
 
-  async function uploadSelectedFile() {
+  async function uploadSelectedFile(): Promise<void> {
     if (!selectedFile.value)
       return
 
     await upload.upload(selectedFile.value)
   }
 
-  async function removeUploadById(id: UploadId) {
+  async function removeUploadById(id: UploadId): Promise<void> {
     deletingId.value = id
     try {
       await deleteUpload({ id })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { useTaskWorkspace } from '../composables/useTaskWorkspace'
 import TaskComposer from './TaskComposer.vue'
 import TaskList from './TaskList.vue'
-import { useTaskWorkspace } from '../composables/useTaskWorkspace'
 
 const props = defineProps<{
   userId: string

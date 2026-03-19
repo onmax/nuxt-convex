@@ -1,9 +1,21 @@
+import type { ComputedRef, ShallowRef } from 'vue'
+import type { TaskDoc, TaskId } from '../lib/model'
 import { useConvexMutation, useConvexQuery } from '@onmax/convex-vue'
 import { computed, shallowRef } from 'vue'
 import { api } from '../lib/convex'
-import type { TaskId } from '../lib/model'
 
-export function useTaskWorkspace(userId: string) {
+interface UseTaskWorkspaceReturn {
+  deletingId: ShallowRef<TaskId | null>
+  deleteTaskById: (id: TaskId) => Promise<void>
+  draftTitle: ShallowRef<string>
+  error: ComputedRef<Error | null>
+  isAdding: ComputedRef<boolean>
+  isPending: ComputedRef<boolean>
+  submitTask: () => Promise<void>
+  tasks: ComputedRef<TaskDoc[]>
+}
+
+export function useTaskWorkspace(userId: string): UseTaskWorkspaceReturn {
   const draftTitle = shallowRef('')
   const deletingId = shallowRef<TaskId | null>(null)
   const { data, error: queryError, isPending } = useConvexQuery(
@@ -17,7 +29,7 @@ export function useTaskWorkspace(userId: string) {
   const tasks = computed(() => data.value ?? [])
   const error = computed(() => addError.value ?? removeError.value ?? queryError.value)
 
-  async function submitTask() {
+  async function submitTask(): Promise<void> {
     const title = draftTitle.value.trim()
     if (!title)
       return
@@ -26,7 +38,7 @@ export function useTaskWorkspace(userId: string) {
     draftTitle.value = ''
   }
 
-  async function deleteTaskById(id: TaskId) {
+  async function deleteTaskById(id: TaskId): Promise<void> {
     deletingId.value = id
     try {
       await removeTask({ id })

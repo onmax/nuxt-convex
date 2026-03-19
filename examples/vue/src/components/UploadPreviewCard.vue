@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { UploadDoc, UploadId } from '../lib/model'
 import { useConvexStorage } from '@onmax/convex-vue/storage'
 import { computed } from 'vue'
 import { formatRelativeTime } from '../lib/format'
-import type { UploadDoc, UploadId } from '../lib/model'
 
 const props = defineProps<{
   isDeleting: boolean

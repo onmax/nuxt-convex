@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { TaskDoc, TaskId } from '../lib/model'
 import { computed } from 'vue'
 import { formatRelativeTime } from '../lib/format'
-import type { TaskDoc, TaskId } from '../lib/model'
 
 const props = defineProps<{
   deletingId: TaskId | null
