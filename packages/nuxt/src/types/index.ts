@@ -15,9 +15,9 @@ export type {
   UseConvexQueryReturn,
 } from '@onmax/convex-vue'
 export type {
-  ConvexVueController,
   ConvexControllerConnectOptions,
   ConvexControllerStatus,
+  ConvexVueController,
 } from '@onmax/convex-vue/advanced'
 export type {
   ConvexStorageOptions,

@@ -1,5 +1,4 @@
 import process from 'node:process'
-import NuxtConvex from '../packages/nuxt/src/module'
 import { getPlaygroundSiteUrl, getPlaygroundWorkerName, isGitHubAuthEnabled } from './utils/playground-env'
 
 const siteUrl = getPlaygroundSiteUrl()
@@ -7,11 +6,7 @@ const workerName = getPlaygroundWorkerName()
 const enableGitHubAuth = isGitHubAuthEnabled()
 
 export default defineNuxtConfig({
-  modules: [NuxtConvex, 'nuxt-skill-hub', '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
-
-  alias: {
-    '@onmax/convex-vue': '../packages/vue/src/index.ts',
-  },
+  modules: ['nuxt-convex', 'nuxt-skill-hub', '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
 
   hub: {},
 

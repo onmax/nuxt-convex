@@ -1,6 +1,6 @@
 import type { ConvexVueOptions } from 'convex-vue'
-import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 import { getStorageRefs } from '#convex/storage-refs'
+import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 import { convexVue } from 'convex-vue'
 
 interface RuntimeConvexConfig {

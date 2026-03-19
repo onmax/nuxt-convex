@@ -55,7 +55,7 @@ Open the Nuxt-specific guides
 
 - Auto-imports for the shared composables.
 - `#convex`, `#convex/api`, and `#convex/advanced` aliases.
-- Optional `#convex/storage` and `#convex/r2` aliases.
+- Optional `#convex/storage` alias and `useConvexR2Upload` auto-imports.
 - Global `ConvexQuery` and `ConvexPaginatedQuery` components.
 - Dev-only warnings when the generated Convex API is missing.
 - Optional storage scaffolding in `convex/_hub/storage.ts`.

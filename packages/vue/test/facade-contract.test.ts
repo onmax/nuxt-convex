@@ -1,9 +1,9 @@
-import { describe, expectTypeOf, it } from 'vitest'
 import type { DeepReadonly, Ref } from 'vue'
 import type { UseConvexConnectionStateReturn } from '../src/useConvexConnectionState'
 import type { UseConvexPaginatedQueryReturn } from '../src/useConvexPaginatedQuery'
 import type { UseConvexQueriesReturn } from '../src/useConvexQueries'
 import type { UseConvexQueryReturn } from '../src/useConvexQuery'
+import { describe, expectTypeOf, it } from 'vitest'
 import { createHarness, paginatedRef, queryRef, storageRefs } from './helpers/runtimeHarness'
 
 describe('runtime facade contract', () => {

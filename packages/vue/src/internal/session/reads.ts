@@ -181,7 +181,7 @@ export function createQueryResource<Query extends QueryReference>(
     return await promise
   }
 
-  const waitForResult = () => new Promise<FunctionReturnType<Query> | undefined>((resolve, reject) => {
+  const waitForResult = (): Promise<FunctionReturnType<Query> | undefined> => new Promise((resolve, reject) => {
     const stop = watch([data, error], ([nextData, nextError]) => {
       if (nextError) {
         stop()
@@ -366,7 +366,7 @@ export function createPaginationResource<Query extends QueryReference>(
       } as FunctionArgs<Query>,
       (result) => {
         pages.value[index] = result as PaginationResult<any>
-        pages.value = pages.value
+        triggerRef(pages)
         error.value = null
         isDone.value = (result as PaginationResult<any>).isDone
         isLoadingMore.value = false

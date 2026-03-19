@@ -35,9 +35,10 @@ describe('nuxt-convex', async () => {
     const storageModule = readFileSync(join(buildDir(), 'convex/storage.mjs'), 'utf8')
     const advancedModule = readFileSync(join(buildDir(), 'convex/advanced.mjs'), 'utf8')
 
-    expect(rootModule).toContain("vue/src/index")
-    expect(storageModule).toContain("vue/src/storage")
-    expect(advancedModule).toContain("vue/src/advanced")
+    expect(rootModule).toContain('vue/src/index')
+    expect(rootModule).not.toContain('vue/src/advanced')
+    expect(storageModule).toContain('vue/src/storage')
+    expect(advancedModule).toContain('vue/src/advanced')
   })
 
   it('only auto-imports storage helpers when storage is enabled', () => {

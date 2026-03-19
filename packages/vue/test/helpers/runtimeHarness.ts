@@ -3,8 +3,8 @@ import type { FunctionReference, PaginationResult } from 'convex/server'
 import { vi } from 'vitest'
 import { createApp, effectScope } from 'vue'
 import { createConvexVueController, useConvexClient, useConvexHttpClient } from '../../src/advanced'
-import { useConvexRuntimeFacade } from '../../src/internal/session/facade'
 import { convexVue, useConvexAction, useConvexConnectionState, useConvexMutation, useConvexPaginatedQuery, useConvexQueries, useConvexQuery } from '../../src/index'
+import { useConvexRuntimeFacade } from '../../src/internal/session/facade'
 import { convexVueStorage, useConvexStorage, useConvexUpload } from '../../src/storage'
 import { useConvexController } from '../../src/useConvexController'
 
@@ -39,57 +39,61 @@ export const realtimeClients: MockRealtimeClient[] = []
 export const httpClients: MockHttpClient[] = []
 
 vi.mock('convex/browser', () => {
+  function MockConvexClient(url: string, options: unknown): MockRealtimeClient {
+    const listeners: QueryListener[] = []
+    const connectionListeners: Array<(state: ConnectionState) => void> = []
+    const client: MockRealtimeClient = {
+      action: vi.fn(),
+      client: {
+        localQueryResult: vi.fn(() => undefined),
+      },
+      close: vi.fn(),
+      connectionListeners,
+      connectionState: vi.fn(() => client.connectionStateValue),
+      connectionStateValue: {
+        hasInflightRequests: false,
+        isWebSocketConnected: false,
+      } as ConnectionState,
+      listeners,
+      mutation: vi.fn(),
+      onUpdate: vi.fn((_query, args, onResult, onError) => {
+        listeners.push({ args, onError, onResult })
+        return () => {
+          const index = listeners.findIndex(listener => listener.onError === onError && listener.onResult === onResult)
+          if (index >= 0)
+            listeners.splice(index, 1)
+        }
+      }),
+      options,
+      subscribeToConnectionState: vi.fn((onState) => {
+        connectionListeners.push(onState)
+        return () => {
+          const index = connectionListeners.indexOf(onState)
+          if (index >= 0)
+            connectionListeners.splice(index, 1)
+        }
+      }),
+      url,
+    }
+
+    realtimeClients.push(client)
+    return client
+  }
+
+  function MockConvexHttpClient(url: string, options: unknown): MockHttpClient {
+    const client: MockHttpClient = {
+      options,
+      query: vi.fn(),
+      url,
+    }
+
+    httpClients.push(client)
+    return client
+  }
+
   return {
-    ConvexClient: vi.fn(function MockConvexClient(url: string, options: unknown) {
-      const listeners: QueryListener[] = []
-      const connectionListeners: Array<(state: ConnectionState) => void> = []
-      const client: MockRealtimeClient = {
-        action: vi.fn(),
-        client: {
-          localQueryResult: vi.fn(() => undefined),
-        },
-        close: vi.fn(),
-        connectionListeners,
-        connectionState: vi.fn(() => client.connectionStateValue),
-        connectionStateValue: {
-          hasInflightRequests: false,
-          isWebSocketConnected: false,
-        } as ConnectionState,
-        listeners,
-        mutation: vi.fn(),
-        onUpdate: vi.fn((_query, args, onResult, onError) => {
-          listeners.push({ args, onError, onResult })
-          return () => {
-            const index = listeners.findIndex(listener => listener.onError === onError && listener.onResult === onResult)
-            if (index >= 0)
-              listeners.splice(index, 1)
-          }
-        }),
-        options,
-        subscribeToConnectionState: vi.fn((onState) => {
-          connectionListeners.push(onState)
-          return () => {
-            const index = connectionListeners.indexOf(onState)
-            if (index >= 0)
-              connectionListeners.splice(index, 1)
-          }
-        }),
-        url,
-      }
-
-      realtimeClients.push(client)
-      return client
-    }),
-    ConvexHttpClient: vi.fn(function MockConvexHttpClient(url: string, options: unknown) {
-      const client: MockHttpClient = {
-        options,
-        query: vi.fn(),
-        url,
-      }
-
-      httpClients.push(client)
-      return client
-    }),
+    ConvexClient: vi.fn(MockConvexClient),
+    ConvexHttpClient: vi.fn(MockConvexHttpClient),
   }
 })
 
@@ -128,7 +132,12 @@ export function createHarness({
 }: {
   options?: Parameters<typeof convexVue.install>[1]
   storageOptions?: Parameters<typeof convexVueStorage.install>[1]
-} = {}) {
+} = {}): {
+  controller: ReturnType<typeof useConvexController>
+  facade: ReturnType<typeof useConvexRuntimeFacade>
+  run: <T>(factory: () => T) => T
+  stop: () => void
+} {
   const app = createApp({ render: () => null })
   app.use(convexVue, options ?? {})
   if (storageOptions)
@@ -179,7 +188,7 @@ export const paginatedRef = { _name: 'tasks:paginated' } as unknown as FunctionR
   PaginationResult<{ _id: string }>
 >
 export const storageRefs = {
-  generateUploadUrl: { _name: '_hub.storage.generateUploadUrl' } as unknown as FunctionReference<'mutation', 'public', {}, string>,
+  generateUploadUrl: { _name: '_hub.storage.generateUploadUrl' } as unknown as FunctionReference<'mutation', 'public', Record<never, never>, string>,
   getUrl: { _name: '_hub.storage.getUrl' } as unknown as FunctionReference<'query', 'public', { storageId: string }, string | null>,
   remove: { _name: '_hub.storage.remove' } as unknown as FunctionReference<'mutation', 'public', { storageId: string }, void>,
 }

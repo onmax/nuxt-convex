@@ -7,8 +7,8 @@ type PaginatedQueryReference = FunctionReference<'query', any, any, PaginationRe
 type PaginatedQueryArgs<Query extends PaginatedQueryReference> = { [K in keyof Omit<FunctionArgs<Query>, 'paginationOpts'>]: Omit<FunctionArgs<Query>, 'paginationOpts'>[K] }
 type PaginatedQueryItem<Query extends PaginatedQueryReference> = FunctionReturnType<Query> extends PaginationResult<infer T> ? T : never
 
-type LocalQueryResult<Query extends FunctionReference<'query'>> = { args: FunctionArgs<Query>, value: undefined | FunctionReturnType<Query> }
-type LoadedResult<Query extends FunctionReference<'query'>> = { args: FunctionArgs<Query>, value: FunctionReturnType<Query> }
+interface LocalQueryResult<Query extends FunctionReference<'query'>> { args: FunctionArgs<Query>, value: undefined | FunctionReturnType<Query> }
+interface LoadedResult<Query extends FunctionReference<'query'>> { args: FunctionArgs<Query>, value: FunctionReturnType<Query> }
 
 function matchesArgs<Query extends PaginatedQueryReference>(
   queries: LocalQueryResult<Query>[],
@@ -95,8 +95,9 @@ export function insertAtPosition<Query extends PaginatedQueryReference>(options:
   for (const query of queries) {
     if (argsToMatch !== undefined && !Object.keys(argsToMatch).every(
       k => compareValues((argsToMatch as any)[k], (query.args as any)[k]) === 0,
-    ))
+    )) {
       continue
+    }
     const key = JSON.stringify(
       Object.fromEntries(
         Object.entries(query.args).map(([k, v]) => [k, k === 'paginationOpts' ? (v as any).id : v]),

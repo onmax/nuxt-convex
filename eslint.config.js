@@ -11,7 +11,7 @@ export default createConfigForNuxt({
     vue: true,
     formatters: true,
     pnpm: true,
-    ignores: ['**/convex/_generated/**'],
+    ignores: ['.artifacts/**', '.codex/**', '**/.nuxt/**', '**/.output/**', '**/convex/_generated/**'],
   }),
   {
     files: ['package.json'],

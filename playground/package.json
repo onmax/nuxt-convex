@@ -2,8 +2,8 @@
   "name": "nuxt-convex-playground",
   "private": true,
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build"
+    "dev": "pnpm --filter nuxt-convex dev:prepare && nuxi dev",
+    "build": "pnpm --filter nuxt-convex build && nuxi build"
   },
   "dependencies": {
     "@convex-dev/better-auth": "catalog:convex",
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@nuxt/ui": "catalog:",
     "nuxt": "catalog:",
+    "nuxt-convex": "workspace:*",
     "nuxt-skill-hub": "link:/Users/maxi/nuxt/nuxt-skill-hub",
     "tailwindcss": "catalog:",
     "wrangler": "catalog:playground"

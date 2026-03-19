@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { $fetch, setup, useTestContext } from '@nuxt/test-utils/e2e'
@@ -9,12 +9,12 @@ const rootDir = fileURLToPath(new URL('./fixtures/r2', import.meta.url))
 describe('nuxt-convex r2', async () => {
   await setup({ rootDir, buildDir: '.nuxt' })
 
-  it('generates r2 templates when r2: true', () => {
+  it('auto-imports useConvexR2Upload without generating an r2 virtual module', () => {
     const buildDir = useTestContext().nuxt!.options.buildDir
-    const r2TemplatePath = join(buildDir, 'convex/r2.mjs')
-    const r2TypesPath = join(buildDir, 'types/convex-r2.d.ts')
-    expect(existsSync(r2TemplatePath)).toBe(true)
-    expect(existsSync(r2TypesPath)).toBe(true)
+    const imports = readFileSync(join(buildDir, 'types/imports.d.ts'), 'utf8')
+
+    expect(useTestContext().nuxt!.options.alias['#convex/r2']).toBeUndefined()
+    expect(imports).toContain('useConvexR2Upload')
   })
 
   it('exposes r2 flag via runtime config', async () => {
