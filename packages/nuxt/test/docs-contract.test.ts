@@ -1,22 +1,37 @@
-import { execFileSync } from 'node:child_process'
-import { resolve } from 'node:path'
+import { readdirSync, readFileSync } from 'node:fs'
+import { join, resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 const repoRoot = resolve(process.cwd(), '../..')
+const ignoredDirectories = new Set(['.cache', '.nuxt', '.output', '.wrangler', 'node_modules'])
+
+function collectFiles(directory: string): string[] {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(directory, entry.name)
+    if (entry.isDirectory()) {
+      if (ignoredDirectories.has(entry.name))
+        return []
+      return collectFiles(path)
+    }
+    if (entry.isFile())
+      return path
+    return []
+  })
+}
 
 function search(pattern: string): string {
-  try {
-    return execFileSync('rg', ['-n', '-F', pattern, 'docs/content', 'playground'], {
-      cwd: repoRoot,
-      encoding: 'utf8',
-    }).trim()
+  const roots = ['docs/content', 'playground'].map(path => join(repoRoot, path))
+
+  for (const root of roots) {
+    for (const file of collectFiles(root)) {
+      const contents = readFileSync(file, 'utf8')
+      const line = contents.split('\n').findIndex(nextLine => nextLine.includes(pattern))
+      if (line >= 0)
+        return `${file}:${line + 1}`
+    }
   }
-  catch (error) {
-    const result = error as { status?: number }
-    if (result.status === 1)
-      return ''
-    throw error
-  }
+
+  return ''
 }
 
 describe('docs contract', () => {
