@@ -61,6 +61,13 @@ describe('nuxt-convex', () => {
     expect(advancedModule).toContain('vue/src/advanced')
   })
 
+  it('keeps storage refs behind a lazy internal runtime helper', () => {
+    const storageRefsRuntime = readFileSync(join(fixture.buildDir(), 'convex/storage-refs-runtime.mjs'), 'utf8')
+
+    expect(storageRefsRuntime).toContain('/* @vite-ignore */ generatedApiImport')
+    expect(storageRefsRuntime).not.toContain(`import('#convex/api')`)
+  })
+
   it('only auto-imports storage helpers when storage is enabled', () => {
     const sharedImports = readFileSync(join(fixture.buildDir(), 'types/imports.d.ts'), 'utf8')
 
