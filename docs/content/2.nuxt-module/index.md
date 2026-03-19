@@ -3,7 +3,7 @@ title: Nuxt Module
 description: Understand what nuxt-convex adds on top of the shared Vue package, including auto-imports, virtual modules, storage helpers, and renderless components.
 ---
 
-`nuxt-convex` is the Nuxt-specific layer in this monorepo. The module exposes the shared Vue runtime to Nuxt app code through `#convex`, `#convex/advanced`, `#convex/api`, and optional `#convex/storage`. It also wires the supported composables into Nuxt auto-imports and can scaffold storage helpers.
+`nuxt-convex` is the Nuxt-specific layer in this monorepo. It exposes the shared runtime to Nuxt app code through `#convex`, `#convex/advanced`, `#convex/api`, and optional `#convex/storage`. It also wires the supported composables into Nuxt auto-imports, registers the renderless components, and can scaffold storage helpers.
 
 ::u-page-section
 #title
@@ -53,7 +53,7 @@ Open the Nuxt-specific guides
 
 ## What the module adds
 
-The module adds the Nuxt-facing entrypoints and registrations around the shared Vue package. Use this list as the public contract for Nuxt app code.
+The module adds the Nuxt-facing entrypoints and registrations around the shared runtime. Use this list as the public contract for Nuxt app code.
 
 - Root auto-imports from `#convex`: `useConvexQuery`, `useConvexQueries`, `useConvexMutation`, `useConvexAction`, `useConvexPaginatedQuery`, `useConvexAuth`, and `useConvexConnectionState`.
 - `#convex`, `#convex/api`, and `#convex/advanced` aliases.
@@ -64,6 +64,8 @@ The module adds the Nuxt-facing entrypoints and registrations around the shared 
 - Optional storage scaffolding in `convex/_hub/storage.ts`.
 
 Advanced helpers such as `useConvexClient` and `useConvexHttpClient` stay available through `#convex/advanced`, but they are not auto-imported.
+
+The module does not expose internal runtime helpers or compatibility aliases as part of the public contract.
 
 ## Minimal setup
 
@@ -88,11 +90,7 @@ That behavior matters in layered Nuxt apps, starter kits, and modules that ship 
 
 ## What stays shared with Vue core
 
-The module does not reimplement the data layer.
-
-- `#convex` mirrors `@onmax/convex-vue`
-- `#convex/storage` mirrors `@onmax/convex-vue/storage`
-- `#convex/advanced` mirrors `@onmax/convex-vue/advanced`
+The module does not reimplement the data layer. Query subscriptions, write helpers, pagination semantics, auth state, and the advanced controller still come from the shared Vue package underneath the wrapper.
 
 ::tip
 In Nuxt app code, use the `#convex*` aliases and Nuxt auto-imports. Read the Vue track for shared behavior and backend patterns, not for Nuxt-side import paths.

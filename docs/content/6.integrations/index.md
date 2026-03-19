@@ -1,6 +1,6 @@
 ---
 title: Integrations
-description: Connect nuxt-convex and @onmax/convex-vue with adjacent tools such as Better Auth and Cloudflare R2.
+description: Extend nuxt-convex with the adjacent tools that this repo currently documents and exercises.
 ---
 
 The integration guides describe real extension points in this repository. They focus on the surrounding tools that matter once the core Convex wiring is already in place.
@@ -20,7 +20,7 @@ Open an integration guide
     Add Better Auth
 
     #description
-    Connect Better Auth to the shared Convex client and the Nuxt runtime around it.
+    Connect Better Auth to the shipped provider hook and HTTP adapter, with the current dependency constraints called out explicitly.
     ::::
 
     ::::u-page-card

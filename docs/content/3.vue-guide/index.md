@@ -5,6 +5,8 @@ description: Use @onmax/convex-vue directly in any Vue 3 app with full control o
 
 `@onmax/convex-vue` is the shared package behind the Nuxt module. Install it directly when you build a standalone Vue app or need full control over plugin wiring.
 
+If you are using Nuxt, keep the Nuxt-side import paths from the Nuxt track and use this guide only for the shared runtime behavior.
+
 ::u-page-section
 #title
 Get started with the Vue package

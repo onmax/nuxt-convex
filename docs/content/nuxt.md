@@ -4,9 +4,9 @@ description: The Nuxt-focused track for nuxt-convex, with setup, guides, integra
 navigation: false
 ---
 
-Use this track when your app runs on Nuxt. It covers the `nuxt-convex` module, the runtime wiring it adds, and the integrations that depend on Nuxt-specific behavior.
+Use this track when your app runs on Nuxt. It covers the `nuxt-convex` module, the public `#convex*` aliases, the Nuxt auto-imports, and the integrations that depend on Nuxt-specific runtime behavior.
 
-The module wraps `@onmax/convex-vue`. When you need the shared composables or the backend patterns they rely on, continue into the Vue track.
+Move into the Vue track when you need the shared composable semantics or the backend patterns that both runtimes consume.
 
 ::u-page-section
 #title
@@ -39,7 +39,7 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
     Configure the wrapper
 
     #description
-    Learn what the module adds on top of the shared Vue package, including aliases, auto-imports, runtime setup, and layer-aware resolution.
+    Learn what the module adds for Nuxt app code, including aliases, auto-imports, runtime setup, and layer-aware resolution.
     ::::
 
     ::::u-page-card
@@ -70,12 +70,12 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
   :::
 ::
 
-## Understand what the Nuxt layer adds
+## Understand what the Nuxt layer owns
 
-- `nuxt-convex` handles aliases, auto-imports, generated API access, and runtime wiring.
-- File storage and Cloudflare R2 live here because they depend on module scaffolding and runtime behavior.
-- The data layer stays shared with `@onmax/convex-vue`, but this track explains how the Nuxt module exposes it.
+- `nuxt-convex` owns aliases, auto-imports, generated API access, and runtime wiring.
+- File storage and Cloudflare R2 live here because they depend on module scaffolding and Nuxt runtime behavior.
+- The shared query, mutation, pagination, auth, and controller behavior still lives in the Vue package.
 
 ::tip
-Use the Vue track for shared composables such as `useConvexQuery` and `useConvexMutation`. Use the Nuxt track for module configuration, auto-imports, and Nuxt-specific integrations.
+Use the Vue track to learn shared composable behavior. Use the Nuxt track to learn the app-facing wrapper contract.
 ::

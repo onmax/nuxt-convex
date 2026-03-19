@@ -10,6 +10,8 @@ import { join } from 'pathe'
 import { version } from '../package.json'
 import { formatProjectRelativePath, resolveConvexRoot, resolveStorageServerImportPath, toImportPath } from './internal/convex-paths'
 
+export * from './types/index'
+
 const log = consola.withTag('nuxt:convex')
 
 const rootAutoImports = [
@@ -262,7 +264,6 @@ declare module '#convex/storage' {
   }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex/storage'] = template.dst
-  nuxt.options.alias['convex-vue/storage'] = template.dst
   addImports(storageAutoImports.map(name => ({ name, from: '#convex/storage' })))
 }
 
@@ -346,5 +347,3 @@ function addConvexDevTools(nuxt: Nuxt, config: ResolvedConvexConfig): void {
     })
   })
 }
-
-export * from './types/index'
