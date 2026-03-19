@@ -13,7 +13,7 @@ const generatedServerPath = join(baseDir, 'convex/_generated/server.ts')
 rmSync(storagePath, { force: true })
 
 describe('nuxt-convex layered defaults', async () => {
-  await setup({ rootDir, dev: true })
+  await setup({ rootDir })
 
   it('discovers convex files from the nearest base layer by default', async () => {
     const res = await $fetch<{ layer: string, url: string }>('/api/layer')

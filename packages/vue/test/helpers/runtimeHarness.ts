@@ -1,5 +1,5 @@
 import type { ConnectionState } from 'convex/browser'
-import type { FunctionReference } from 'convex/server'
+import type { FunctionReference, PaginationResult } from 'convex/server'
 import { vi } from 'vitest'
 import { createApp, effectScope } from 'vue'
 import { createConvexVueController, useConvexClient, useConvexHttpClient } from '../../src/advanced'
@@ -148,15 +148,40 @@ export function createHarness({
   }
 }
 
-export const queryRef = { _name: 'tasks:list' } as unknown as FunctionReference<'query'>
-export const secondQueryRef = { _name: 'tasks:detail' } as unknown as FunctionReference<'query'>
-export const mutationRef = { _name: 'tasks:create' } as unknown as FunctionReference<'mutation'>
-export const actionRef = { _name: 'tasks:action' } as unknown as FunctionReference<'action'>
-export const paginatedRef = { _name: 'tasks:paginated' } as unknown as FunctionReference<'query'>
+export const queryRef = { _name: 'tasks:list' } as unknown as FunctionReference<
+  'query',
+  'public',
+  { userId: string },
+  Array<{ _id: string }>
+>
+export const secondQueryRef = { _name: 'tasks:detail' } as unknown as FunctionReference<
+  'query',
+  'public',
+  { id: string },
+  { _id: string }
+>
+export const mutationRef = { _name: 'tasks:create' } as unknown as FunctionReference<
+  'mutation',
+  'public',
+  { title: string },
+  string
+>
+export const actionRef = { _name: 'tasks:action' } as unknown as FunctionReference<
+  'action',
+  'public',
+  { title: string },
+  string
+>
+export const paginatedRef = { _name: 'tasks:paginated' } as unknown as FunctionReference<
+  'query',
+  'public',
+  { userId: string, paginationOpts: { cursor: string | null, numItems: number } },
+  PaginationResult<{ _id: string }>
+>
 export const storageRefs = {
-  generateUploadUrl: { _name: '_hub.storage.generateUploadUrl' } as unknown as FunctionReference<'mutation'>,
-  getUrl: { _name: '_hub.storage.getUrl' } as unknown as FunctionReference<'query'>,
-  remove: { _name: '_hub.storage.remove' } as unknown as FunctionReference<'mutation'>,
+  generateUploadUrl: { _name: '_hub.storage.generateUploadUrl' } as unknown as FunctionReference<'mutation', 'public', {}, string>,
+  getUrl: { _name: '_hub.storage.getUrl' } as unknown as FunctionReference<'query', 'public', { storageId: string }, string | null>,
+  remove: { _name: '_hub.storage.remove' } as unknown as FunctionReference<'mutation', 'public', { storageId: string }, void>,
 }
 
 export {

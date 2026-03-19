@@ -1,8 +1,13 @@
-import type { FunctionArgs, FunctionReference } from 'convex/server'
+import type { FunctionArgs, FunctionReference, FunctionReturnType, PaginationResult } from 'convex/server'
 import type { DeepReadonly, MaybeRefOrGetter, Ref } from 'vue'
 import type { ConvexRuntimeContext } from '../runtime'
 import type { ConvexTransportPort } from './transport'
 import {
+  type ConnectionResourceState,
+  type PaginationResourceState,
+  type QueriesResourceState,
+  type QueryEntry,
+  type QueryResourceState,
   createConnectionResource,
   createLiveValueResource,
   createPaginationResource,
@@ -19,15 +24,23 @@ export interface ConvexRuntimeFacade {
     query: Query,
     args: MaybeRefOrGetter<FunctionArgs<Query> | 'skip'>,
     options?: { server?: boolean },
-  ) => ReturnType<typeof createQueryResource<Query>>
-  queries: typeof createQueriesResource
-  pagination: typeof createPaginationResource
-  connection: typeof createConnectionResource
+  ) => QueryResourceState<Query>
+  queries: <T extends Record<string, QueryEntry>>(
+    queries: MaybeRefOrGetter<T>,
+  ) => QueriesResourceState<T>
+  pagination: <Query extends QueryReference>(
+    query: Query,
+    args: MaybeRefOrGetter<Omit<FunctionArgs<Query>, 'paginationOpts'> | 'skip'>,
+    options: { numItems: number },
+  ) => PaginationResourceState<
+    FunctionReturnType<Query> extends PaginationResult<infer Item> ? Item : never
+  >
+  connection: () => ConnectionResourceState
   liveValue: <Query extends QueryReference>(
     query: Query,
     args: MaybeRefOrGetter<FunctionArgs<Query>>,
-    initialValue: ReturnType<typeof createLiveValueResource<Query>> extends DeepReadonly<Ref<infer T>> ? T : never,
-  ) => ReturnType<typeof createLiveValueResource<Query>>
+    initialValue: FunctionReturnType<Query>,
+  ) => DeepReadonly<Ref<FunctionReturnType<Query>>>
 }
 
 export function createConvexRuntimeFacade(
@@ -36,7 +49,7 @@ export function createConvexRuntimeFacade(
 ): ConvexRuntimeFacade {
   return {
     query(query, args, options) {
-      return createQueryResource(transport, args, query, {
+      return createQueryResource(transport, query, args, {
         server: options?.server ?? context.optionsRef.value.server,
       })
     },
@@ -44,7 +57,7 @@ export function createConvexRuntimeFacade(
       return createQueriesResource(transport, queries)
     },
     pagination(query, args, options) {
-      return createPaginationResource(transport, args, options, query)
+      return createPaginationResource(transport, query, args, options)
     },
     connection() {
       return createConnectionResource(transport)

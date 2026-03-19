@@ -103,7 +103,10 @@ describe('internal runtime facade', () => {
 
   it('tracks keyed query subscriptions through one boundary', async () => {
     const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
-    const queriesRef = ref({
+    const queriesRef = ref<{
+      list: { query: typeof queryRef, args: { userId: string } }
+      detail: { query: typeof secondQueryRef, args: { id: string } | 'skip' }
+    }>({
       list: { query: queryRef, args: { userId: '1' } },
       detail: { query: secondQueryRef, args: 'skip' as const },
     })
@@ -135,7 +138,7 @@ describe('internal runtime facade', () => {
   it('recreates paginated suspense after reset', async () => {
     const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
     const client = getLastRealtimeClient()
-    const pagination = harness.run(() => harness.facade.pagination(paginatedRef, {}, { numItems: 2 }))
+    const pagination = harness.run(() => harness.facade.pagination(paginatedRef, { userId: '1' }, { numItems: 2 }))
 
     client.listeners[0].onResult({
       continueCursor: 'cursor-1',
@@ -201,7 +204,7 @@ describe('internal runtime facade', () => {
 
     client.listeners[0].onResult([{ _id: 'task-1' }])
     client.listeners[1].onResult({
-      continueCursor: null,
+      continueCursor: '',
       isDone: true,
       page: [{ _id: 'page-1' }],
     } satisfies PaginationResult<{ _id: string }>)

@@ -64,8 +64,8 @@ function shouldResetOnError(error: Error): boolean {
 
 export function createQueryResource<Query extends QueryReference>(
   transport: ConvexTransportPort,
-  args: MaybeRefOrGetter<FunctionArgs<Query> | 'skip'>,
   query: Query,
+  args: MaybeRefOrGetter<FunctionArgs<Query> | 'skip'>,
   options: QueryResourceOptions,
 ): QueryResourceState<Query> {
   const isServer = typeof window === 'undefined'
@@ -309,9 +309,9 @@ export function createQueriesResource<T extends Record<string, QueryEntry>>(
 
 export function createPaginationResource<Query extends QueryReference>(
   transport: ConvexTransportPort,
+  query: Query,
   args: MaybeRefOrGetter<Omit<FunctionArgs<Query>, 'paginationOpts'> | 'skip'>,
   options: { numItems: number },
-  query: Query,
 ): PaginationResourceState<
   FunctionReturnType<Query> extends PaginationResult<infer Item> ? Item : never
 > {
