@@ -3,6 +3,7 @@ import type { FunctionArgs, FunctionReference, FunctionReturnType, PaginationRes
 import type { Value } from 'convex/values'
 import type { ComputedRef, DeepReadonly, MaybeRefOrGetter, Ref } from 'vue'
 import type { ConvexTransportPort } from './transport'
+import { getFunctionName } from 'convex/server'
 import { computed, nextTick, onScopeDispose, readonly, shallowRef, toValue, triggerRef, watch } from 'vue'
 import { normalizeError } from '../useConvexRuntimeContext'
 
@@ -226,6 +227,7 @@ export function createQueriesResource<T extends Record<string, QueryEntry>>(
   const errors = shallowRef<Record<string, Error | null>>({})
   const unsubscribers = new Map<string, () => void>()
   const trackedArgs = new Map<string, string>()
+  let lastClient = transport.getRealtimeClient()
 
   function subscribeKey(key: string, entry: QueryEntry): void {
     unsubscribers.get(key)?.()
@@ -269,27 +271,43 @@ export function createQueriesResource<T extends Record<string, QueryEntry>>(
   }
 
   function serializeEntry(entry: QueryEntry): string {
-    return entry.args === 'skip' ? 'skip' : JSON.stringify(entry.args)
+    return JSON.stringify({
+      args: entry.args,
+      query: (entry.query as { _name?: string })._name ?? getFunctionName(entry.query),
+    })
   }
 
   function sync(): void {
     const current = toValue(queries)
     const currentKeys = new Set(Object.keys(current))
+    const currentClient = transport.getRealtimeClient()
+    const clientChanged = currentClient !== lastClient
+    let mutated = false
+
+    lastClient = currentClient
 
     for (const key of unsubscribers.keys()) {
       if (!currentKeys.has(key)) {
         unsubscribers.get(key)?.()
         unsubscribers.delete(key)
         trackedArgs.delete(key)
+        delete data.value[key]
+        delete errors.value[key]
+        mutated = true
       }
     }
 
     for (const [key, entry] of Object.entries(current)) {
       const serialized = serializeEntry(entry)
-      if (trackedArgs.get(key) === serialized)
+      if (!clientChanged && trackedArgs.get(key) === serialized)
         continue
       trackedArgs.set(key, serialized)
       subscribeKey(key, entry)
+    }
+
+    if (mutated) {
+      triggerRef(data)
+      triggerRef(errors)
     }
   }
 
@@ -377,7 +395,7 @@ export function createPaginationResource<Query extends QueryReference>(
         isLoadingMore.value = false
         suspenseController.reject(error.value)
         if (shouldResetOnError(error.value))
-          reset(false)
+          reset(true)
       },
     )
   }

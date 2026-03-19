@@ -37,3 +37,18 @@ export const remove = mutation({
     }
   },
 })
+
+export const removeByStorageId = mutation({
+  args: { storageId: v.id('_storage') },
+  handler: async (ctx, { storageId }) => {
+    const upload = await ctx.db
+      .query('uploads')
+      .filter(q => q.eq(q.field('storageId'), storageId))
+      .first()
+
+    if (upload)
+      await ctx.db.delete(upload._id)
+
+    await ctx.storage.delete(storageId)
+  },
+})

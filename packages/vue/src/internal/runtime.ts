@@ -36,6 +36,11 @@ export interface ConvexAuthState {
   isAuthenticated: boolean
 }
 
+export const DISCONNECTED_AUTH_STATE: ConvexAuthState = {
+  isAuthenticated: false,
+  isLoading: false,
+}
+
 export interface ConvexRuntimeContext {
   controller: ConvexVueController
   optionsRef: ShallowRef<ResolvedConvexVueOptions>
@@ -86,7 +91,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
   const statusRef = shallowRef<ConvexControllerStatus>('disconnected')
   const clientRef = shallowRef<ConvexClient>()
   const httpClientRef = shallowRef<ConvexHttpClient>()
-  const authStateRef = shallowRef<ConvexAuthState>({ isLoading: false, isAuthenticated: false })
+  const authStateRef = shallowRef<ConvexAuthState>({ ...DISCONNECTED_AUTH_STATE })
 
   const closeExistingClient = (): void => {
     if (clientRef.value && typeof clientRef.value.close === 'function')
@@ -120,6 +125,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
       optionsRef.value = resolveOptions({ ...optionsRef.value, url: undefined })
       clientRef.value = undefined
       httpClientRef.value = undefined
+      authStateRef.value = { ...DISCONNECTED_AUTH_STATE }
       statusRef.value = 'disconnected'
     },
     getClient() {
