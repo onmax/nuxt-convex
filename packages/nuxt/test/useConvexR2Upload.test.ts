@@ -1,11 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useConvexR2Upload } from '../src/runtime/composables/useConvexR2Upload'
 
-const mutation = vi.fn()
+const { mutation, useConvexClient } = vi.hoisted(() => {
+  const mutation = vi.fn()
+  const useConvexClient = vi.fn(() => ({ mutation }))
+  return { mutation, useConvexClient }
+})
 
 vi.mock('convex-vue/advanced', () => {
   return {
-    useConvexClient: () => ({ mutation }),
+    useConvexClient,
   }
 })
 
@@ -29,7 +33,19 @@ class MockXMLHttpRequest {
 describe('useConvexR2Upload', () => {
   beforeEach(() => {
     mutation.mockReset()
+    useConvexClient.mockClear()
     vi.stubGlobal('XMLHttpRequest', MockXMLHttpRequest)
+  })
+
+  it('does not resolve the Convex client during setup', () => {
+    const api = {
+      generateUploadUrl: { _name: 'r2:generateUploadUrl' },
+      syncMetadata: { _name: 'r2:syncMetadata' },
+    }
+
+    useConvexR2Upload(api)
+
+    expect(useConvexClient).not.toHaveBeenCalled()
   })
 
   it('uploads via the Convex client and syncs metadata', async () => {
@@ -49,6 +65,7 @@ describe('useConvexR2Upload', () => {
     const key = await upload(file)
 
     expect(key).toBe('file-key')
+    expect(useConvexClient).toHaveBeenCalledTimes(1)
     expect(mutation).toHaveBeenNthCalledWith(1, api.generateUploadUrl, {})
     expect(mutation).toHaveBeenNthCalledWith(2, api.syncMetadata, { key: 'file-key' })
     expect(progress.value).toBe(100)

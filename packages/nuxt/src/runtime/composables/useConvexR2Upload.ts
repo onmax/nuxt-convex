@@ -56,7 +56,6 @@ function uploadWithProgress(
 }
 
 export function useConvexR2Upload(api: ConvexR2Api, options: UseConvexR2UploadOptions = {}): UseConvexR2UploadReturn {
-  const client = useConvexClient()
   const isUploading = ref(false)
   const progress = ref(0)
   const error = ref<Error | null>(null)
@@ -73,6 +72,7 @@ export function useConvexR2Upload(api: ConvexR2Api, options: UseConvexR2UploadOp
         return null
       }
 
+      const client = useConvexClient()
       isUploading.value = true
       progress.value = 0
       error.value = null
