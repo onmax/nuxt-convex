@@ -1,5 +1,4 @@
 import process from 'node:process'
-import NuxtConvex from '../packages/nuxt/src/module'
 import { getPlaygroundSiteUrl, getPlaygroundWorkerName, isGitHubAuthEnabled } from './utils/playground-env'
 
 const siteUrl = getPlaygroundSiteUrl()
@@ -7,18 +6,9 @@ const workerName = getPlaygroundWorkerName()
 const enableGitHubAuth = isGitHubAuthEnabled()
 
 export default defineNuxtConfig({
-  modules: [NuxtConvex, 'nuxt-skill-hub', '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
-
-  alias: {
-    '@onmax/convex-vue': '../packages/vue/src/index.ts',
-  },
+  modules: ['nuxt-convex', '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
 
   hub: {},
-
-  skillHub: {
-    skillName: 'nuxt',
-    targets: ['codex'],
-  },
 
   icon: {
     customCollections: [{ prefix: 'custom', dir: './app/assets/icons' }],
@@ -37,7 +27,7 @@ export default defineNuxtConfig({
       siteUrl,
     },
   },
-  compatibilityDate: '2025-01-01',
+  compatibilityDate: '2025-12-11',
 
   nitro: {
     preset: 'cloudflare-module',

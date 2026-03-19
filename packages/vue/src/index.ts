@@ -1,6 +1,8 @@
+export { ConvexAuthenticated, ConvexAuthLoading, ConvexUnauthenticated } from './components/ConvexAuth'
 export type {
   ConvexVueOptions,
 } from './internal/runtime'
+export { insertAtBottomIfLoaded, insertAtPosition, insertAtTop, optimisticallyUpdateValueInPaginatedQuery } from './paginationHelpers'
 export { convexVue } from './plugin'
 export { useConvexAction } from './useConvexAction'
 export type { UseConvexActionReturn } from './useConvexAction'
@@ -16,5 +18,3 @@ export { useConvexQueries } from './useConvexQueries'
 export type { QueryEntry, UseConvexQueriesReturn } from './useConvexQueries'
 export { useConvexQuery } from './useConvexQuery'
 export type { UseConvexQueryOptions, UseConvexQueryReturn } from './useConvexQuery'
-export { ConvexAuthenticated, ConvexUnauthenticated, ConvexAuthLoading } from './components/ConvexAuth'
-export { insertAtTop, insertAtBottomIfLoaded, insertAtPosition, optimisticallyUpdateValueInPaginatedQuery } from './paginationHelpers'
