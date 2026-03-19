@@ -3,7 +3,7 @@ title: Nuxt Module
 description: Understand what nuxt-convex adds on top of the shared Vue package, including auto-imports, virtual modules, storage helpers, and renderless components.
 ---
 
-`nuxt-convex` is the Nuxt-specific layer in this monorepo. The module exposes the shared Vue runtime to Nuxt app code through `#convex`, `#convex/advanced`, `#convex/api`, and optional `#convex/storage`, wires the supported composables into Nuxt auto-imports, and can scaffold storage helpers.
+`nuxt-convex` is the Nuxt-specific layer in this monorepo. The module exposes the shared Vue runtime to Nuxt app code through `#convex`, `#convex/advanced`, `#convex/api`, and optional `#convex/storage`. It also wires the supported composables into Nuxt auto-imports and can scaffold storage helpers.
 
 ::u-page-section
 #title
@@ -53,6 +53,8 @@ Open the Nuxt-specific guides
 
 ## What the module adds
 
+The module adds the Nuxt-facing entrypoints and registrations around the shared Vue package. Use this list as the public contract for Nuxt app code.
+
 - Root auto-imports from `#convex`: `useConvexQuery`, `useConvexQueries`, `useConvexMutation`, `useConvexAction`, `useConvexPaginatedQuery`, `useConvexAuth`, and `useConvexConnectionState`.
 - `#convex`, `#convex/api`, and `#convex/advanced` aliases.
 - Optional `#convex/storage` alias with `useConvexStorage` and `useConvexUpload` auto-imports when `storage: true`.
@@ -64,6 +66,8 @@ Open the Nuxt-specific guides
 Advanced helpers such as `useConvexClient` and `useConvexHttpClient` stay available through `#convex/advanced`, but they are not auto-imported.
 
 ## Minimal setup
+
+Add the module and set the options you need in `nuxt.config.ts`.
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
@@ -78,7 +82,7 @@ export default defineNuxtConfig({
 
 ## How the module resolves files
 
-The module resolves `convex.dir` across Nuxt layers. It prefers a layer that already contains generated Convex files. If the resolved layer is not writable, storage scaffolding falls back to the project layer and keeps imports pointed at the authoritative generated directory.
+The module resolves `convex.dir` across Nuxt layers. It prefers a layer that already contains generated Convex files. If that layer is not writable, storage scaffolding falls back to the project layer and keeps imports pointed at the authoritative generated directory.
 
 That behavior matters in layered Nuxt apps, starter kits, and modules that ship Convex files inside a layer.
 
