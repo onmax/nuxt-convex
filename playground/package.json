@@ -17,7 +17,6 @@
     "@nuxt/ui": "catalog:",
     "nuxt": "catalog:",
     "nuxt-convex": "workspace:*",
-    "nuxt-skill-hub": "link:/Users/maxi/nuxt/nuxt-skill-hub",
     "tailwindcss": "catalog:",
     "wrangler": "catalog:playground"
   }

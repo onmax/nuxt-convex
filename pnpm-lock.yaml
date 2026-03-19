@@ -343,9 +343,6 @@ importers:
       nuxt-convex:
         specifier: workspace:*
         version: link:../packages/nuxt
-      nuxt-skill-hub:
-        specifier: link:/Users/maxi/nuxt/nuxt-skill-hub
-        version: link:../../nuxt-skill-hub
       tailwindcss:
         specifier: 'catalog:'
         version: 4.2.1
