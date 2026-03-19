@@ -1,9 +1,9 @@
 import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { $fetch, setup } from '@nuxt/test-utils/e2e'
 import { resolve } from 'pathe'
 import { describe, expect, it } from 'vitest'
+import { setupSubprocessE2E } from './helpers/subprocess-e2e'
 
 const baseDir = fileURLToPath(new URL('./fixtures/layered-base', import.meta.url))
 const rootDir = fileURLToPath(new URL('./fixtures/layered-app', import.meta.url))
@@ -12,11 +12,11 @@ const generatedServerPath = join(baseDir, 'convex/_generated/server.ts')
 
 rmSync(storagePath, { force: true })
 
-describe('nuxt-convex layered defaults', async () => {
-  await setup({ rootDir })
+describe('nuxt-convex layered defaults', () => {
+  const fixture = setupSubprocessE2E({ rootDir })
 
   it('discovers convex files from the nearest base layer by default', async () => {
-    const res = await $fetch<{ layer: string, url: string }>('/api/layer')
+    const res = await fixture.fetch<{ layer: string, url: string }>('/api/layer')
     expect(res.layer).toBe('base')
     expect(res.url).toBe('https://layered.convex.cloud')
   })
