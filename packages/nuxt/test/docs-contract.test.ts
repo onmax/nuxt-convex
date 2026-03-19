@@ -34,9 +34,40 @@ function search(pattern: string): string {
   return ''
 }
 
+function read(relativePath: string): string {
+  return readFileSync(join(repoRoot, relativePath), 'utf8')
+}
+
 describe('docs contract', () => {
   it('does not document a #convex/r2 virtual module', () => {
     expect(search('#convex/r2')).toBe('')
     expect(search(`import { useUploadFile } from '#convex/r2'`)).toBe('')
+  })
+
+  it('keeps #convex/storage-refs internal-only in Nuxt docs', () => {
+    const virtualModulesDoc = read('docs/content/5.api-reference/2.virtual-modules.md')
+
+    expect(virtualModulesDoc).not.toContain('| `#convex/storage-refs` |')
+    expect(virtualModulesDoc).toContain('`#convex/storage-refs` stays internal')
+  })
+
+  it('does not recommend direct @onmax/convex-vue runtime imports in Nuxt-facing docs', () => {
+    const nuxtModuleDoc = read('docs/content/2.nuxt-module/index.md')
+    const virtualModulesDoc = read('docs/content/5.api-reference/2.virtual-modules.md')
+
+    expect(nuxtModuleDoc).not.toContain(`from '@onmax/convex-vue`)
+    expect(virtualModulesDoc).not.toContain(`from '@onmax/convex-vue`)
+  })
+
+  it('documents the public Nuxt alias matrix consistently', () => {
+    const nuxtModuleDoc = read('docs/content/2.nuxt-module/index.md')
+    const virtualModulesDoc = read('docs/content/5.api-reference/2.virtual-modules.md')
+
+    expect(nuxtModuleDoc).toContain('`#convex`, `#convex/api`, and `#convex/advanced` aliases')
+    expect(nuxtModuleDoc).toContain('Optional `#convex/storage` alias')
+    expect(virtualModulesDoc).toContain('| `#convex`')
+    expect(virtualModulesDoc).toContain('| `#convex/advanced`')
+    expect(virtualModulesDoc).toContain('| `#convex/api`')
+    expect(virtualModulesDoc).toContain('| `#convex/storage`')
   })
 })
