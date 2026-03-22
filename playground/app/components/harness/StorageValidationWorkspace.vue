@@ -85,10 +85,10 @@ async function removeUploadById(id: Id<'uploads'>): Promise<void> {
               Convex Storage
             </p>
             <h2 class="text-2xl font-semibold text-highlighted">
-              Upload, preview, and delete files through the supported storage helpers.
+              Upload, preview, and delete files.
             </h2>
             <p class="max-w-2xl text-sm text-muted">
-              This section validates the Nuxt storage path: `#convex/storage`, `useConvexUpload`, and `useConvexStorage().getUrl(...)`.
+              Uses `useConvexUpload` and `useConvexStorage().getUrl(...)` from `#convex/storage`.
             </p>
           </div>
 
@@ -159,11 +159,10 @@ async function removeUploadById(id: Id<'uploads'>): Promise<void> {
         <div class="rounded-3xl border border-dashed border-default/70 bg-default/60 p-5">
           <div class="space-y-2">
             <h3 class="font-semibold text-highlighted">
-              What this section proves
+              How it works
             </h3>
             <p class="text-sm text-muted">
-              The playground persists file metadata separately and uses reactive storage URLs in the card grid below.
-              That keeps the demo aligned with the actual storage contract in the docs.
+              File metadata is persisted separately and storage URLs resolve reactively in the card grid below.
             </p>
           </div>
 
@@ -221,7 +220,7 @@ async function removeUploadById(id: Id<'uploads'>): Promise<void> {
         v-else
         icon="i-heroicons-photo"
         title="No stored files yet"
-        description="Upload an image above to validate the supported storage flow."
+        description="Upload an image above to try file storage."
         class="py-10"
       />
     </UCard>

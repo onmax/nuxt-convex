@@ -143,11 +143,10 @@ async function clearTasks(): Promise<void> {
               Tasks
             </p>
             <h2 class="text-2xl font-semibold text-highlighted">
-              One workflow validates query, mutation, and pagination.
+              Queries, mutations, and pagination.
             </h2>
             <p class="max-w-2xl text-sm text-muted">
-              Create tasks, delete them, seed larger data, and page through the resulting archive.
-              This section is the canonical playground proof for the core Convex data path.
+              Create tasks, delete them, seed sample data, and page through the archive.
             </p>
           </div>
 
@@ -183,7 +182,7 @@ async function clearTasks(): Promise<void> {
       <div class="grid gap-6 xl:grid-cols-[1.08fr_0.92fr]">
         <form class="space-y-4" @submit.prevent="createTask">
           <UFormField label="Task title" help="This mutation feeds both the live query and the paginated archive." required>
-            <UInput v-model="form.title" size="xl" placeholder="Ship the supported Better Auth path" />
+            <UInput v-model="form.title" size="xl" placeholder="Buy groceries" />
           </UFormField>
 
           <div class="flex flex-wrap gap-3">
@@ -202,7 +201,7 @@ async function clearTasks(): Promise<void> {
               Seed and reset the archive
             </h3>
             <p class="text-sm text-muted">
-              Use the same `tasks` table to validate pagination under more realistic load, then reset the pagination state after each change.
+              Bulk-add tasks to test pagination, then reset the view.
             </p>
           </div>
 
@@ -291,7 +290,7 @@ async function clearTasks(): Promise<void> {
                 Paginated archive
               </h3>
               <p class="text-sm text-muted">
-                `useConvexPaginatedQuery(api.tasks.listPaginated)` proves the load-more path against the same data set.
+                `useConvexPaginatedQuery(api.tasks.listPaginated)` with load-more.
               </p>
             </div>
             <UBadge color="neutral" variant="subtle">

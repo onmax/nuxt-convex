@@ -103,10 +103,10 @@ function formatSize(bytes?: number): string {
               Cloudflare R2
             </p>
             <h2 class="text-2xl font-semibold text-highlighted">
-              Validate the supported `useConvexR2Upload(api.r2)` path.
+              Upload and manage R2 objects via `useConvexR2Upload(api.r2)`.
             </h2>
             <p class="max-w-2xl text-sm text-muted">
-              This section uploads to R2, syncs metadata back through Convex, lists the stored objects, and deletes them through the same supported client API.
+              Upload to R2, sync metadata through Convex, list objects, and delete them.
             </p>
           </div>
 
@@ -179,7 +179,7 @@ function formatSize(bytes?: number): string {
               Required environment
             </h3>
             <p class="text-sm text-muted">
-              The R2 playground path expects the same environment that the integration docs describe. Set these variables in the Convex environment before you test uploads.
+              Set these variables in your Convex environment to enable R2 uploads.
             </p>
           </div>
 
@@ -286,7 +286,7 @@ function formatSize(bytes?: number): string {
         v-else
         icon="i-simple-icons-cloudflare"
         title="No R2 objects yet"
-        description="Upload a file above to validate the supported R2 flow."
+        description="Upload a file above to try R2 storage."
         class="py-10"
       />
     </UCard>

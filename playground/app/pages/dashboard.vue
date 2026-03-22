@@ -14,25 +14,25 @@ const sections = [
     id: 'tasks',
     icon: 'i-heroicons-list-bullet',
     title: 'Tasks',
-    description: 'Validate query, mutation, and pagination against one shared workflow.',
+    description: 'CRUD with realtime queries, mutations, and pagination.',
   },
   {
     id: 'storage',
     icon: 'i-heroicons-cloud-arrow-up',
     title: 'Convex Storage',
-    description: 'Upload, list, preview, and delete Convex storage objects through the supported storage helpers.',
+    description: 'Upload, preview, and delete files via Convex storage.',
   },
   {
     id: 'r2',
     icon: 'i-simple-icons-cloudflare',
     title: 'Cloudflare R2',
-    description: 'Exercise the supported `useConvexR2Upload(api.r2)` path end to end.',
+    description: 'Upload to R2 with metadata synced through Convex.',
   },
   {
     id: 'diagnostics',
     icon: 'i-heroicons-shield-check',
     title: 'Session & Diagnostics',
-    description: 'Confirm the supported email/password auth path and the current Nuxt runtime state.',
+    description: 'Auth state, connection status, and runtime config.',
   },
 ]
 </script>
@@ -47,23 +47,22 @@ const sections = [
           <div class="space-y-5">
             <div class="space-y-3">
               <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
-                Canonical Validation Harness
+                Dashboard
               </p>
               <h1 class="max-w-2xl text-4xl font-semibold text-highlighted sm:text-5xl">
-                Validate the shipped Nuxt + Convex product in one real dashboard.
+                Nuxt + Convex playground.
               </h1>
               <p class="max-w-2xl text-base text-muted sm:text-lg">
-                This dashboard is the source of truth for the supported task, storage, R2, and auth flows.
-                Each section proves a path that the docs can point to directly.
+                Tasks, file storage, R2 uploads, and auth — all wired up and working.
               </p>
             </div>
 
             <div class="flex flex-wrap gap-3">
               <UBadge color="primary" variant="subtle">
-                Email/password is the supported auth path
+                Email/password auth
               </UBadge>
               <UBadge v-if="runtimeConfig.public.enableGitHubAuth" color="neutral" variant="subtle">
-                GitHub stays optional and secondary
+                GitHub auth enabled
               </UBadge>
               <UBadge color="neutral" variant="subtle">
                 Convex URL: {{ convex?.url || 'missing' }}
@@ -92,7 +91,7 @@ const sections = [
                 Current module switches
               </h2>
               <p class="text-sm text-muted">
-                These values reflect the runtime contract that the playground is validating right now.
+                Current module configuration.
               </p>
             </div>
 

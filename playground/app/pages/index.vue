@@ -39,10 +39,10 @@ const authDescription = computed(() => enableGitHubAuth
   : 'Sign in with email and password.')
 
 const features = [
-  { icon: 'i-heroicons-list-bullet', title: 'Tasks', description: 'Create, delete, and paginate one task workflow that exercises the shared data layer.' },
-  { icon: 'i-heroicons-cloud-arrow-up', title: 'Convex Storage', description: 'Upload, preview, and delete stored files through the supported Nuxt helpers.' },
-  { icon: 'i-simple-icons-cloudflare', title: 'Cloudflare R2', description: 'Validate the supported `useConvexR2Upload(api.r2)` path with real metadata sync.' },
-  { icon: 'i-heroicons-shield-check', title: 'Session Diagnostics', description: 'Confirm the supported email/password auth path and inspect the current runtime state.' },
+  { icon: 'i-heroicons-list-bullet', title: 'Tasks', description: 'Create, delete, and paginate tasks with realtime updates.' },
+  { icon: 'i-heroicons-cloud-arrow-up', title: 'Convex Storage', description: 'Upload, preview, and delete files via Convex storage.' },
+  { icon: 'i-simple-icons-cloudflare', title: 'Cloudflare R2', description: 'Upload to R2 with metadata synced through Convex.' },
+  { icon: 'i-heroicons-shield-check', title: 'Session Diagnostics', description: 'Auth state, connection status, and runtime config.' },
 ]
 
 async function finishAuthFlow() {
@@ -121,13 +121,13 @@ async function signInWithGitHub() {
 
           <div class="space-y-4">
             <p class="text-sm font-medium uppercase tracking-[0.24em] text-primary">
-              Canonical Playground
+              Playground
             </p>
             <h1 class="max-w-xl text-5xl font-bold text-highlighted sm:text-6xl">
-              Validate Nuxt + Convex through one real app.
+              Nuxt + Convex in action.
             </h1>
             <p class="max-w-xl text-lg text-muted">
-              Sign in with the supported email/password flow, then move through the task, storage, R2, and diagnostics sections that define the shipped product today.
+              Sign in and explore tasks, file storage, R2 uploads, and auth — all powered by Convex.
             </p>
           </div>
 
@@ -148,7 +148,7 @@ async function signInWithGitHub() {
           </div>
 
           <p class="text-xs text-dimmed">
-            Demo data auto-deletes after 24h. The dashboard sections are the source of truth for the current supported flows.
+            Demo data auto-deletes after 24h.
           </p>
         </section>
 

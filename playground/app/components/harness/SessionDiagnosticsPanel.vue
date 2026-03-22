@@ -14,12 +14,12 @@ const diagnostics = computed(() => [
   {
     label: 'Supported auth path',
     value: 'Email/password',
-    detail: 'This is the canonical Better Auth flow that the playground validates.',
+    detail: 'Better Auth with email and password.',
   },
   {
     label: 'Optional GitHub provider',
     value: runtimeConfig.public.enableGitHubAuth ? 'Enabled' : 'Disabled',
-    detail: 'GitHub can stay available behind environment flags, but it is not the supported baseline.',
+    detail: 'Optional, enabled via environment flags.',
   },
   {
     label: 'Convex connection',
@@ -43,10 +43,10 @@ const diagnostics = computed(() => [
             Session &amp; Diagnostics
           </p>
           <h2 class="text-2xl font-semibold text-highlighted">
-            Confirm the supported auth boundary and the current runtime state.
+            Auth and runtime state.
           </h2>
           <p class="max-w-2xl text-sm text-muted">
-            This section keeps the Better Auth story honest: email/password is the supported path, GitHub is optional, and the Nuxt runtime surface stays explicit.
+            Current session, Convex connection, and module config.
           </p>
         </div>
 
