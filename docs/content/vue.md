@@ -15,15 +15,19 @@ Start with the Vue package
 #description
 Follow the guides in order, or jump to the topic you need.
 
-  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-    ::::u-page-card
-    ---
-    icon: i-lucide-download
-    spotlight: true
-    to: /vue-guide/installation
-    ---
-    #title
-    Installation
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+::::u-page-card
+
+---
+
+icon: i-lucide-download
+spotlight: true
+to: /vue-guide/installation
+
+---
+
+#title
+Installation
 
     #description
     Install the plugin and verify with a first query.
@@ -119,7 +123,8 @@ Follow the guides in order, or jump to the topic you need.
     #description
     Schema, functions, and realtime patterns.
     ::::
-  :::
+
+:::
 ::
 
 ::important

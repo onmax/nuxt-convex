@@ -18,15 +18,19 @@ The integration pages below explain the parts of that dashboard that depend on e
 #title
 Open an integration guide
 
-  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-    ::::u-page-card
-    ---
-    icon: i-lucide-shield
-    spotlight: true
-    to: /integrations/better-auth
-    ---
-    #title
-    Add Better Auth
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+::::u-page-card
+
+---
+
+icon: i-lucide-shield
+spotlight: true
+to: /integrations/better-auth
+
+---
+
+#title
+Add Better Auth
 
     #description
     Provider hook and HTTP adapter setup.
@@ -44,7 +48,8 @@ Open an integration guide
     #description
     Bucket uploads beyond default Convex storage.
     ::::
-  :::
+
+:::
 ::
 
 ## See what is included

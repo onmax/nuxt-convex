@@ -29,11 +29,6 @@ const storageAutoImports = [
   'useConvexUpload',
 ] as const
 
-const globalComponents = [
-  'ConvexQuery',
-  'ConvexPaginatedQuery',
-] as const
-
 interface BetterAuthDatabaseProviderDefinition {
   buildDatabaseCode: (ctx: unknown) => string
   setup?: (ctx: unknown) => void | Promise<void>
@@ -75,6 +70,7 @@ const module: NuxtModule<ConvexConfig> = defineNuxtModule<ConvexConfig>({
     )
 
     nuxt.hook('better-auth:database:providers', (providers: BetterAuthDatabaseProviders) => {
+      addPlugin(resolve('./runtime/better-auth/plugin'))
       providers.convex = {
         buildDatabaseCode: () => `import { useRuntimeConfig } from '#imports'
 import { createConvexHttpAdapter } from 'nuxt-convex/better-auth'
@@ -171,8 +167,11 @@ declare module '#convex' {
 
   addImports(rootAutoImports.map(name => ({ name, from: '#convex' })))
 
-  addComponent({ name: globalComponents[0], export: 'default', filePath: resolve('./runtime/components/ConvexQuery'), global: true })
-  addComponent({ name: globalComponents[1], export: 'default', filePath: resolve('./runtime/components/ConvexPaginatedQuery'), global: true })
+  addComponent({ name: 'ConvexQuery', export: 'default', filePath: resolve('./runtime/components/ConvexQuery'), global: true })
+  addComponent({ name: 'ConvexPaginatedQuery', export: 'default', filePath: resolve('./runtime/components/ConvexPaginatedQuery'), global: true })
+
+  for (const name of ['ConvexAuthenticated', 'ConvexUnauthenticated', 'ConvexAuthLoading'] as const)
+    addComponent({ name, export: name, filePath: resolve('./runtime/components/ConvexAuth'), global: true })
 }
 
 function setupConvexAdvanced(nuxt: Nuxt, resolve: (path: string) => string): void {

@@ -9,15 +9,19 @@ Start here when you are choosing between the two runtime tracks. `nuxt-convex` i
 #title
 Choose your runtime
 
-  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-    ::::u-page-card
-    ---
-    icon: i-simple-icons-nuxtdotjs
-    spotlight: true
-    to: /nuxt-module
-    ---
-    #title
-    Start with `nuxt-convex`
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+::::u-page-card
+
+---
+
+icon: i-simple-icons-nuxtdotjs
+spotlight: true
+to: /nuxt-module
+
+---
+
+#title
+Start with `nuxt-convex`
 
     #description
     Auto-imports, virtual modules, SSR queries, and storage.
@@ -35,7 +39,8 @@ Choose your runtime
     #description
     Standalone Vue 3 with full plugin control.
     ::::
-  :::
+
+:::
 ::
 
 ## Shared prerequisites

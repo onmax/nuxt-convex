@@ -34,6 +34,13 @@ const mainNav = computed<NavigationMenuItem[]>(() => {
   }
 
   items.push({
+    label: 'Auth',
+    icon: 'i-lucide-shield',
+    to: '/dashboard/auth',
+    onSelect: () => { open.value = false },
+  })
+
+  items.push({
     label: 'Advanced',
     icon: 'i-lucide-flask-conical',
     to: '/dashboard/advanced',

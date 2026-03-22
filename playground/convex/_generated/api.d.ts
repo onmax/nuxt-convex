@@ -11,6 +11,7 @@
 import type * as _hub_storage from "../_hub/storage.js";
 import type * as auth from "../auth.js";
 import type * as cleanup from "../cleanup.js";
+import type * as env from "../env.js";
 import type * as http from "../http.js";
 import type * as r2 from "../r2.js";
 import type * as tasks from "../tasks.js";
@@ -25,6 +26,7 @@ declare const fullApi: ApiFromModules<{
   "_hub/storage": typeof _hub_storage;
   auth: typeof auth;
   cleanup: typeof cleanup;
+  env: typeof env;
   http: typeof http;
   r2: typeof r2;
   tasks: typeof tasks;

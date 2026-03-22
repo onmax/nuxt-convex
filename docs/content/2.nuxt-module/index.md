@@ -11,15 +11,19 @@ Use the Nuxt playground dashboard as the validation reference for this layer. Th
 #title
 Open the Nuxt-specific guides
 
-  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-    ::::u-page-card
-    ---
-    icon: i-lucide-hard-drive
-    to: /nuxt-module/file-storage
-    spotlight: true
-    ---
-    #title
-    Set up file storage
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+::::u-page-card
+
+---
+
+icon: i-lucide-hard-drive
+to: /nuxt-module/file-storage
+spotlight: true
+
+---
+
+#title
+Set up file storage
 
     #description
     Scaffolded storage helpers and generated files.
@@ -50,7 +54,8 @@ Open the Nuxt-specific guides
     #description
     Shared composable behavior and backend patterns.
     ::::
-  :::
+
+:::
 ::
 
 ## What the module adds

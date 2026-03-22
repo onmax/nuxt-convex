@@ -9,15 +9,19 @@ Both frontend tracks in this repo expect the same Convex backend fundamentals: a
 #title
 Open the backend patterns
 
-  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-    ::::u-page-card
-    ---
-    icon: i-lucide-database
-    spotlight: true
-    to: /convex-patterns/schema
-    ---
-    #title
-    Define your schema
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+::::u-page-card
+
+---
+
+icon: i-lucide-database
+spotlight: true
+to: /convex-patterns/schema
+
+---
+
+#title
+Define your schema
 
     #description
     Tables and indexes that shape the frontend API.
@@ -48,7 +52,8 @@ Open the backend patterns
     #description
     Convex updates with server rendering and hydration.
     ::::
-  :::
+
+:::
 ::
 
 ## Why this matters

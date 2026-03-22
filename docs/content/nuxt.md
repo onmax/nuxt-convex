@@ -17,15 +17,19 @@ Start in the Nuxt layer
 #description
 Module setup, runtime helpers, and Nuxt-specific integrations.
 
-  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-    ::::u-page-card
-    ---
-    icon: i-lucide-download
-    spotlight: true
-    to: /getting-started
-    ---
-    #title
-    Install the module
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+::::u-page-card
+
+---
+
+icon: i-lucide-download
+spotlight: true
+to: /getting-started
+
+---
+
+#title
+Install the module
 
     #description
     Install `nuxt-convex` and generate the typed API.
@@ -69,7 +73,8 @@ Module setup, runtime helpers, and Nuxt-specific integrations.
     #description
     Composable details and backend patterns.
     ::::
-  :::
+
+:::
 ::
 
 ## Understand what the Nuxt layer owns

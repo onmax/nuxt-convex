@@ -16,31 +16,39 @@ Typed queries, SSR-aware realtime data, and storage helpers for Vue and Nuxt.
 ::
 
 ::u-page-grid{class="max-w-2xl mx-auto !grid-cols-2 !gap-4 -mt-16 mb-16 px-4"}
-  :::u-page-card
-  ---
-  icon: i-simple-icons-vuedotjs
-  spotlight: true
-  to: /vue
-  ---
-  #title
-  Vue core + shared API
+:::u-page-card
 
-  #description
-  Standalone Vue package, shared composables, and backend patterns.
-  :::
+---
 
-  :::u-page-card
-  ---
-  icon: i-simple-icons-nuxtdotjs
-  spotlight: true
-  to: /nuxt
-  ---
-  #title
-  Nuxt module
+icon: i-simple-icons-vuedotjs
+spotlight: true
+to: /vue
 
-  #description
-  Auto-imports, `#convex*` aliases, storage helpers, and integrations.
-  :::
+---
+
+#title
+Vue core + shared API
+
+#description
+Standalone Vue package, shared composables, and backend patterns.
+:::
+
+:::u-page-card
+
+---
+
+icon: i-simple-icons-nuxtdotjs
+spotlight: true
+to: /nuxt
+
+---
+
+#title
+Nuxt module
+
+#description
+Auto-imports, `#convex*` aliases, storage helpers, and integrations.
+:::
 ::
 
 ::important{class="max-w-2xl mx-auto"}

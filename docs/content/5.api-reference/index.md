@@ -9,15 +9,19 @@ This reference follows the shipped code in `packages/nuxt` and `packages/vue`. I
 #title
 Start with the shared API
 
-  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-    ::::u-page-card
-    ---
-    icon: i-lucide-search
-    spotlight: true
-    to: /api-reference/use-convex-query
-    ---
-    #title
-    Query Convex data
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+::::u-page-card
+
+---
+
+icon: i-lucide-search
+spotlight: true
+to: /api-reference/use-convex-query
+
+---
+
+#title
+Query Convex data
 
     #description
     Shared query behavior used by both tracks.
@@ -48,7 +52,8 @@ Start with the shared API
     #description
     Module config, virtual modules, and components.
     ::::
-  :::
+
+:::
 ::
 
 ## Browse the shared Vue API

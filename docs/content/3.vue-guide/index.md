@@ -11,15 +11,19 @@ If you are using Nuxt, keep the Nuxt-side import paths from the Nuxt track and u
 #title
 Get started with the Vue package
 
-  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-    ::::u-page-card
-    ---
-    icon: i-lucide-download
-    spotlight: true
-    to: /vue-guide/installation
-    ---
-    #title
-    Installation
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+::::u-page-card
+
+---
+
+icon: i-lucide-download
+spotlight: true
+to: /vue-guide/installation
+
+---
+
+#title
+Installation
 
     #description
     Install the plugin and verify with a first query.
@@ -115,5 +119,6 @@ Get started with the Vue package
     #description
     Schema, functions, and realtime patterns.
     ::::
-  :::
+
+:::
 ::
