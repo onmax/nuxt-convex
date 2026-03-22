@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { parseBooleanFlag } from '../../utils/playground-env'
 
-definePageMeta({ middleware: 'guest' })
+definePageMeta({ layout: false, middleware: 'guest' })
 
 type AuthTab = 'sign-in' | 'sign-up'
 
@@ -14,8 +14,8 @@ const signInWithSocial = useSignIn('social')
 const enableGitHubAuth = parseBooleanFlag(runtimeConfig.public.enableGitHubAuth, false)
 
 const authTabs: Array<{ label: string, value: AuthTab, icon: string }> = [
-  { label: 'Sign in', value: 'sign-in', icon: 'i-heroicons-arrow-right-end-on-rectangle' },
-  { label: 'Create account', value: 'sign-up', icon: 'i-heroicons-user-plus' },
+  { label: 'Sign in', value: 'sign-in', icon: 'i-lucide-log-in' },
+  { label: 'Create account', value: 'sign-up', icon: 'i-lucide-user-plus' },
 ]
 
 const activeTab = ref<AuthTab>('sign-in')
@@ -39,10 +39,10 @@ const authDescription = computed(() => enableGitHubAuth
   : 'Sign in with email and password.')
 
 const features = [
-  { icon: 'i-heroicons-list-bullet', title: 'Tasks', description: 'Create, delete, and paginate tasks with realtime updates.' },
-  { icon: 'i-heroicons-cloud-arrow-up', title: 'Convex Storage', description: 'Upload, preview, and delete files via Convex storage.' },
+  { icon: 'i-lucide-list-todo', title: 'Tasks', description: 'Create, delete, and paginate tasks with realtime updates.' },
+  { icon: 'i-lucide-cloud-upload', title: 'Storage', description: 'Upload, preview, and delete files via Convex storage.' },
   { icon: 'i-simple-icons-cloudflare', title: 'Cloudflare R2', description: 'Upload to R2 with metadata synced through Convex.' },
-  { icon: 'i-heroicons-shield-check', title: 'Session Diagnostics', description: 'Auth state, connection status, and runtime config.' },
+  { icon: 'i-lucide-settings', title: 'Settings', description: 'Auth state, connection status, and runtime config.' },
 ]
 
 async function finishAuthFlow() {
@@ -108,15 +108,27 @@ async function signInWithGitHub() {
 
 <template>
   <div class="min-h-screen flex flex-col bg-default">
-    <AppHeader />
+    <header class="flex items-center justify-between px-6 py-4">
+      <div class="flex items-center gap-3">
+        <UIcon name="i-simple-icons-nuxtdotjs" class="size-5 text-[var(--color-nuxt)]" />
+        <span class="text-sm text-muted">+</span>
+        <UIcon name="i-custom-convex" class="size-4 text-[var(--color-convex-500)]" />
+      </div>
+      <div class="flex items-center gap-2">
+        <UButton to="https://nuxt-convex.onmax.me" target="_blank" variant="ghost" color="neutral" size="sm">
+          Docs
+        </UButton>
+        <UButton to="https://github.com/onmax/nuxt-convex" target="_blank" icon="i-simple-icons-github" variant="ghost" color="neutral" size="sm" />
+      </div>
+    </header>
 
     <div class="flex-1 px-6 py-10 sm:py-14">
       <div class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <section class="space-y-8">
           <div class="flex items-center gap-4">
-            <UIcon name="i-simple-icons-nuxtdotjs" class="size-12 text-nuxt" />
+            <UIcon name="i-simple-icons-nuxtdotjs" class="size-12 text-[var(--color-nuxt)]" />
             <span class="text-2xl text-muted">+</span>
-            <UIcon name="i-custom-convex" class="size-10 text-convex" />
+            <UIcon name="i-custom-convex" class="size-10 text-[var(--color-convex-500)]" />
           </div>
 
           <div class="space-y-4">

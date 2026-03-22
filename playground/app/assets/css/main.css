@@ -1,18 +1,26 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
 
-@theme {
+@theme static {
   --color-nuxt: #00dc82;
-  --color-convex: #ee5533;
+  --color-convex-50: #fff4ee;
+  --color-convex-100: #ffe4d0;
+  --color-convex-200: #ffc59e;
+  --color-convex-300: #ff9e63;
+  --color-convex-400: #ff6b28;
+  --color-convex-500: #f4510d;
+  --color-convex-600: #e03a06;
+  --color-convex-700: #ba2c07;
+  --color-convex-800: #94240e;
+  --color-convex-900: #7a210f;
+  --color-convex-950: #420e05;
 }
 
-body {
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at top left, rgb(0 220 130 / 0.1), transparent 28%),
-    radial-gradient(circle at top right, rgb(238 85 51 / 0.08), transparent 30%), var(--ui-bg);
+:root {
+  --ui-radius: 0.25rem;
 }
 
-code {
-  font-size: 0.95em;
+.dark {
+  --ui-bg: var(--color-zinc-950);
+  --ui-bg-elevated: var(--color-zinc-900);
 }
