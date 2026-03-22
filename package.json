@@ -24,10 +24,6 @@
     "publish:packages": "pnpm --filter @onmax/convex-vue publish --no-git-checks --provenance --access public && pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public",
     "release": "bumpp && git push --follow-tags"
   },
-  "dependencies": {
-    "zod": "catalog:",
-    "zod-to-json-schema": "catalog:"
-  },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
     "@nuxt/devtools": "catalog:nuxt",
@@ -50,7 +46,6 @@
     "vite": "catalog:vite",
     "vitest": "catalog:test",
     "vitest-package-exports": "catalog:test",
-    "vue": "catalog:nuxt",
-    "yaml": "catalog:"
+    "vue": "catalog:nuxt"
   }
 }

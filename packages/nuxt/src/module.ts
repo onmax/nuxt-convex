@@ -112,11 +112,13 @@ export const db = undefined
     setupConvexExports(nuxt, resolve)
     setupConvexAdvanced(nuxt, resolve)
     setupInternalStorageRefsRuntime(nuxt)
-    setupInternalStorageRuntime(nuxt, resolve)
 
     if (config.storage) {
       setupConvexStorage(nuxt, resolve)
       await scaffoldStorageFunctions(nuxt)
+    }
+    else {
+      setupStorageRuntimeFallback(nuxt, resolve)
     }
 
     if (config.r2)
@@ -238,6 +240,7 @@ declare module '#convex/storage' {
   }, { nitro: true, nuxt: true })
 
   nuxt.options.alias['#convex/storage'] = template.dst
+  nuxt.options.alias['#nuxt-convex/storage-runtime'] = template.dst
   addImports(storageAutoImports.map(name => ({ name, from: '#convex/storage' })))
 }
 
@@ -266,7 +269,7 @@ export async function getStorageRefs() {
   nuxt.options.alias['#nuxt-convex/storage-refs-runtime'] = template.dst
 }
 
-function setupInternalStorageRuntime(nuxt: Nuxt, resolve: (path: string) => string): void {
+function setupStorageRuntimeFallback(nuxt: Nuxt, resolve: (path: string) => string): void {
   const convexVueRuntimeImport = resolveConvexVueImport(nuxt, resolve, join(nuxt.options.buildDir, 'convex'), 'storage')
   const template = addTemplate({
     filename: 'convex/storage-runtime.mjs',

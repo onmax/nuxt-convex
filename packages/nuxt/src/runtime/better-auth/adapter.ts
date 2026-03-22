@@ -69,7 +69,7 @@ async function handlePagination<T>(
     const result = await next({
       paginationOpts: {
         cursor: state.cursor,
-        numItems: Math.min(200, (limit ?? 200) - state.docs.length, 200),
+        numItems: Math.min(200, (limit ?? 200) - state.docs.length),
       },
     })
 
