@@ -45,7 +45,7 @@ const items = computed<DropdownMenuItem[][]>(() => [[{
 }], [{
   label: 'Sign out',
   icon: 'i-lucide-log-out',
-  onSelect: () => signOut({ onSuccess: () => navigateTo('/', { external: true }) }),
+  onSelect: () => signOut({ onSuccess: () => navigateTo('/') }),
 }]])
 </script>
 

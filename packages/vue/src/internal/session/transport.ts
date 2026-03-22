@@ -31,6 +31,8 @@ export function createConvexTransportPort(context: ConvexRuntimeContext): Convex
         return undefined
 
       const queryName = (query as { _name?: string })._name ?? getFunctionName(query)
+      if (typeof queryName !== 'string')
+        return undefined
       const cached = client.client?.localQueryResult?.(queryName, args as Record<string, Value>)
       return cached as FunctionReturnType<typeof query> | undefined
     },
@@ -45,7 +47,12 @@ export function createConvexTransportPort(context: ConvexRuntimeContext): Convex
       if (!client)
         return undefined
 
-      return client.onUpdate(query, args, onResult, onError)
+      try {
+        return client.onUpdate(query, args, onResult, onError)
+      }
+      catch {
+        return undefined
+      }
     },
     getConnectionState() {
       const client = context.clientRef.value
