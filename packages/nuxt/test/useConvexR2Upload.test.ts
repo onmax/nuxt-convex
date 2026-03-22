@@ -7,7 +7,7 @@ const { mutation, useConvexClient } = vi.hoisted(() => {
   return { mutation, useConvexClient }
 })
 
-vi.mock('convex-vue/advanced', () => {
+vi.mock('#nuxt-convex/advanced-runtime', () => {
   return {
     useConvexClient,
   }

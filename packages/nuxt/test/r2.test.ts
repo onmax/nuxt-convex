@@ -15,19 +15,43 @@ describe('nuxt-convex r2', () => {
     expect(fixture.alias('#convex/advanced')).toBeTruthy()
     expect(fixture.alias('#convex/storage')).toBeUndefined()
     expect(fixture.alias('#convex/r2')).toBeUndefined()
+    expect(fixture.alias('convex-vue')).toBeUndefined()
+    expect(fixture.alias('convex-vue/advanced')).toBeUndefined()
   })
 
-  it('auto-imports useConvexR2Upload without generating an r2 virtual module', () => {
+  it('auto-imports the supported r2 helper without exposing extra runtime helpers', () => {
     const imports = readFileSync(join(fixture.buildDir(), 'types/imports.d.ts'), 'utf8')
 
-    expect(fixture.alias('#convex/r2')).toBeUndefined()
     expect(imports).toContain('useConvexR2Upload')
+    expect(imports).toContain('useConvexQuery')
     expect(imports).not.toContain('useConvexStorage')
     expect(imports).not.toContain('useConvexUpload')
+    expect(imports).not.toContain('useConvexClient')
+    expect(imports).not.toContain('useConvexHttpClient')
   })
 
-  it('exposes r2 flag via runtime config', async () => {
-    const res = await fixture.fetch<{ r2: boolean }>('/api/config')
-    expect(res.r2).toBe(true)
+  it('exposes the resolved runtime config in r2 mode', async () => {
+    const res = await fixture.fetch<{
+      convex: {
+        r2: boolean
+        server: boolean
+        storage: boolean
+        url: string
+      }
+    }>('/api/config')
+
+    expect(res.convex).toEqual({
+      r2: true,
+      server: true,
+      storage: false,
+      url: 'https://test.convex.cloud',
+    })
+  })
+
+  it('renders the supported r2 helper in SSR output', async () => {
+    const html = await fixture.fetch<string>('/', { responseType: 'text' })
+
+    expect(html).toContain('https://test.convex.cloud')
+    expect(html).toContain('function,function')
   })
 })

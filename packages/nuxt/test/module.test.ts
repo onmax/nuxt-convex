@@ -40,6 +40,9 @@ describe('nuxt-convex', () => {
     expect(fixture.alias('#convex/advanced')).toBeTruthy()
     expect(fixture.alias('#convex/storage')).toBeTruthy()
     expect(fixture.alias('#convex/r2')).toBeUndefined()
+    expect(fixture.alias('#convex/storage-refs')).toBeUndefined()
+    expect(fixture.alias('convex-vue')).toBeUndefined()
+    expect(fixture.alias('convex-vue/advanced')).toBeUndefined()
   })
 
   it('scaffolds storage functions when storage: true', () => {
@@ -56,6 +59,13 @@ describe('nuxt-convex', () => {
     expect(rootModule).not.toContain('vue/src/advanced')
     expect(storageModule).toContain('vue/src/storage')
     expect(advancedModule).toContain('vue/src/advanced')
+  })
+
+  it('keeps storage refs behind a lazy internal runtime helper', () => {
+    const storageRefsRuntime = readFileSync(join(fixture.buildDir(), 'convex/storage-refs-runtime.mjs'), 'utf8')
+
+    expect(storageRefsRuntime).toContain('/* @vite-ignore */ generatedApiImport')
+    expect(storageRefsRuntime).not.toContain(`import('#convex/api')`)
   })
 
   it('only auto-imports storage helpers when storage is enabled', () => {

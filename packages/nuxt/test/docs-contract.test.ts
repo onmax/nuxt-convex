@@ -79,4 +79,25 @@ describe('docs contract', () => {
     expect(betterAuthDoc).toContain('https://pkg.pr.new/get-convex/better-auth/@convex-dev/better-auth@292')
     expect(betterAuthDoc).toContain('better-auth@1.5.5')
   })
+
+  it('documents the supported Better Auth boundary through the playground flow', () => {
+    const betterAuthDoc = read('docs/content/6.integrations/1.better-auth.md')
+
+    expect(betterAuthDoc).toContain('email/password')
+    expect(betterAuthDoc).toContain('optional and secondary')
+    expect(betterAuthDoc).toContain('Session & Diagnostics')
+    expect(betterAuthDoc).toContain('playground')
+  })
+
+  it('documents the supported R2 path without inventing new aliases', () => {
+    const r2Doc = read('docs/content/6.integrations/2.r2.md')
+    const nuxtR2Doc = read('docs/content/2.nuxt-module/2.cloudflare-r2.md')
+
+    expect(r2Doc).toContain('useConvexR2Upload')
+    expect(r2Doc).toContain('Cloudflare R2')
+    expect(r2Doc).toContain('playground')
+    expect(r2Doc).toContain('does not add a new virtual module or a new `#convex/*` alias')
+    expect(nuxtR2Doc).toContain('Cloudflare R2')
+    expect(nuxtR2Doc).toContain('does not create an R2-specific alias')
+  })
 })

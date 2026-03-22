@@ -30,6 +30,16 @@ export const remove = mutation({
   },
 })
 
+export const clearAll = mutation({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    const tasks = await ctx.db.query('tasks').withIndex('by_user', q => q.eq('userId', userId)).collect()
+
+    await Promise.all(tasks.map(task => ctx.db.delete(task._id)))
+    return tasks.length
+  },
+})
+
 export const seed = mutation({
   args: { userId: v.string(), count: v.optional(v.number()) },
   handler: async (ctx, { userId, count = 25 }) => {

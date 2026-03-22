@@ -15,6 +15,9 @@ describe('nuxt-convex without storage', () => {
     expect(fixture.alias('#convex/advanced')).toBeTruthy()
     expect(fixture.alias('#convex/storage')).toBeUndefined()
     expect(fixture.alias('#convex/r2')).toBeUndefined()
+    expect(fixture.alias('#convex/storage-refs')).toBeUndefined()
+    expect(fixture.alias('convex-vue')).toBeUndefined()
+    expect(fixture.alias('convex-vue/advanced')).toBeUndefined()
   })
 
   it('keeps root composables auto-imported and omits storage helpers', () => {
