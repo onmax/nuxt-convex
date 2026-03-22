@@ -11,7 +11,7 @@ export default defineComponent({
   props: {
     query: { type: Object as PropType<QueryReference>, required: true },
     args: { type: Object as PropType<FunctionArgs<QueryReference>>, default: () => ({}) },
-    options: { type: Object as PropType<UseConvexPaginatedQueryOptions>, required: true },
+    options: { type: Object as PropType<UseConvexPaginatedQueryOptions>, default: () => ({ numItems: 10 }) },
     suspense: { type: Boolean, default: false },
   },
   async setup(props, { slots }) {

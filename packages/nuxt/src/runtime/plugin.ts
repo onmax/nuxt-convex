@@ -31,7 +31,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   if (config.storage) {
     try {
-      const storage = await getStorageRefs()
+      const storage = getStorageRefs()
       if (storage?.generateUploadUrl && storage?.getUrl && storage?.remove)
         storageOptions = storage as RuntimeConvexStorageOptions
     }

@@ -13,5 +13,8 @@
   },
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "NUXT_PUBLIC_SITE_URL": "https://nuxt-convex-playground.je-cf9.workers.dev"
   }
 }
