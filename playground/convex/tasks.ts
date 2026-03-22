@@ -1,6 +1,7 @@
 import { paginationOptsValidator } from 'convex/server'
 import { v } from 'convex/values'
-import { mutation, query } from './_generated/server'
+import { api } from './_generated/api'
+import { action, mutation, query } from './_generated/server'
 
 export const list = query({
   args: { userId: v.string() },
@@ -37,6 +38,22 @@ export const clearAll = mutation({
 
     await Promise.all(tasks.map(task => ctx.db.delete(task._id)))
     return tasks.length
+  },
+})
+
+export const stats = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    const tasks = await ctx.db.query('tasks').withIndex('by_user', q => q.eq('userId', userId)).collect()
+    return { total: tasks.length, oldest: tasks.at(-1)?.createdAt ?? null, newest: tasks.at(0)?.createdAt ?? null }
+  },
+})
+
+export const summarize = action({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    const s = await ctx.runQuery(api.tasks.stats, { userId })
+    return `You have ${s.total} task${s.total === 1 ? '' : 's'}. ${s.newest ? `Latest created ${new Date(s.newest).toLocaleString()}.` : 'None yet.'}`
   },
 })
 
