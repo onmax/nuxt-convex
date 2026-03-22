@@ -10,17 +10,17 @@ Move into the Vue track when you need the shared composable semantics or the bac
 
 The Nuxt playground is the canonical validation harness for this track. Its `Tasks`, `Convex Storage`, `Cloudflare R2`, and `Session & Diagnostics` sections are the reference flows that these docs describe.
 
-::u-page-section
+::u-page-section{align="left"}
 #title
 Start in the Nuxt layer
 
 #description
-Follow these pages when you want module setup, runtime helpers, and Nuxt-specific integrations.
+Module setup, runtime helpers, and Nuxt-specific integrations.
 
-  :::u-page-grid
+  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-download
     spotlight: true
     to: /getting-started
     ---
@@ -28,12 +28,12 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
     Install the module
 
     #description
-    Install `nuxt-convex`, connect Convex, and generate the API used throughout the module and examples.
+    Install `nuxt-convex` and generate the typed API.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-settings
     spotlight: true
     to: /nuxt-module
     ---
@@ -41,12 +41,12 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
     Configure the wrapper
 
     #description
-    Learn what the module adds for Nuxt app code, including aliases, auto-imports, runtime setup, and layer-aware resolution.
+    Aliases, auto-imports, runtime setup, and resolution.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-plug
     spotlight: true
     to: /integrations
     ---
@@ -54,12 +54,12 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
     Add integrations
 
     #description
-    Add Better Auth and Cloudflare R2 where the Nuxt module provides the surrounding wiring.
+    Better Auth and Cloudflare R2 wiring.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-arrow-right-left
     spotlight: true
     to: /vue
     ---
@@ -67,7 +67,7 @@ Follow these pages when you want module setup, runtime helpers, and Nuxt-specifi
     Open the shared Vue layer
 
     #description
-    Move into the shared package when you want composable details, manual plugin setup, or backend patterns that apply outside Nuxt.
+    Composable details and backend patterns.
     ::::
   :::
 ::

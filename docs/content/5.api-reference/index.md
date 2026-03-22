@@ -5,14 +5,14 @@ description: Review the current public API surface for nuxt-convex and @onmax/co
 
 This reference follows the shipped code in `packages/nuxt` and `packages/vue`. It covers the shared root composables, the explicit storage and advanced entrypoints, and the Nuxt-only exports that the wrapper adds on top.
 
-::u-page-section
+::u-page-section{align="left"}
 #title
 Start with the shared API
 
-  :::u-page-grid
+  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
     ::::u-page-card
     ---
-    class: col-span-2 md:col-span-1
+    icon: i-lucide-search
     spotlight: true
     to: /api-reference/use-convex-query
     ---
@@ -20,12 +20,12 @@ Start with the shared API
     Query Convex data
 
     #description
-    Start with `useConvexQuery` and the shared query behavior used by both runtime tracks.
+    Shared query behavior used by both tracks.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 md:col-span-1
+    icon: i-lucide-pen-line
     spotlight: true
     to: /api-reference/use-convex-mutation
     ---
@@ -33,12 +33,12 @@ Start with the shared API
     Call mutations and actions
 
     #description
-    Review the shared write APIs before you move into runtime-specific wiring.
+    Shared write APIs for both runtimes.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2
+    icon: i-simple-icons-nuxtdotjs
     spotlight: true
     to: /api-reference/module-configuration
     ---
@@ -46,7 +46,7 @@ Start with the shared API
     Review Nuxt-only exports
 
     #description
-    Inspect module configuration, virtual modules, `useConvexR2Upload`, and the renderless components that only the Nuxt wrapper adds.
+    Module config, virtual modules, and components.
     ::::
   :::
 ::

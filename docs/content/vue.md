@@ -8,17 +8,17 @@ Use this track when you install `@onmax/convex-vue` directly in a Vue 3 app. It 
 
 This track also serves as the reference for the shared runtime that the Nuxt module wraps. Nuxt users can read it to understand lower-level composable behavior without changing their Nuxt import paths.
 
-::u-page-section
+::u-page-section{align="left"}
 #title
 Start with the Vue package
 
 #description
 Follow the guides in order, or jump to the topic you need.
 
-  :::u-page-grid
+  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-download
     spotlight: true
     to: /vue-guide/installation
     ---
@@ -26,12 +26,12 @@ Follow the guides in order, or jump to the topic you need.
     Installation
 
     #description
-    Install `@onmax/convex-vue`, register the plugin, and verify with a first query.
+    Install the plugin and verify with a first query.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-search
     spotlight: true
     to: /vue-guide/queries
     ---
@@ -39,12 +39,12 @@ Follow the guides in order, or jump to the topic you need.
     Queries
 
     #description
-    Subscribe to Convex queries with reactive arguments, SSR support, and realtime updates.
+    Reactive subscriptions with SSR and realtime updates.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-pen-line
     spotlight: true
     to: /vue-guide/mutations-and-actions
     ---
@@ -52,12 +52,12 @@ Follow the guides in order, or jump to the topic you need.
     Mutations & Actions
 
     #description
-    Write data with mutations, run server-side logic with actions, and track pending state.
+    Write data and run server-side logic.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-list
     spotlight: true
     to: /vue-guide/pagination
     ---
@@ -65,12 +65,12 @@ Follow the guides in order, or jump to the topic you need.
     Pagination
 
     #description
-    Load data page by page with cursor-based pagination and infinite scroll.
+    Cursor-based pagination and infinite scroll.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-hard-drive
     spotlight: true
     to: /vue-guide/file-storage
     ---
@@ -78,12 +78,12 @@ Follow the guides in order, or jump to the topic you need.
     File Storage
 
     #description
-    Upload files and display them with reactive URL subscriptions.
+    Upload files and display with reactive URLs.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-sliders-horizontal
     spotlight: true
     to: /vue-guide/controller
     ---
@@ -91,12 +91,12 @@ Follow the guides in order, or jump to the topic you need.
     Controller
 
     #description
-    Connect, reconfigure, or disconnect the Convex client at runtime.
+    Connect or disconnect the client at runtime.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-file-code
     spotlight: true
     to: /api-reference
     ---
@@ -104,12 +104,12 @@ Follow the guides in order, or jump to the topic you need.
     API Reference
 
     #description
-    Browse composable signatures, return types, and options for every shared export.
+    Composable signatures, types, and options.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-puzzle
     spotlight: true
     to: /convex-patterns
     ---
@@ -117,7 +117,7 @@ Follow the guides in order, or jump to the topic you need.
     Convex Patterns
 
     #description
-    Review schema, function, and realtime patterns that both runtimes share.
+    Schema, functions, and realtime patterns.
     ::::
   :::
 ::

@@ -35,8 +35,8 @@ const isSignInPending = computed(() => signInWithEmail.status.value === 'pending
 const isSignUpPending = computed(() => signUpWithEmail.status.value === 'pending')
 const isGitHubPending = computed(() => signInWithSocial.status.value === 'pending')
 const authDescription = computed(() => enableGitHubAuth
-  ? 'Use email/password for the supported path. GitHub stays available as an optional secondary provider.'
-  : 'Use email/password to access the canonical validation dashboard.')
+  ? 'Sign in with email or GitHub.'
+  : 'Sign in with email and password.')
 
 const features = [
   { icon: 'i-heroicons-list-bullet', title: 'Tasks', description: 'Create, delete, and paginate one task workflow that exercises the shared data layer.' },

@@ -1,6 +1,7 @@
 export default defineAppConfig({
   docus: {
     locale: 'en',
+    assistant: false,
   },
   docsModules: [
     {
@@ -30,36 +31,7 @@ export default defineAppConfig({
     npm: 'https://www.npmjs.com/package/nuxt-convex',
     nuxt: 'https://nuxt.com',
   },
-  assistant: {
-    faqQuestions: {
-      en: [
-        {
-          category: 'Getting Started',
-          items: [
-            'How do I install nuxt-convex in a Nuxt app?',
-            'When should I use @onmax/convex-vue instead?',
-            'How do I generate the #convex/api types?',
-          ],
-        },
-        {
-          category: 'Nuxt Module',
-          items: [
-            'Which module options does nuxt-convex support?',
-            'How do storage scaffolding and layer resolution work?',
-            'How do I enable Cloudflare R2 uploads?',
-          ],
-        },
-        {
-          category: 'API Reference',
-          items: [
-            'How does useConvexQuery behave during SSR?',
-            'What do ConvexQuery and ConvexPaginatedQuery expose?',
-            'What is the difference between useConvexUpload and useConvexR2Upload?',
-          ],
-        },
-      ],
-    },
-  },
+  assistant: { enabled: false, explainWithAi: false },
   toc: {
     title: 'On This Page',
   },
@@ -102,7 +74,18 @@ export default defineAppConfig({
     },
     pageSection: {
       slots: {
-        title: 'font-semibold',
+        title: 'font-semibold !leading-snug',
+        description: 'text-muted max-w-2xl',
+      },
+    },
+    pageCard: {
+      slots: {
+        wrapper: 'grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 items-start',
+        leading: 'mb-0 mt-0.5 row-start-1 col-start-1',
+        leadingIcon: 'size-4 text-primary',
+        body: 'contents',
+        title: 'font-semibold row-start-1 col-start-2 text-start',
+        description: 'row-start-2 col-span-2 text-start font-normal text-muted',
       },
     },
   },

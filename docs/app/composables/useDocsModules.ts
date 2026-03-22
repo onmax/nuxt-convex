@@ -1,6 +1,6 @@
 import type { ContentNavigationItem } from '@nuxt/content'
 
-type DocsModule = {
+interface DocsModule {
   id: string
   label: string
   to: string

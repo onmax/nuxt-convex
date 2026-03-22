@@ -5,14 +5,14 @@ description: Follow the shared backend patterns that both the Nuxt module and th
 
 Both frontend tracks in this repo expect the same Convex backend fundamentals: a schema, generated APIs, and public functions that the browser can call.
 
-::u-page-section
+::u-page-section{align="left"}
 #title
 Open the backend patterns
 
-  :::u-page-grid
+  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
     ::::u-page-card
     ---
-    class: col-span-2 md:col-span-1
+    icon: i-lucide-database
     spotlight: true
     to: /convex-patterns/schema
     ---
@@ -20,12 +20,12 @@ Open the backend patterns
     Define your schema
 
     #description
-    Learn how tables and indexes shape the API that your frontend calls.
+    Tables and indexes that shape the frontend API.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 md:col-span-1
+    icon: i-lucide-split
     spotlight: true
     to: /convex-patterns/functions
     ---
@@ -33,12 +33,12 @@ Open the backend patterns
     Split your functions
 
     #description
-    Keep queries, mutations, and actions predictable so the frontend helpers stay simple.
+    Queries, mutations, and actions boundaries.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2
+    icon: i-lucide-radio
     spotlight: true
     to: /convex-patterns/realtime-and-ssr
     ---
@@ -46,16 +46,10 @@ Open the backend patterns
     Handle realtime and SSR
 
     #description
-    Understand how Convex updates interact with server rendering and client hydration.
+    Convex updates with server rendering and hydration.
     ::::
   :::
 ::
-
-## See what this section covers
-
-- Schema definitions and indexes.
-- Query, mutation, and action boundaries.
-- Realtime updates and SSR behavior.
 
 ## Why this matters
 
@@ -64,9 +58,3 @@ The frontend helpers in this repo are thin wrappers over Convex. When the backen
 ::tip
 Read this section alongside the Vue track. The Nuxt module builds on these same backend expectations.
 ::
-
-## Next steps
-
-- Read [Schema](/convex-patterns/schema) for table and index definitions.
-- Read [Functions](/convex-patterns/functions) for queries, mutations, and actions.
-- Read [Realtime and SSR](/convex-patterns/realtime-and-ssr) for rendering behavior.

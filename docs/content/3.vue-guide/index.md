@@ -7,14 +7,14 @@ description: Use @onmax/convex-vue directly in any Vue 3 app with full control o
 
 If you are using Nuxt, keep the Nuxt-side import paths from the Nuxt track and use this guide only for the shared runtime behavior.
 
-::u-page-section
+::u-page-section{align="left"}
 #title
 Get started with the Vue package
 
-  :::u-page-grid
+  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-download
     spotlight: true
     to: /vue-guide/installation
     ---
@@ -22,12 +22,12 @@ Get started with the Vue package
     Installation
 
     #description
-    Install the package, register the plugin, and verify the setup with a first query.
+    Install the plugin and verify with a first query.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-search
     spotlight: true
     to: /vue-guide/queries
     ---
@@ -35,12 +35,12 @@ Get started with the Vue package
     Queries
 
     #description
-    Subscribe to Convex queries with reactive arguments, SSR support, and realtime updates.
+    Reactive subscriptions with SSR and realtime updates.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-pen-line
     spotlight: true
     to: /vue-guide/mutations-and-actions
     ---
@@ -48,12 +48,12 @@ Get started with the Vue package
     Mutations & Actions
 
     #description
-    Write data with mutations, run server-side logic with actions, and track pending state.
+    Write data and run server-side logic.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-list
     spotlight: true
     to: /vue-guide/pagination
     ---
@@ -61,12 +61,12 @@ Get started with the Vue package
     Pagination
 
     #description
-    Load data page by page with cursor-based pagination and infinite scroll patterns.
+    Cursor-based pagination and infinite scroll.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-hard-drive
     spotlight: true
     to: /vue-guide/file-storage
     ---
@@ -74,12 +74,12 @@ Get started with the Vue package
     File Storage
 
     #description
-    Upload files to Convex storage and display them with reactive URL subscriptions.
+    Upload files and display with reactive URLs.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-sliders-horizontal
     spotlight: true
     to: /vue-guide/controller
     ---
@@ -87,12 +87,12 @@ Get started with the Vue package
     Controller
 
     #description
-    Connect, reconfigure, or disconnect the Convex client at runtime for multi-tenant setups.
+    Connect or disconnect the client at runtime.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-file-code
     spotlight: true
     to: /api-reference
     ---
@@ -100,12 +100,12 @@ Get started with the Vue package
     API Reference
 
     #description
-    Browse the full composable signatures, return types, and options for every export.
+    Composable signatures, types, and options.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 lg:col-span-1
+    icon: i-lucide-puzzle
     spotlight: true
     to: /convex-patterns
     ---
@@ -113,7 +113,7 @@ Get started with the Vue package
     Convex Patterns
 
     #description
-    Review schema, function, and realtime patterns that the composables expect on the backend.
+    Schema, functions, and realtime patterns.
     ::::
   :::
 ::

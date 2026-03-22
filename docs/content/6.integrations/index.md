@@ -14,14 +14,14 @@ The canonical validation surface lives in the playground dashboard:
 
 The integration pages below explain the parts of that dashboard that depend on external packages or extra environment.
 
-::u-page-section
+::u-page-section{align="left"}
 #title
 Open an integration guide
 
-  :::u-page-grid
+  :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
     ::::u-page-card
     ---
-    class: col-span-2 md:col-span-1
+    icon: i-lucide-shield
     spotlight: true
     to: /integrations/better-auth
     ---
@@ -29,12 +29,12 @@ Open an integration guide
     Add Better Auth
 
     #description
-    Connect Better Auth to the shipped provider hook and HTTP adapter, with the current support boundary called out explicitly.
+    Provider hook and HTTP adapter setup.
     ::::
 
     ::::u-page-card
     ---
-    class: col-span-2 md:col-span-1
+    icon: i-lucide-cloud
     spotlight: true
     to: /integrations/r2
     ---
@@ -42,7 +42,7 @@ Open an integration guide
     Add Cloudflare R2
 
     #description
-    Extend file uploads with R2 when you need bucket storage beyond the default Convex storage flow.
+    Bucket uploads beyond default Convex storage.
     ::::
   :::
 ::
