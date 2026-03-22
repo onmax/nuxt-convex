@@ -1,12 +1,13 @@
+/* eslint-disable node/prefer-global/process */
 import type { GenericCtx } from '@convex-dev/better-auth'
 import type { DataModel } from './_generated/dataModel'
 import { createClient } from '@convex-dev/better-auth'
 import { convex, crossDomain } from '@convex-dev/better-auth/plugins'
 import { betterAuth } from 'better-auth/minimal'
-import { getPlaygroundSiteUrl, isGitHubAuthEnabled } from '../utils/playground-env'
 import { components } from './_generated/api'
 import { query } from './_generated/server'
 import authConfig from './auth.config'
+import { getPlaygroundSiteUrl, isGitHubAuthEnabled } from './env'
 
 const siteUrl = getPlaygroundSiteUrl()
 const enableGitHubAuth = isGitHubAuthEnabled()

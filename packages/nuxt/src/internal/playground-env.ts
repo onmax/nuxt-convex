@@ -1,3 +1,5 @@
+import process from 'node:process'
+
 type EnvSource = Record<string, string | undefined>
 type BooleanSource = boolean | string | undefined
 
