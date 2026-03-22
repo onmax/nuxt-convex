@@ -35,7 +35,7 @@ export default defineNuxtConfig({
 
   future: { compatibilityVersion: 4 },
 
-  compatibilityDate: '2025-07-22',
+  compatibilityDate: '2026-03-22',
 
   llms: {
     domain: 'nuxt-convex.onmax.me',
