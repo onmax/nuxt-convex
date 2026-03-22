@@ -1,10 +1,9 @@
-export default defineNuxtRouteMiddleware(async () => {
+export default defineNuxtRouteMiddleware(() => {
   if (import.meta.server)
     return
 
-  const { user, waitForSession } = useUserSession()
-  await waitForSession()
+  const { user, ready } = useUserSession()
 
-  if (user.value)
+  if (ready.value && user.value)
     return navigateTo('/dashboard')
 })
