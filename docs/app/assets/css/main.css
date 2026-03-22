@@ -22,3 +22,31 @@
 :root {
   --ui-radius: 0.25rem;
 }
+
+@media (min-width: 1024px) {
+  .docs-header {
+    --ui-header-height: 112px;
+  }
+}
+
+.dark {
+  --ui-bg: var(--color-zinc-950);
+  --ui-bg-elevated: var(--color-zinc-900);
+}
+
+.hero-glow {
+  position: relative;
+  overflow: hidden;
+}
+.hero-glow::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 80%;
+  background: radial-gradient(ellipse, oklch(from var(--color-convex-500) l c h / 0.08), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
