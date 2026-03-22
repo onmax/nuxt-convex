@@ -1,0 +1,96 @@
+name: playground-deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'playground/**'
+      - 'packages/**'
+  workflow_dispatch:
+
+concurrency:
+  group: playground-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      PRODUCTION_CONVEX_URL: ${{ vars.PLAYGROUND_PRODUCTION_CONVEX_URL }}
+      PRODUCTION_CONVEX_SITE_URL: ${{ vars.PLAYGROUND_PRODUCTION_CONVEX_SITE_URL }}
+      PRODUCTION_SITE_URL: ${{ vars.PLAYGROUND_PRODUCTION_SITE_URL }}
+      BETTER_AUTH_SECRET: ${{ secrets.PLAYGROUND_BETTER_AUTH_SECRET }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Detect deploy configuration
+        id: config
+        run: |
+          missing_keys=""
+          for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN PRODUCTION_CONVEX_URL PRODUCTION_CONVEX_SITE_URL PRODUCTION_SITE_URL BETTER_AUTH_SECRET; do
+            if [ -z "${!key}" ]; then
+              missing_keys="${missing_keys} ${key}"
+            fi
+          done
+
+          if [ -n "${missing_keys}" ]; then
+            message="Skipping playground deploy: missing${missing_keys}"
+            echo "::warning::${message}"
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "message=${message}" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: ./.github/actions/setup-pnpm
+        if: steps.config.outputs.enabled == 'true'
+        with:
+          install-command: pnpm install --filter nuxt-convex-playground... --filter @onmax/convex-vue... --filter nuxt-convex...
+
+      - name: Build playground
+        if: steps.config.outputs.enabled == 'true'
+        env:
+          CONVEX_URL: ${{ env.PRODUCTION_CONVEX_URL }}
+          NUXT_PUBLIC_CONVEX_URL: ${{ env.PRODUCTION_CONVEX_URL }}
+          NUXT_PUBLIC_ENABLE_GITHUB_AUTH: 'false'
+          NUXT_PUBLIC_SITE_URL: ${{ env.PRODUCTION_SITE_URL }}
+          PLAYGROUND_ENABLE_GITHUB_AUTH: 'false'
+          SITE_URL: ${{ env.PRODUCTION_SITE_URL }}
+          VITE_CONVEX_SITE_URL: ${{ env.PRODUCTION_CONVEX_SITE_URL }}
+        run: pnpm --dir playground build
+
+      - name: Deploy production worker
+        if: steps.config.outputs.enabled == 'true'
+        run: |
+          pnpm --dir playground exec wrangler --cwd .output deploy \
+            --var "CONVEX_URL:${PRODUCTION_CONVEX_URL}" \
+            --var "NUXT_PUBLIC_CONVEX_URL:${PRODUCTION_CONVEX_URL}" \
+            --var "NUXT_PUBLIC_ENABLE_GITHUB_AUTH:false" \
+            --var "NUXT_PUBLIC_SITE_URL:${PRODUCTION_SITE_URL}" \
+            --var "PLAYGROUND_ENABLE_GITHUB_AUTH:false" \
+            --var "SITE_URL:${PRODUCTION_SITE_URL}" \
+            --var "VITE_CONVEX_SITE_URL:${PRODUCTION_CONVEX_SITE_URL}" \
+            --var "BETTER_AUTH_SECRET:${BETTER_AUTH_SECRET}"
+
+      - name: Publish deploy summary
+        if: steps.config.outputs.enabled == 'true'
+        run: |
+          {
+            echo "## Playground Production Deploy"
+            echo
+            echo "- Worker: \`nuxt-convex-playground\`"
+            echo "- URL: [${PRODUCTION_SITE_URL}](${PRODUCTION_SITE_URL})"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish skipped deploy summary
+        if: steps.config.outputs.enabled != 'true'
+        run: |
+          {
+            echo "## Playground Production Deploy"
+            echo
+            echo "${{ steps.config.outputs.message }}"
+          } >> "$GITHUB_STEP_SUMMARY"
