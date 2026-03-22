@@ -7,8 +7,6 @@ packages:
   - docs
   - examples/*
 
-patchedDependencies:
-  unenv@2.0.0-rc.24: patches/unenv@2.0.0-rc.24.patch
 catalog:
   '@nuxt/content': ^3.12.0
   '@nuxt/fonts': ^0.12.1
