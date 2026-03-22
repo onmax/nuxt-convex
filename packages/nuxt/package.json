@@ -2,7 +2,6 @@
   "name": "nuxt-convex",
   "type": "module",
   "version": "0.0.6",
-  "packageManager": "pnpm@10.15.1",
   "description": "Nuxt module for Convex powered by @onmax/convex-vue",
   "author": "onmax",
   "license": "MIT",
@@ -76,5 +75,8 @@
     "consola": "catalog:prod",
     "defu": "catalog:prod",
     "pathe": "catalog:prod"
+  },
+  "devDependencies": {
+    "yaml": "catalog:"
   }
 }

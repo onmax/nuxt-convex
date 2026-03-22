@@ -1,8 +1,9 @@
 import type { OptimisticUpdate } from 'convex/browser'
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
 import type { ComputedRef, MaybeRefOrGetter, Ref } from 'vue'
-import { computed, ref, toValue } from 'vue'
-import { normalizeError, requireRealtimeClient, useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
+import { toValue } from 'vue'
+import { useCommandState } from './internal/useCommandState'
+import { requireRealtimeClient, useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 
 type MutationReference = FunctionReference<'mutation'>
 
@@ -21,29 +22,15 @@ export function useConvexMutation<Mutation extends MutationReference>(
   options: UseConvexMutationOptions<Mutation> = {},
 ): UseConvexMutationReturn<Mutation> {
   const { clientRef } = useConvexRuntimeContext()
-  const pendingCount = ref(0)
-  const error = ref<Error | null>(null)
+  const { error, isPending, run } = useCommandState()
 
   return {
-    mutate: async (args) => {
-      pendingCount.value += 1
-      error.value = null
-      try {
-        return await requireRealtimeClient(clientRef).mutation(
-          mutation,
-          toValue(args),
-          options.optimisticUpdate ? { optimisticUpdate: options.optimisticUpdate } : undefined,
-        )
-      }
-      catch (err) {
-        error.value = normalizeError(err)
-        throw error.value
-      }
-      finally {
-        pendingCount.value -= 1
-      }
-    },
+    mutate: args => run(() => requireRealtimeClient(clientRef).mutation(
+      mutation,
+      toValue(args),
+      options.optimisticUpdate ? { optimisticUpdate: options.optimisticUpdate } : undefined,
+    )),
     error,
-    isPending: computed(() => pendingCount.value > 0),
+    isPending,
   }
 }
