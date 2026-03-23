@@ -1,9 +1,7 @@
 import process from 'node:process'
 import { getPlaygroundSiteUrl, getPlaygroundWorkerName, isGitHubAuthEnabled } from './utils/playground-env'
 
-const siteUrl = getPlaygroundSiteUrl()
-const workerName = getPlaygroundWorkerName()
-const enableGitHubAuth = isGitHubAuthEnabled()
+const env = process.env
 
 export default defineNuxtConfig({
   modules: ['nuxt-convex', '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
@@ -19,12 +17,12 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     github: {
-      clientId: enableGitHubAuth ? process.env.NUXT_GITHUB_CLIENT_ID || '' : '',
-      clientSecret: enableGitHubAuth ? process.env.NUXT_GITHUB_SECRET || '' : '',
+      clientId: isGitHubAuthEnabled(env) ? env.NUXT_GITHUB_CLIENT_ID || '' : '',
+      clientSecret: isGitHubAuthEnabled(env) ? env.NUXT_GITHUB_SECRET || '' : '',
     },
     public: {
-      enableGitHubAuth,
-      siteUrl,
+      enableGitHubAuth: isGitHubAuthEnabled(env),
+      siteUrl: getPlaygroundSiteUrl(env),
     },
   },
   compatibilityDate: '2026-03-22',
@@ -34,7 +32,7 @@ export default defineNuxtConfig({
     cloudflare: {
       nodeCompat: true,
       wrangler: {
-        name: workerName,
+        name: getPlaygroundWorkerName(env),
         observability: { enabled: true },
       },
     },

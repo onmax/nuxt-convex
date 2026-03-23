@@ -2,8 +2,8 @@
   "name": "nuxt-convex-playground",
   "private": true,
   "scripts": {
-    "dev": "node ./scripts/run-with-playground-env.mjs dev",
-    "build": "node ./scripts/run-with-playground-env.mjs build"
+    "dev": "pnpm --filter @onmax/convex-vue build && pnpm --filter nuxt-convex build && nuxi dev --dotenv .env.local",
+    "build": "pnpm --filter @onmax/convex-vue build && pnpm --filter nuxt-convex build && nuxi build --dotenv .env.local"
   },
   "dependencies": {
     "@convex-dev/better-auth": "catalog:convex",
