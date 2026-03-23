@@ -116,6 +116,13 @@ export function setupSubprocessE2E(options: SubprocessE2EOptions): SubprocessE2E
 
     await nuxt.close()
 
+    await runCommand('pnpm', ['exec', 'nuxi', 'prepare', options.rootDir], {
+      cwd: process.cwd(),
+      env: {
+        NODE_ENV: 'production',
+      },
+    })
+
     await runCommand('pnpm', ['exec', 'nuxi', 'build', options.rootDir], {
       cwd: process.cwd(),
       env: {

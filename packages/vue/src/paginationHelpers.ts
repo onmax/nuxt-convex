@@ -148,10 +148,13 @@ function insertAtPositionInPages<Query extends PaginatedQueryReference>(options:
     return
   }
 
-  const lastLoadedPage = sortedPages[sortedPages.length - 1]
+  const lastLoadedPage = sortedPages.at(-1)
   if (lastLoadedPage === undefined)
     return
-  const lastPageKey = sortKeyFromItem(lastLoadedPage.value.page[lastLoadedPage.value.page.length - 1])
+  const lastPageItem = lastLoadedPage.value.page.at(-1)
+  if (lastPageItem === undefined)
+    return
+  const lastPageKey = sortKeyFromItem(lastPageItem)
   const isAfterLastPage = sortOrder === 'asc'
     ? compareValues(insertedKey, lastPageKey) >= 0
     : compareValues(insertedKey, lastPageKey) <= 0
@@ -171,7 +174,7 @@ function insertAtPositionInPages<Query extends PaginatedQueryReference>(options:
       : compareValues(sortKeyFromItem(p.value.page[0]), insertedKey) < 0,
   )
   const pageToUpdate = successorPageIndex === -1
-    ? sortedPages[sortedPages.length - 1]
+    ? sortedPages.at(-1)
     : sortedPages[successorPageIndex - 1]
   if (pageToUpdate === undefined)
     return

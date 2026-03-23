@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { resolve } from 'pathe'
 import { describe, expect, it } from 'vitest'
-import { resolveConvexRoot, resolveStorageServerImportPath } from '../src/internal/convex-paths'
+import { resolveConvexRoot, resolveStorageServerImportPath } from '../../src/internal/convex-paths'
 
 function createNuxt(projectRoot: string, layers: string[]): Nuxt {
   return {
