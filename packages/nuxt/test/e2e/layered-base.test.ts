@@ -3,10 +3,10 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'pathe'
 import { describe, expect, it } from 'vitest'
-import { setupSubprocessE2E } from './helpers/subprocess-e2e'
+import { setupSubprocessE2E } from '../helpers/subprocess-e2e'
 
-const baseDir = fileURLToPath(new URL('./fixtures/layered-base', import.meta.url))
-const rootDir = fileURLToPath(new URL('./fixtures/layered-app', import.meta.url))
+const baseDir = fileURLToPath(new URL('../fixtures/layered-base', import.meta.url))
+const rootDir = fileURLToPath(new URL('../fixtures/layered-app', import.meta.url))
 const storagePath = join(baseDir, 'convex/_hub/storage.ts')
 const generatedServerPath = join(baseDir, 'convex/_generated/server.ts')
 

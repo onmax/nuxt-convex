@@ -2,9 +2,9 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { setupSubprocessE2E } from './helpers/subprocess-e2e'
+import { setupSubprocessE2E } from '../helpers/subprocess-e2e'
 
-const rootDir = fileURLToPath(new URL('./fixtures/full', import.meta.url))
+const rootDir = fileURLToPath(new URL('../fixtures/full', import.meta.url))
 
 describe('nuxt-convex', () => {
   const fixture = setupSubprocessE2E({ rootDir })
@@ -64,7 +64,8 @@ describe('nuxt-convex', () => {
   it('keeps storage refs behind a lazy internal runtime helper', () => {
     const storageRefsRuntime = readFileSync(join(fixture.buildDir(), 'convex/storage-refs-runtime.mjs'), 'utf8')
 
-    expect(storageRefsRuntime).toContain('/* @vite-ignore */ generatedApiImport')
+    expect(storageRefsRuntime).toMatch(/import\s+\{\s*api\s*\}\s+from\s+['"].*convex\/_generated\/api['"]/)
+    expect(storageRefsRuntime).toContain('return api?._hub?.storage')
     expect(storageRefsRuntime).not.toContain(`import('#convex/api')`)
   })
 

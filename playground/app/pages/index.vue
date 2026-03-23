@@ -7,22 +7,32 @@ type AuthTab = 'sign-in' | 'sign-up'
 
 const toast = useToast()
 const runtimeConfig = useRuntimeConfig()
+const requestUrl = useRequestURL()
 const { user, waitForSession } = useUserSession()
 const signInWithEmail = useSignIn('email')
 const signUpWithEmail = useSignUp('email')
 const signInWithSocial = useSignIn('social')
 const enableGitHubAuth = parseBooleanFlag(runtimeConfig.public.enableGitHubAuth, false)
+const isLocalPlayground = computed(() => {
+  try {
+    const host = requestUrl.hostname || new URL(runtimeConfig.public.siteUrl).hostname
+    return host === 'localhost' || host === '127.0.0.1'
+  }
+  catch {
+    return false
+  }
+})
 
 const authTabs: Array<{ label: string, value: AuthTab, icon: string }> = [
   { label: 'Sign in', value: 'sign-in', icon: 'i-lucide-log-in' },
   { label: 'Create account', value: 'sign-up', icon: 'i-lucide-user-plus' },
 ]
 
-const activeTab = ref<AuthTab>('sign-in')
+const activeTab = ref<AuthTab>(isLocalPlayground.value ? 'sign-up' : 'sign-in')
 
 const signInForm = reactive({
-  email: 'demo@nuxt-convex.dev',
-  password: 'password123',
+  email: isLocalPlayground.value ? '' : 'demo@nuxt-convex.dev',
+  password: isLocalPlayground.value ? '' : 'password123',
 })
 
 const signUpForm = reactive({
@@ -34,9 +44,14 @@ const signUpForm = reactive({
 const isSignInPending = computed(() => signInWithEmail.status.value === 'pending')
 const isSignUpPending = computed(() => signUpWithEmail.status.value === 'pending')
 const isGitHubPending = computed(() => signInWithSocial.status.value === 'pending')
-const authDescription = computed(() => enableGitHubAuth
-  ? 'Sign in with email or GitHub.'
-  : 'Sign in with email and password.')
+const authDescription = computed(() => {
+  if (isLocalPlayground.value)
+    return 'Create an account first when testing locally.'
+
+  return enableGitHubAuth
+    ? 'Sign in with email or GitHub.'
+    : 'Sign in with email and password.'
+})
 
 const features = [
   { icon: 'i-lucide-list-todo', title: 'Tasks', description: 'Create, delete, and paginate tasks with realtime updates.' },

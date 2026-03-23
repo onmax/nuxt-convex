@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { getPlaygroundSiteUrl, getPlaygroundWorkerName, hasGitHubCredentials, isGitHubAuthEnabled, parseBooleanFlag } from '../src/internal/playground-env'
+import { getPlaygroundSiteUrl, getPlaygroundWorkerName, hasGitHubCredentials, isGitHubAuthEnabled, parseBooleanFlag } from '../../src/internal/playground-env'
 
 describe('playground env helpers', () => {
-  it('uses stable defaults when preview env is unset', () => {
+  it('uses localhost for local development when preview env is unset', () => {
     expect(getPlaygroundWorkerName({})).toBe('nuxt-convex-playground')
-    expect(getPlaygroundSiteUrl({})).toBe('https://demo-nuxt-convex.onmax.me')
+    expect(getPlaygroundSiteUrl({})).toBe('http://localhost:3000')
     expect(isGitHubAuthEnabled({})).toBe(false)
+  })
+
+  it('uses the demo deployment url in production when preview env is unset', () => {
+    expect(getPlaygroundWorkerName({ NODE_ENV: 'production' })).toBe('nuxt-convex-playground')
+    expect(getPlaygroundSiteUrl({ NODE_ENV: 'production' })).toBe('https://demo-nuxt-convex.onmax.me')
+    expect(isGitHubAuthEnabled({ NODE_ENV: 'production' })).toBe(false)
   })
 
   it('prefers preview overrides for worker and site url', () => {

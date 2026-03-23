@@ -12,24 +12,13 @@ const deletingId = ref<Id<'uploads'> | null>(null)
 
 const uploadArgs = computed(() => userId.value ? { userId: userId.value } : 'skip' as const)
 const { data: uploads, isPending } = useConvexQuery(api._hub.storage.list, uploadArgs)
+const { mutate: generateUploadUrl } = useConvexMutation(api._hub.storage.generateUploadUrl)
 const { mutate: saveFile } = useConvexMutation(api._hub.storage.saveFile)
 const { mutate: removeUpload } = useConvexMutation(api._hub.storage.remove)
 
-const { upload, isUploading, progress, error } = useConvexUpload({
-  onSuccess: async (storageId: string, file: File) => {
-    await saveFile({
-      storageId: storageId as Id<'_storage'>,
-      name: file.name,
-      type: file.type || 'application/octet-stream',
-      userId: userId.value,
-    })
-    selectedFile.value = null
-    toast.add({ color: 'success', title: 'File uploaded', description: file.name })
-  },
-  onError: (uploadError: Error) => {
-    toast.add({ color: 'error', title: 'Upload failed', description: uploadError.message })
-  },
-})
+const isUploading = ref(false)
+const progress = ref(0)
+const uploadError = ref<Error | null>(null)
 
 const uploadCount = computed(() => uploads.value?.length ?? 0)
 
@@ -38,11 +27,49 @@ function handleFileChange(event: Event) {
 }
 
 async function uploadSelectedFile() {
-  if (!selectedFile.value)
+  if (!selectedFile.value || !userId.value)
     return
-  await upload(selectedFile.value)
-  if (fileInput.value)
-    fileInput.value.value = ''
+
+  isUploading.value = true
+  progress.value = 0
+  uploadError.value = null
+
+  try {
+    const file = selectedFile.value
+    const uploadUrl = await generateUploadUrl({})
+    const response = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': file.type || 'application/octet-stream' },
+      body: file,
+    })
+
+    if (!response.ok)
+      throw new Error(`Upload failed: ${response.status} ${response.statusText}`)
+
+    const { storageId } = await response.json()
+    if (typeof storageId !== 'string' || storageId.length === 0)
+      throw new Error('Upload response did not include a storageId')
+
+    progress.value = 100
+    await saveFile({
+      storageId: storageId as Id<'_storage'>,
+      name: file.name,
+      type: file.type || 'application/octet-stream',
+      userId: userId.value,
+    })
+
+    selectedFile.value = null
+    if (fileInput.value)
+      fileInput.value.value = ''
+    toast.add({ color: 'success', title: 'File uploaded', description: file.name })
+  }
+  catch (error) {
+    uploadError.value = error instanceof Error ? error : new Error('Upload failed')
+    toast.add({ color: 'error', title: 'Upload failed', description: uploadError.value.message })
+  }
+  finally {
+    isUploading.value = false
+  }
 }
 
 async function removeUploadById(id: Id<'uploads'>) {
@@ -94,7 +121,7 @@ async function removeUploadById(id: Id<'uploads'>) {
     </template>
 
     <template #body>
-      <UAlert v-if="error" color="error" title="Upload error" :description="error.message" class="mb-4" />
+      <UAlert v-if="uploadError" color="error" title="Upload error" :description="uploadError.message" class="mb-4" />
 
       <div v-if="isUploading" class="mb-4">
         <UProgress :value="progress" />

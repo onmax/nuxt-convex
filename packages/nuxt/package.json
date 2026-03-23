@@ -77,6 +77,8 @@
     "pathe": "catalog:prod"
   },
   "devDependencies": {
+    "ofetch": "catalog:",
+    "ufo": "catalog:",
     "yaml": "catalog:"
   }
 }

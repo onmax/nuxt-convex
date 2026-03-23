@@ -2,9 +2,9 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { setupSubprocessE2E } from './helpers/subprocess-e2e'
+import { setupSubprocessE2E } from '../helpers/subprocess-e2e'
 
-const rootDir = fileURLToPath(new URL('./fixtures/no-storage', import.meta.url))
+const rootDir = fileURLToPath(new URL('../fixtures/no-storage', import.meta.url))
 
 describe('nuxt-convex without storage', () => {
   const fixture = setupSubprocessE2E({ rootDir, server: false })

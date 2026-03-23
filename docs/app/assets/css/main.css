@@ -21,9 +21,9 @@
 
 :root {
   --ui-radius: 0.75rem;
-  --ui-bg: #F9F3E0;
+  --ui-bg: #f9f3e0;
   --ui-bg-elevated: #ffffff;
-  --ui-text-highlighted: #1A1A1A;
+  --ui-text-highlighted: #1a1a1a;
 }
 
 @media (min-width: 1024px) {

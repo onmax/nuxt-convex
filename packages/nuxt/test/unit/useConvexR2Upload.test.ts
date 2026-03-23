@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { useConvexR2Upload } from '../src/runtime/composables/useConvexR2Upload'
+import { useConvexR2Upload } from '../../src/runtime/composables/useConvexR2Upload'
 
 const { mutation, useConvexClient } = vi.hoisted(() => {
   const mutation = vi.fn()
