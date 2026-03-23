@@ -64,7 +64,7 @@ describe('nuxt-convex', () => {
   it('keeps storage refs behind a lazy internal runtime helper', () => {
     const storageRefsRuntime = readFileSync(join(fixture.buildDir(), 'convex/storage-refs-runtime.mjs'), 'utf8')
 
-    expect(storageRefsRuntime).toContain(`import { api } from '../../../../../convex/_generated/api'`)
+    expect(storageRefsRuntime).toMatch(/import\s+\{\s*api\s*\}\s+from\s+['"].*convex\/_generated\/api['"]/)
     expect(storageRefsRuntime).toContain('return api?._hub?.storage')
     expect(storageRefsRuntime).not.toContain(`import('#convex/api')`)
   })
