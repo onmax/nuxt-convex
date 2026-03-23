@@ -206,7 +206,7 @@ async function signInWithGitHub() {
                       <UInput v-model="signInForm.password" type="password" placeholder="Enter your password" size="xl" />
                     </UFormField>
 
-                    <UButton type="button" color="primary" size="xl" block :loading="isSignInPending" @click="submitSignIn">
+                    <UButton type="submit" color="primary" size="xl" block :loading="isSignInPending">
                       Sign in
                     </UButton>
                   </form>
@@ -228,7 +228,7 @@ async function signInWithGitHub() {
                       <UInput v-model="signUpForm.password" type="password" placeholder="Choose a password" size="xl" />
                     </UFormField>
 
-                    <UButton type="button" color="primary" size="xl" block :loading="isSignUpPending" @click="submitSignUp">
+                    <UButton type="submit" color="primary" size="xl" block :loading="isSignUpPending">
                       Create account
                     </UButton>
                   </form>

@@ -1,4 +1,5 @@
 import type { ContentNavigationItem } from '@nuxt/content'
+import type { ComputedRef } from 'vue'
 
 interface DocsModule {
   id: string
@@ -8,11 +9,16 @@ interface DocsModule {
   sidebarRoots: string[]
 }
 
-function matchesPath(path: string, prefix: string) {
+function matchesPath(path: string, prefix: string): boolean {
   return path === prefix || path.startsWith(`${prefix}/`)
 }
 
-export function useDocsModules() {
+export function useDocsModules(): {
+  activeModule: ComputedRef<DocsModule | null>
+  filterNavigation: (items?: ContentNavigationItem[]) => ContentNavigationItem[]
+  isModuleActive: (module: DocsModule) => boolean
+  modules: ComputedRef<DocsModule[]>
+} {
   const route = useRoute()
   const appConfig = useAppConfig()
 
@@ -20,11 +26,11 @@ export function useDocsModules() {
 
   const activeModule = computed(() => modules.value.find(module => module.match.some(prefix => matchesPath(route.path, prefix))) || null)
 
-  function isModuleActive(module: DocsModule) {
+  function isModuleActive(module: DocsModule): boolean {
     return module.match.some(prefix => matchesPath(route.path, prefix))
   }
 
-  function filterNavigation(items?: ContentNavigationItem[]) {
+  function filterNavigation(items?: ContentNavigationItem[]): ContentNavigationItem[] {
     if (!items?.length)
       return []
 

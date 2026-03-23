@@ -13,6 +13,29 @@ const commands = {
   build: 'pnpm --filter @onmax/convex-vue build && pnpm --filter nuxt-convex build && nuxi build',
 }
 
+function findClosingQuote(value, quote) {
+  for (let index = 1; index < value.length; index++) {
+    if (value[index] === quote && value[index - 1] !== '\\')
+      return index
+  }
+
+  return -1
+}
+
+function parseEnvValue(valueWithComment) {
+  if (!valueWithComment)
+    return ''
+
+  const quote = valueWithComment[0]
+  if (quote === '"' || quote === '\'') {
+    const closingQuote = findClosingQuote(valueWithComment, quote)
+    if (closingQuote !== -1)
+      return valueWithComment.slice(1, closingQuote)
+  }
+
+  return valueWithComment.split(ENV_COMMENT_SEPARATOR_RE, 1)[0].trim()
+}
+
 function parseEnvFile(path) {
   if (!existsSync(path))
     return {}
@@ -30,9 +53,7 @@ function parseEnvFile(path) {
 
     const key = line.slice(0, separator).trim()
     const valueWithComment = line.slice(separator + 1).trim()
-    const value = valueWithComment.startsWith('"') || valueWithComment.startsWith('\'')
-      ? valueWithComment.slice(1, -1)
-      : valueWithComment.split(ENV_COMMENT_SEPARATOR_RE, 1)[0].trim()
+    const value = parseEnvValue(valueWithComment)
 
     env[key] = value
   }
