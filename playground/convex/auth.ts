@@ -11,6 +11,7 @@ import { getPlaygroundSiteUrl, isGitHubAuthEnabled } from './env'
 
 const siteUrl = getPlaygroundSiteUrl()
 const enableGitHubAuth = isGitHubAuthEnabled()
+const useSecureCookies = siteUrl.startsWith('https://')
 
 export const authComponent = createClient<DataModel>(components.betterAuth, {
   cors: { allowedOrigins: [siteUrl] },
@@ -19,6 +20,7 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 export function createAuth(ctx: GenericCtx<DataModel>): ReturnType<typeof betterAuth> {
   return betterAuth({
     trustedOrigins: [siteUrl],
+    useSecureCookies,
     database: authComponent.adapter(ctx),
     emailAndPassword: { enabled: true, requireEmailVerification: false },
     ...(enableGitHubAuth

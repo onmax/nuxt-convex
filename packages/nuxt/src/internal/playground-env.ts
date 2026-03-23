@@ -3,6 +3,7 @@ import process from 'node:process'
 type EnvSource = Record<string, string | undefined>
 type BooleanSource = boolean | string | undefined
 
+const DEFAULT_DEV_SITE_URL = 'http://localhost:3000'
 const DEFAULT_SITE_URL = 'https://demo-nuxt-convex.onmax.me'
 const DEFAULT_WORKER_NAME = 'nuxt-convex-playground'
 const DISABLED_VALUES = new Set(['0', 'false', 'no', 'off'])
@@ -35,7 +36,8 @@ export function hasGitHubCredentials(env: EnvSource = process.env): boolean {
 }
 
 export function getPlaygroundSiteUrl(env: EnvSource = process.env): string {
-  return getEnvValue(env, 'NUXT_PUBLIC_SITE_URL', 'SITE_URL') || DEFAULT_SITE_URL
+  return getEnvValue(env, 'NUXT_PUBLIC_SITE_URL', 'SITE_URL')
+    || (env.NODE_ENV === 'production' ? DEFAULT_SITE_URL : DEFAULT_DEV_SITE_URL)
 }
 
 export function getPlaygroundWorkerName(env: EnvSource = process.env): string {
