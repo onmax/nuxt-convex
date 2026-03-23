@@ -12,9 +12,7 @@ const emit = defineEmits<{
   remove: [id: Id<'uploads'>]
 }>()
 
-const { getUrl } = useConvexStorage()
-const reactiveUrl = getUrl(props.upload.storageId)
-const previewUrl = computed(() => reactiveUrl.value || props.upload.url || null)
+const previewUrl = computed(() => props.upload.url || null)
 const isImage = computed(() => props.upload.type.startsWith('image/'))
 </script>
 
