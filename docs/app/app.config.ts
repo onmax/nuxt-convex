@@ -70,14 +70,14 @@ export default defineAppConfig({
     pageHero: {
       slots: {
         title: 'font-semibold sm:text-5xl lg:text-6xl',
-        description: 'text-lg sm:text-xl text-muted max-w-2xl',
+        description: 'text-lg sm:text-xl text-muted max-w-2xl mx-auto',
         links: 'gap-3',
       },
     },
     pageSection: {
       slots: {
         title: 'font-semibold !leading-snug',
-        description: 'text-muted max-w-2xl',
+        description: 'text-muted max-w-2xl mx-auto',
       },
     },
     pageCard: {

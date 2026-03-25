@@ -29,7 +29,7 @@ Type-safe queries, SSR-aware subscriptions, and storage helpers for Vue and Nuxt
   :::
 ::
 
-::u-page-section{align="center"}
+::u-page-section{orientation="vertical"}
 #title
 Choose your path
 
@@ -65,7 +65,7 @@ The same composables power both packages. Pick the one that matches your stack.
   :::
 ::
 
-::u-page-section{align="center"}
+::u-page-section{orientation="vertical"}
 #title
 See it in action
 
@@ -76,7 +76,7 @@ Define your schema, use a composable, get realtime data. That's it.
 :landing-realtime-preview
 ::
 
-::u-page-section{align="center"}
+::u-page-section{orientation="vertical"}
 #title
 Built for realtime apps
 
@@ -152,7 +152,7 @@ Everything you need to build reactive, type-safe applications with Convex.
   :::
 ::
 
-::u-page-section{align="center"}
+::u-page-section{orientation="vertical"}
 #title
 How it works
 
@@ -171,7 +171,7 @@ How it works
   :::
 ::
 
-::u-page-section{align="center" class="landing-section-alt"}
+::u-page-section{orientation="vertical" class="landing-section-alt"}
 #title
 What the Nuxt module adds
 
@@ -225,7 +225,7 @@ Everything in the Vue package, plus framework-level integrations.
   :::
 ::
 
-::u-page-section{align="center"}
+::u-page-section{orientation="vertical"}
 #title
 Ready to build?
 
