@@ -7,53 +7,49 @@ description: Understand what nuxt-convex adds on top of the shared Vue package, 
 
 Use the Nuxt playground dashboard as the validation reference for this layer. The `Tasks`, `Convex Storage`, `Cloudflare R2`, and `Session & Diagnostics` sections are the concrete flows that these docs describe.
 
-::u-page-section{align="left"}
+::u-page-section
 #title
 Open the Nuxt-specific guides
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
-
 ---
-
 icon: i-lucide-hard-drive
 to: /nuxt-module/file-storage
 spotlight: true
-
 ---
-
 #title
 Set up file storage
 
-    #description
-    Scaffolded storage helpers and generated files.
-    ::::
+#description
+Scaffolded storage helpers and generated files.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-settings
-    to: /api-reference/module-configuration
-    spotlight: true
-    ---
-    #title
-    Review module options
+::::u-page-card
+---
+icon: i-lucide-settings
+to: /api-reference/module-configuration
+spotlight: true
+---
+#title
+Review module options
 
-    #description
-    Public configuration surface of the module.
-    ::::
+#description
+Public configuration surface of the module.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-simple-icons-vuedotjs
-    to: /vue
-    spotlight: true
-    ---
-    #title
-    Continue in the shared Vue track
+::::u-page-card
+---
+icon: i-simple-icons-vuedotjs
+to: /vue
+spotlight: true
+---
+#title
+Continue in the shared Vue track
 
-    #description
-    Shared composable behavior and backend patterns.
-    ::::
+#description
+Shared composable behavior and backend patterns.
+::::
 
 :::
 ::

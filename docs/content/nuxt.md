@@ -8,7 +8,7 @@ The `nuxt-convex` module wraps the Vue composables with auto-imports, `#convex` 
 
 For shared composable behavior and backend patterns, see the [Vue track](/vue).
 
-::u-page-section{align="left"}
+::u-page-section
 #title
 Start in the Nuxt layer
 
@@ -17,60 +17,56 @@ Module setup, runtime helpers, and Nuxt-specific integrations.
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
-
 ---
-
 icon: i-lucide-download
 spotlight: true
 to: /getting-started
-
 ---
-
 #title
 Install the module
 
-    #description
-    Install `nuxt-convex` and generate the typed API.
-    ::::
+#description
+Install `nuxt-convex` and generate the typed API.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-settings
-    spotlight: true
-    to: /nuxt-module
-    ---
-    #title
-    Configure the wrapper
+::::u-page-card
+---
+icon: i-lucide-settings
+spotlight: true
+to: /nuxt-module
+---
+#title
+Configure the wrapper
 
-    #description
-    Aliases, auto-imports, runtime setup, and resolution.
-    ::::
+#description
+Aliases, auto-imports, runtime setup, and resolution.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-plug
-    spotlight: true
-    to: /integrations
-    ---
-    #title
-    Add integrations
+::::u-page-card
+---
+icon: i-lucide-plug
+spotlight: true
+to: /integrations
+---
+#title
+Add integrations
 
-    #description
-    Better Auth and Cloudflare R2 wiring.
-    ::::
+#description
+Better Auth and Cloudflare R2 wiring.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-arrow-right-left
-    spotlight: true
-    to: /vue
-    ---
-    #title
-    Open the shared Vue layer
+::::u-page-card
+---
+icon: i-lucide-arrow-right-left
+spotlight: true
+to: /vue
+---
+#title
+Open the shared Vue layer
 
-    #description
-    Composable details and backend patterns.
-    ::::
+#description
+Composable details and backend patterns.
+::::
 
 :::
 ::

@@ -7,118 +7,114 @@ description: Use @onmax/convex-vue directly in any Vue 3 app with full control o
 
 If you are using Nuxt, keep the Nuxt-side import paths from the Nuxt track and use this guide only for the shared runtime behavior.
 
-::u-page-section{align="left"}
+::u-page-section
 #title
 Get started with the Vue package
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
-
 ---
-
 icon: i-lucide-download
 spotlight: true
 to: /vue-guide/installation
-
 ---
-
 #title
 Installation
 
-    #description
-    Install the plugin and verify with a first query.
-    ::::
+#description
+Install the plugin and verify with a first query.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-search
-    spotlight: true
-    to: /vue-guide/queries
-    ---
-    #title
-    Queries
+::::u-page-card
+---
+icon: i-lucide-search
+spotlight: true
+to: /vue-guide/queries
+---
+#title
+Queries
 
-    #description
-    Reactive subscriptions with SSR and realtime updates.
-    ::::
+#description
+Reactive subscriptions with SSR and realtime updates.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-pen-line
-    spotlight: true
-    to: /vue-guide/mutations-and-actions
-    ---
-    #title
-    Mutations & Actions
+::::u-page-card
+---
+icon: i-lucide-pen-line
+spotlight: true
+to: /vue-guide/mutations-and-actions
+---
+#title
+Mutations & Actions
 
-    #description
-    Write data and run server-side logic.
-    ::::
+#description
+Write data and run server-side logic.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-list
-    spotlight: true
-    to: /vue-guide/pagination
-    ---
-    #title
-    Pagination
+::::u-page-card
+---
+icon: i-lucide-list
+spotlight: true
+to: /vue-guide/pagination
+---
+#title
+Pagination
 
-    #description
-    Cursor-based pagination and infinite scroll.
-    ::::
+#description
+Cursor-based pagination and infinite scroll.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-hard-drive
-    spotlight: true
-    to: /vue-guide/file-storage
-    ---
-    #title
-    File Storage
+::::u-page-card
+---
+icon: i-lucide-hard-drive
+spotlight: true
+to: /vue-guide/file-storage
+---
+#title
+File Storage
 
-    #description
-    Upload files and display with reactive URLs.
-    ::::
+#description
+Upload files and display with reactive URLs.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-sliders-horizontal
-    spotlight: true
-    to: /vue-guide/controller
-    ---
-    #title
-    Controller
+::::u-page-card
+---
+icon: i-lucide-sliders-horizontal
+spotlight: true
+to: /vue-guide/controller
+---
+#title
+Controller
 
-    #description
-    Connect or disconnect the client at runtime.
-    ::::
+#description
+Connect or disconnect the client at runtime.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-file-code
-    spotlight: true
-    to: /api-reference
-    ---
-    #title
-    API Reference
+::::u-page-card
+---
+icon: i-lucide-file-code
+spotlight: true
+to: /api-reference
+---
+#title
+API Reference
 
-    #description
-    Composable signatures, types, and options.
-    ::::
+#description
+Composable signatures, types, and options.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-puzzle
-    spotlight: true
-    to: /convex-patterns
-    ---
-    #title
-    Convex Patterns
+::::u-page-card
+---
+icon: i-lucide-puzzle
+spotlight: true
+to: /convex-patterns
+---
+#title
+Convex Patterns
 
-    #description
-    Schema, functions, and realtime patterns.
-    ::::
+#description
+Schema, functions, and realtime patterns.
+::::
 
 :::
 ::
