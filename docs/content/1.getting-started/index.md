@@ -5,41 +5,36 @@ description: Choose between the Nuxt module and the standalone Vue package, then
 
 Start here when you are choosing between the two runtime tracks. `nuxt-convex` is the Nuxt wrapper, while `@onmax/convex-vue` is the standalone Vue package and shared lower layer.
 
-::u-page-section{align="left"}
+::u-page-section
 #title
 Choose your runtime
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
-
 ---
-
 icon: i-simple-icons-nuxtdotjs
 spotlight: true
 to: /nuxt-module
-
 ---
-
 #title
-Start with `nuxt-convex`
+Start with the Nuxt module
 
-    #description
-    Auto-imports, virtual modules, SSR queries, and storage.
-    ::::
+#description
+Auto-imports, virtual modules, SSR queries, and storage.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-simple-icons-vuedotjs
-    spotlight: true
-    to: /vue-guide
-    ---
-    #title
-    Start with `@onmax/convex-vue`
+::::u-page-card
+---
+icon: i-simple-icons-vuedotjs
+spotlight: true
+to: /vue-guide
+---
+#title
+Start with the Vue package
 
-    #description
-    Standalone Vue 3 with full plugin control.
-    ::::
-
+#description
+Standalone Vue 3 with full plugin control.
+::::
 :::
 ::
 

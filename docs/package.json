@@ -17,6 +17,7 @@
     "docus": "catalog:",
     "nuxt": "catalog:",
     "tailwindcss": "catalog:",
+    "@vueuse/core": "catalog:",
     "zod": "catalog:",
     "zod-to-json-schema": "catalog:"
   }

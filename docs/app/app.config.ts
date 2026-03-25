@@ -69,23 +69,22 @@ export default defineAppConfig({
     },
     pageHero: {
       slots: {
-        title: 'font-semibold sm:text-6xl',
+        title: 'font-semibold sm:text-5xl lg:text-6xl',
+        description: 'text-lg sm:text-xl text-muted max-w-2xl mx-auto',
+        links: 'gap-3',
       },
     },
     pageSection: {
       slots: {
         title: 'font-semibold !leading-snug',
-        description: 'text-muted max-w-2xl',
+        description: 'text-muted max-w-2xl mx-auto',
       },
     },
     pageCard: {
       slots: {
-        wrapper: 'grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 items-start',
-        leading: 'mb-0 mt-0.5 row-start-1 col-start-1',
-        leadingIcon: 'size-4 text-primary',
-        body: 'contents',
-        title: 'font-semibold row-start-1 col-start-2 text-start',
-        description: 'row-start-2 col-span-2 text-start font-normal text-muted',
+        leadingIcon: 'size-5 text-primary',
+        title: 'font-semibold',
+        description: 'text-muted font-normal',
       },
     },
   },

@@ -4,13 +4,11 @@ description: The Nuxt-focused track for nuxt-convex, with setup, guides, integra
 navigation: false
 ---
 
-Use this track when your app runs on Nuxt. It covers the `nuxt-convex` module, the public `#convex*` aliases, the Nuxt auto-imports, and the integrations that depend on Nuxt-specific runtime behavior.
+The `nuxt-convex` module wraps the Vue composables with auto-imports, `#convex` virtual modules, and Nuxt-specific integrations like file storage, Cloudflare R2, and Better Auth.
 
-Move into the Vue track when you need the shared composable semantics or the backend patterns that both runtimes consume.
+For shared composable behavior and backend patterns, see the [Vue track](/vue).
 
-The Nuxt playground is the canonical validation harness for this track. Its `Tasks`, `Convex Storage`, `Cloudflare R2`, and `Session & Diagnostics` sections are the reference flows that these docs describe.
-
-::u-page-section{align="left"}
+::u-page-section
 #title
 Start in the Nuxt layer
 
@@ -19,60 +17,56 @@ Module setup, runtime helpers, and Nuxt-specific integrations.
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
-
 ---
-
 icon: i-lucide-download
 spotlight: true
 to: /getting-started
-
 ---
-
 #title
 Install the module
 
-    #description
-    Install `nuxt-convex` and generate the typed API.
-    ::::
+#description
+Install `nuxt-convex` and generate the typed API.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-settings
-    spotlight: true
-    to: /nuxt-module
-    ---
-    #title
-    Configure the wrapper
+::::u-page-card
+---
+icon: i-lucide-settings
+spotlight: true
+to: /nuxt-module
+---
+#title
+Configure the wrapper
 
-    #description
-    Aliases, auto-imports, runtime setup, and resolution.
-    ::::
+#description
+Aliases, auto-imports, runtime setup, and resolution.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-plug
-    spotlight: true
-    to: /integrations
-    ---
-    #title
-    Add integrations
+::::u-page-card
+---
+icon: i-lucide-plug
+spotlight: true
+to: /integrations
+---
+#title
+Add integrations
 
-    #description
-    Better Auth and Cloudflare R2 wiring.
-    ::::
+#description
+Better Auth and Cloudflare R2 wiring.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-arrow-right-left
-    spotlight: true
-    to: /vue
-    ---
-    #title
-    Open the shared Vue layer
+::::u-page-card
+---
+icon: i-lucide-arrow-right-left
+spotlight: true
+to: /vue
+---
+#title
+Open the shared Vue layer
 
-    #description
-    Composable details and backend patterns.
-    ::::
+#description
+Composable details and backend patterns.
+::::
 
 :::
 ::

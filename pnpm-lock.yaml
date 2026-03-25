@@ -44,6 +44,9 @@ catalogs:
     '@vercel/speed-insights':
       specifier: ^2.0.0
       version: 2.0.0
+    '@vueuse/core':
+      specifier: ^14.2.1
+      version: 14.2.1
     bumpp:
       specifier: ^11.0.1
       version: 11.0.1
@@ -236,6 +239,9 @@ importers:
       '@vercel/speed-insights':
         specifier: 'catalog:'
         version: 2.0.0(nuxt@4.4.2(bc3042e804d9adbc15b87da68d29237e))(react@19.2.3)(vue-router@4.6.4(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))
+      '@vueuse/core':
+        specifier: 'catalog:'
+        version: 14.2.1(vue@3.5.30(typescript@5.9.3))
       docus:
         specifier: 'catalog:'
         version: 5.8.1(586cd6a4c41d2df716d283ffbcbc5c3a)

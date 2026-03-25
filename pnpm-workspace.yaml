@@ -16,6 +16,7 @@ catalog:
   '@nuxt/ui': ^4.5.1
   '@vercel/analytics': ^2.0.1
   '@vercel/speed-insights': ^2.0.0
+  '@vueuse/core': ^14.2.1
   bumpp: ^11.0.1
   docus: ^5.8.1
   nuxt: 4.4.2

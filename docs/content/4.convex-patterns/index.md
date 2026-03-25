@@ -5,53 +5,49 @@ description: Follow the shared backend patterns that both the Nuxt module and th
 
 Both frontend tracks in this repo expect the same Convex backend fundamentals: a schema, generated APIs, and public functions that the browser can call.
 
-::u-page-section{align="left"}
+::u-page-section
 #title
 Open the backend patterns
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
-
 ---
-
 icon: i-lucide-database
 spotlight: true
 to: /convex-patterns/schema
-
 ---
-
 #title
 Define your schema
 
-    #description
-    Tables and indexes that shape the frontend API.
-    ::::
+#description
+Tables and indexes that shape the frontend API.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-split
-    spotlight: true
-    to: /convex-patterns/functions
-    ---
-    #title
-    Split your functions
+::::u-page-card
+---
+icon: i-lucide-split
+spotlight: true
+to: /convex-patterns/functions
+---
+#title
+Split your functions
 
-    #description
-    Queries, mutations, and actions boundaries.
-    ::::
+#description
+Queries, mutations, and actions boundaries.
+::::
 
-    ::::u-page-card
-    ---
-    icon: i-lucide-radio
-    spotlight: true
-    to: /convex-patterns/realtime-and-ssr
-    ---
-    #title
-    Handle realtime and SSR
+::::u-page-card
+---
+icon: i-lucide-radio
+spotlight: true
+to: /convex-patterns/realtime-and-ssr
+---
+#title
+Handle realtime and SSR
 
-    #description
-    Convex updates with server rendering and hydration.
-    ::::
+#description
+Convex updates with server rendering and hydration.
+::::
 
 :::
 ::
