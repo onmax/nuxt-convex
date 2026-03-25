@@ -19,5 +19,8 @@
     "tailwindcss": "catalog:",
     "zod": "catalog:",
     "zod-to-json-schema": "catalog:"
+  },
+  "devDependencies": {
+    "@vueuse/core": "catalog:"
   }
 }

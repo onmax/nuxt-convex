@@ -1,9 +1,7 @@
 <script setup lang="ts">
-interface Task {
-  id: number
-  text: string
-  completed: boolean
-}
+import { useIntervalFn, useTimeoutFn } from '@vueuse/core'
+
+interface Task { id: number, text: string, completed: boolean }
 
 const tasks = ref<Task[]>([
   { id: 1, text: 'Set up Convex backend', completed: true },
@@ -11,23 +9,15 @@ const tasks = ref<Task[]>([
   { id: 3, text: 'Deploy to production', completed: false },
 ])
 
-const showNewTask = ref(false)
-const liveDot = ref(true)
+useTimeoutFn(() => {
+  tasks.value.push({ id: 4, text: 'Ship it 🚀', completed: false })
+}, 2000)
 
-onMounted(() => {
-  // Simulate a new task appearing after 2s
-  setTimeout(() => {
-    showNewTask.value = true
-    tasks.value.push({ id: 4, text: 'Ship it 🚀', completed: false })
-  }, 2000)
-
-  // Toggle task completion every 3s
-  setInterval(() => {
-    const task = tasks.value.find(t => t.id === 3)
-    if (task)
-      task.completed = !task.completed
-  }, 3000)
-})
+useIntervalFn(() => {
+  const task = tasks.value.find(t => t.id === 3)
+  if (task)
+    task.completed = !task.completed
+}, 3000)
 </script>
 
 <template>

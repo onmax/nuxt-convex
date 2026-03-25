@@ -44,6 +44,9 @@ catalogs:
     '@vercel/speed-insights':
       specifier: ^2.0.0
       version: 2.0.0
+    '@vueuse/core':
+      specifier: ^14.2.1
+      version: 14.2.1
     bumpp:
       specifier: ^11.0.1
       version: 11.0.1
@@ -251,6 +254,10 @@ importers:
       zod-to-json-schema:
         specifier: 'catalog:'
         version: 3.25.1(zod@4.3.6)
+    devDependencies:
+      '@vueuse/core':
+        specifier: 'catalog:'
+        version: 14.2.1(vue@3.5.30(typescript@5.9.3))
 
   examples/vue:
     dependencies:
