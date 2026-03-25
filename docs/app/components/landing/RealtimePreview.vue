@@ -9,15 +9,17 @@ const tasks = ref<Task[]>([
   { id: 3, text: 'Deploy to production', completed: false },
 ])
 
-useTimeoutFn(() => {
-  tasks.value.push({ id: 4, text: 'Ship it 🚀', completed: false })
-}, 2000)
+onMounted(() => {
+  useTimeoutFn(() => {
+    tasks.value.push({ id: 4, text: 'Ship it 🚀', completed: false })
+  }, 2000)
 
-useIntervalFn(() => {
-  const task = tasks.value.find(t => t.id === 3)
-  if (task)
-    task.completed = !task.completed
-}, 3000)
+  useIntervalFn(() => {
+    const task = tasks.value.find(t => t.id === 3)
+    if (task)
+      task.completed = !task.completed
+  }, 3000)
+})
 </script>
 
 <template>
@@ -81,7 +83,7 @@ useIntervalFn(() => {
       </div>
 
       <p class="text-xs text-muted text-center">
-        Schema 👉 composable 👉 reactive UI. Fully typed.
+        Schema <UIcon name="i-lucide-arrow-right" class="inline size-3" /> composable <UIcon name="i-lucide-arrow-right" class="inline size-3" /> reactive UI. Fully typed.
       </p>
     </div>
   </div>
