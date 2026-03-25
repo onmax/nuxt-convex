@@ -47,7 +47,7 @@ The same composables power both packages. Pick the one that matches your stack.
   Vue standalone
 
   #description
-  Use `@onmax/convex-vue` in any Vue 3 app. Full control over plugin setup, queries, mutations, pagination, and file storage. No framework lock-in.
+  Drop into any Vue 3 app. Full control over plugin setup, queries, mutations, pagination, and file storage. No framework lock-in.
   ::::
 
   ::::u-page-card
@@ -176,7 +176,7 @@ How it works
   2. Install the SDK
 
   #description
-  Add `nuxt-convex` or `@onmax/convex-vue`. The plugin wires reactivity for you.
+  Add the Nuxt module or the Vue plugin. One command, reactivity wired for you.
   ::::
 
   ::::u-page-card
