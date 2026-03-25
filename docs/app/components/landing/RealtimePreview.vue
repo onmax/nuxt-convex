@@ -21,7 +21,7 @@ useIntervalFn(() => {
 </script>
 
 <template>
-  <div class="grid lg:grid-cols-2 gap-6 items-start">
+  <div class="max-w-4xl mx-auto grid lg:grid-cols-2 gap-6 items-start">
     <!-- Code side -->
     <div class="space-y-3">
       <div class="flex items-center gap-2 text-sm text-muted font-mono">

@@ -19,7 +19,6 @@ const links = computed(() => appConfig.github && appConfig.github.url
 
 <template>
   <UHeader
-    :class="{ 'docs-header': activeModule }"
     :ui="{ center: 'flex-1' }"
     :to="localePath('/')"
     :title="appConfig.header?.title || site.name"
@@ -81,9 +80,8 @@ const links = computed(() => appConfig.github && appConfig.github.url
       v-if="activeModule"
       #bottom
     >
-      <USeparator class="hidden lg:flex" />
-
-      <UContainer class="hidden lg:flex items-center">
+      <div class="docs-subheader hidden lg:block border-t border-default">
+      <UContainer class="flex items-center">
         <UNavigationMenu
           :items="modules.map(m => ({ label: m.label, to: m.to, icon: m.id === 'vue' ? 'i-simple-icons-vuedotjs' : m.id === 'nuxt' ? 'i-simple-icons-nuxtdotjs' : undefined, active: isModuleActive(m) }))"
           variant="pill"
@@ -91,6 +89,7 @@ const links = computed(() => appConfig.github && appConfig.github.url
           class="-mx-2.5 -mb-px"
         />
       </UContainer>
+      </div>
     </template>
   </UHeader>
 </template>

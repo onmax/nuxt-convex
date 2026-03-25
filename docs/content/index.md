@@ -18,8 +18,8 @@ Type-safe queries, SSR-aware subscriptions, and storage helpers for Vue and Nuxt
 :u-button{to="/getting-started" size="xl" trailing-icon="i-lucide-arrow-right" label="Get started"}
 :u-button{to="https://github.com/onmax/nuxt-convex" target="_blank" size="xl" color="neutral" variant="outline" trailing-icon="i-simple-icons-github" label="View on GitHub"}
 
-#bottom
-  :::code-group
+#body
+  :::code-group{class="max-w-md mx-auto"}
   ```bash [Nuxt]
   npx nuxi module add nuxt-convex
   ```
@@ -36,7 +36,7 @@ Choose your path
 #description
 The same composables power both packages. Pick the one that matches your stack.
 
-  :::u-page-grid{class="!grid-cols-1 sm:!grid-cols-2 !gap-6"}
+  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-6"}
   ::::u-page-card
   ---
   icon: i-simple-icons-vuedotjs
@@ -178,7 +178,7 @@ What the Nuxt module adds
 #description
 Everything in the Vue package, plus framework-level integrations.
 
-  :::u-page-grid{class="!grid-cols-1 sm:!grid-cols-2 !gap-4"}
+  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-4"}
   ::::u-page-card
   ---
   icon: i-lucide-hash

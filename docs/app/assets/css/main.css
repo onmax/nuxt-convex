@@ -27,8 +27,8 @@
 }
 
 @media (min-width: 1024px) {
-  .docs-header {
-    --ui-header-height: 112px;
+  :root:has(.docs-subheader) {
+    --ui-header-height: 7rem;
   }
 }
 
