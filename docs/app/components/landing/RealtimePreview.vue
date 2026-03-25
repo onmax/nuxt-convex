@@ -51,7 +51,7 @@ useIntervalFn(() => {
           <span class="size-2 rounded-full bg-convex-500 realtime-preview-pulse" />
           Live preview
         </div>
-        <UBadge color="primary" variant="subtle" size="xs">
+        <UBadge color="primary" variant="subtle" size="sm">
           Realtime
         </UBadge>
       </div>
@@ -81,7 +81,7 @@ useIntervalFn(() => {
       </div>
 
       <p class="text-xs text-muted text-center">
-        Schema → composable → reactive UI. Fully typed.
+        Schema 👉 composable 👉 reactive UI. Fully typed.
       </p>
     </div>
   </div>

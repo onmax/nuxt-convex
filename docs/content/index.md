@@ -36,7 +36,7 @@ Choose your path
 #description
 The same composables power both packages. Pick the one that matches your stack.
 
-  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-6 text-center"}
+  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-6"}
   ::::u-page-card
   ---
   icon: i-simple-icons-vuedotjs
@@ -83,7 +83,7 @@ Built for realtime apps
 #description
 Everything you need to build reactive, type-safe applications with Convex.
 
-  :::u-page-grid{class="max-w-5xl mx-auto !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-4 text-center"}
+  :::u-page-grid{class="max-w-5xl mx-auto !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-4"}
   ::::u-page-card
   ---
   icon: i-lucide-radio
@@ -156,7 +156,7 @@ Everything you need to build reactive, type-safe applications with Convex.
 #title
 How it works
 
-  :::u-page-grid{class="max-w-4xl mx-auto !grid-cols-1 sm:!grid-cols-3 !gap-6 text-center"}
+  :::u-page-grid{class="max-w-4xl mx-auto !grid-cols-1 sm:!grid-cols-3 !gap-6"}
   ::::u-page-card
   ---
   icon: i-lucide-database
@@ -199,7 +199,7 @@ What the Nuxt module adds
 #description
 Everything in the Vue package, plus framework-level integrations.
 
-  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-4 text-center"}
+  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-4"}
   ::::u-page-card
   ---
   icon: i-lucide-hash
