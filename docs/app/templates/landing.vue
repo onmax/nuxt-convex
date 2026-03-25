@@ -31,11 +31,9 @@ if (!page.value?.seo?.ogImage) {
 
 <template>
   <UMain>
-    <UContainer>
-      <ContentRenderer
-        v-if="page"
-        :value="page"
-      />
-    </UContainer>
+    <ContentRenderer
+      v-if="page"
+      :value="page"
+    />
   </UMain>
 </template>

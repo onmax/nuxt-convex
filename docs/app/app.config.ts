@@ -69,7 +69,9 @@ export default defineAppConfig({
     },
     pageHero: {
       slots: {
-        title: 'font-semibold sm:text-6xl',
+        title: 'font-semibold sm:text-5xl lg:text-6xl',
+        description: 'text-lg sm:text-xl text-muted max-w-2xl',
+        links: 'gap-3',
       },
     },
     pageSection: {

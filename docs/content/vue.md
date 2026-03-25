@@ -4,9 +4,9 @@ description: Use @onmax/convex-vue directly in any Vue 3 app for realtime data, 
 navigation: false
 ---
 
-Use this track when you install `@onmax/convex-vue` directly in a Vue 3 app. It covers plugin setup, data fetching, mutations, pagination, file storage, and the advanced controller.
+Use `@onmax/convex-vue` in any Vue 3 app — no Nuxt required. This track covers plugin setup, queries, mutations, pagination, file storage, and the runtime controller.
 
-This track also serves as the reference for the shared runtime that the Nuxt module wraps. Nuxt users can read it to understand lower-level composable behavior without changing their Nuxt import paths.
+Nuxt users: this is also the shared runtime underneath `nuxt-convex`. Read it to understand composable behavior; your import paths stay the same.
 
 ::u-page-section{align="left"}
 #title

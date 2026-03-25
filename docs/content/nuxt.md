@@ -4,11 +4,9 @@ description: The Nuxt-focused track for nuxt-convex, with setup, guides, integra
 navigation: false
 ---
 
-Use this track when your app runs on Nuxt. It covers the `nuxt-convex` module, the public `#convex*` aliases, the Nuxt auto-imports, and the integrations that depend on Nuxt-specific runtime behavior.
+The `nuxt-convex` module wraps the Vue composables with auto-imports, `#convex` virtual modules, and Nuxt-specific integrations like file storage, Cloudflare R2, and Better Auth.
 
-Move into the Vue track when you need the shared composable semantics or the backend patterns that both runtimes consume.
-
-The Nuxt playground is the canonical validation harness for this track. Its `Tasks`, `Convex Storage`, `Cloudflare R2`, and `Session & Diagnostics` sections are the reference flows that these docs describe.
+For shared composable behavior and backend patterns, see the [Vue track](/vue).
 
 ::u-page-section{align="left"}
 #title
