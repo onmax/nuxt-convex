@@ -36,7 +36,7 @@ Choose your path
 #description
 The same composables power both packages. Pick the one that matches your stack.
 
-  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-6"}
+  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-6 text-center"}
   ::::u-page-card
   ---
   icon: i-simple-icons-vuedotjs
@@ -47,7 +47,7 @@ The same composables power both packages. Pick the one that matches your stack.
   Vue standalone
 
   #description
-  Use `@onmax/convex-vue` in any Vue 3 app. Full control over plugin setup, queries, mutations, pagination, file storage, and the runtime controller. No framework lock-in.
+  Use `@onmax/convex-vue` in any Vue 3 app. Full control over plugin setup, queries, mutations, pagination, and file storage. No framework lock-in.
   ::::
 
   ::::u-page-card
@@ -60,7 +60,7 @@ The same composables power both packages. Pick the one that matches your stack.
   Nuxt module
 
   #description
-  Install `nuxt-convex` for auto-imports, `#convex` virtual modules, file storage helpers, Cloudflare R2, and Better Auth integration. Everything wired for you.
+  Auto-imports, `#convex` virtual modules, file storage helpers, Cloudflare R2, and Better Auth. Everything wired for you.
   ::::
   :::
 ::
@@ -83,7 +83,7 @@ Built for realtime apps
 #description
 Everything you need to build reactive, type-safe applications with Convex.
 
-  :::u-page-grid{class="!grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-4"}
+  :::u-page-grid{class="max-w-5xl mx-auto !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-4 text-center"}
   ::::u-page-card
   ---
   icon: i-lucide-radio
@@ -156,18 +156,39 @@ Everything you need to build reactive, type-safe applications with Convex.
 #title
 How it works
 
-  :::steps
-  ### Define your backend
+  :::u-page-grid{class="max-w-4xl mx-auto !grid-cols-1 sm:!grid-cols-3 !gap-6 text-center"}
+  ::::u-page-card
+  ---
+  icon: i-lucide-database
+  ---
+  #title
+  1. Define your backend
 
-  Write your schema and server functions in the `convex/` directory. Convex generates typed APIs automatically.
+  #description
+  Write schema and functions in `convex/`. Types are generated automatically.
+  ::::
 
-  ### Install the SDK
+  ::::u-page-card
+  ---
+  icon: i-lucide-download
+  ---
+  #title
+  2. Install the SDK
 
-  Add `nuxt-convex` for Nuxt or `@onmax/convex-vue` for Vue. The plugin connects to your Convex deployment and sets up reactivity.
+  #description
+  Add `nuxt-convex` or `@onmax/convex-vue`. The plugin wires reactivity for you.
+  ::::
 
-  ### Use typed composables
+  ::::u-page-card
+  ---
+  icon: i-lucide-code
+  ---
+  #title
+  3. Use composables
 
-  Call `useConvexQuery`, `useConvexMutation`, or any other composable. Data flows in realtime — fully typed from schema to template.
+  #description
+  Call `useConvexQuery` and friends. Data flows realtime, fully typed.
+  ::::
   :::
 ::
 
@@ -178,7 +199,7 @@ What the Nuxt module adds
 #description
 Everything in the Vue package, plus framework-level integrations.
 
-  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-4"}
+  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-4 text-center"}
   ::::u-page-card
   ---
   icon: i-lucide-hash
