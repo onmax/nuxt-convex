@@ -9,7 +9,7 @@ Start here when you are choosing between the two runtime tracks. `nuxt-convex` i
 #title
 Choose your runtime
 
-:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
+:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-6"}
 ::::u-page-card
 ---
 icon: i-simple-icons-nuxtdotjs
@@ -20,7 +20,7 @@ to: /nuxt-module
 Start with the Nuxt module
 
 #description
-Auto-imports, virtual modules, SSR queries, and storage.
+Auto-imports, SSR, file storage, and auth built in.
 ::::
 
 ::::u-page-card

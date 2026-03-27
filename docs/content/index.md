@@ -5,14 +5,12 @@ navigation: false
 ---
 
 ::u-page-hero{class="hero-glow"}
-#headline
-Open-Source Convex SDK
 
 #title
 Realtime Vue & Nuxt, :br powered by Convex
 
 #description
-Type-safe queries, SSR-aware subscriptions, and storage helpers for Vue and Nuxt. One composable layer — two integration paths.
+Type-safe queries, realtime subscriptions, and file storage for Vue and Nuxt. Works standalone or as a Nuxt module.
 
 #links
 :u-button{to="/getting-started" size="xl" trailing-icon="i-lucide-arrow-right" label="Get started"}
@@ -60,7 +58,7 @@ The same composables power both packages. Pick the one that matches your stack.
   Nuxt module
 
   #description
-  Auto-imports, `#convex` virtual modules, file storage helpers, Cloudflare R2, and Better Auth. Everything wired for you.
+  Auto-imports, file storage, Cloudflare R2, and auth. Everything wired for you.
   ::::
   :::
 ::
@@ -103,7 +101,7 @@ Everything you need to build reactive, type-safe applications with Convex.
   SSR out of the box
 
   #description
-  Server-fetch on first load, client-subscribe after hydration. No layout shift, no loading spinners.
+  First load renders on the server, then switches to realtime. No layout shift, no spinners.
   ::::
 
   ::::u-page-card
@@ -114,7 +112,7 @@ Everything you need to build reactive, type-safe applications with Convex.
   End-to-end types
 
   #description
-  Your Convex schema flows all the way to your `<template>`. Autocomplete and type errors at every layer.
+  Your schema flows all the way to your `<template>`. Full autocomplete and type checking everywhere.
   ::::
 
   ::::u-page-card
@@ -136,7 +134,7 @@ Everything you need to build reactive, type-safe applications with Convex.
   Pagination
 
   #description
-  Cursor-based pagination with infinite scroll. Realtime updates across all loaded pages.
+  Built-in infinite scroll with realtime updates across all loaded pages.
   ::::
 
   ::::u-page-card
@@ -147,7 +145,7 @@ Everything you need to build reactive, type-safe applications with Convex.
   Auth integration
 
   #description
-  Built-in Better Auth support. Or wire any provider through the auth adapter interface.
+  Built-in Better Auth support, or bring your own auth provider.
   ::::
   :::
 ::
@@ -176,7 +174,7 @@ How it works
   2. Install the SDK
 
   #description
-  Add the Nuxt module or the Vue plugin. One command, reactivity wired for you.
+  Add the Nuxt module or the Vue plugin. One command, realtime wired for you.
   ::::
 
   ::::u-page-card
@@ -205,10 +203,10 @@ Everything in the Vue package, plus framework-level integrations.
   icon: i-lucide-hash
   ---
   #title
-  Virtual modules
+  Auto-imports
 
   #description
-  Import from `#convex`, `#convex/advanced`, and `#convex/storage`. Auto-imported, tree-shakeable.
+  All composables and helpers are auto-imported. No manual setup needed.
   ::::
 
   ::::u-page-card
@@ -219,7 +217,7 @@ Everything in the Vue package, plus framework-level integrations.
   Cloudflare R2
 
   #description
-  Upload to R2 with metadata synced through Convex. Built on NuxtHub and the storage composable.
+  Upload files to Cloudflare R2 with metadata synced through Convex.
   ::::
 
   ::::u-page-card
@@ -230,7 +228,7 @@ Everything in the Vue package, plus framework-level integrations.
   Better Auth
 
   #description
-  Database adapter, session hooks, and auth state wired into the Convex client. Drop-in provider support.
+  Auth state wired into the Convex client. Drop-in setup with any Better Auth provider.
   ::::
 
   ::::u-page-card
@@ -241,7 +239,7 @@ Everything in the Vue package, plus framework-level integrations.
   Zero config
 
   #description
-  Auto-detects your Convex deployment URL, registers composables, and configures SSR. Just add the module.
+  Detects your Convex project, registers everything, and configures SSR. Just add the module.
   ::::
   :::
 ::

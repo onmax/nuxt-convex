@@ -82,6 +82,8 @@ export default defineAppConfig({
     },
     pageCard: {
       slots: {
+        wrapper: 'flex flex-row items-start gap-3',
+        leading: 'mb-0 mt-0.5',
         leadingIcon: 'size-5 text-primary',
         title: 'font-semibold',
         description: 'text-muted font-normal',
