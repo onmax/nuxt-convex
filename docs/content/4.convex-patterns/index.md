@@ -5,7 +5,7 @@ description: Follow the shared backend patterns that both the Nuxt module and th
 
 Both frontend tracks in this repo expect the same Convex backend fundamentals: a schema, generated APIs, and public functions that the browser can call.
 
-::u-page-section
+::u-page-section{orientation="vertical"}
 #title
 Open the backend patterns
 

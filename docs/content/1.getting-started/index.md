@@ -5,7 +5,7 @@ description: Choose between the Nuxt module and the standalone Vue package, then
 
 Start here when you are choosing between the two runtime tracks. `nuxt-convex` is the Nuxt wrapper, while `@onmax/convex-vue` is the standalone Vue package and shared lower layer.
 
-::u-page-section
+::u-page-section{orientation="vertical"}
 #title
 Choose your runtime
 
@@ -76,6 +76,4 @@ In Nuxt, the module exposes that same core through `#convex`, `#convex/advanced`
 
 ## Next steps
 
-- Follow the [installation guide](/getting-started/installation) to install the right package.
-- Read [Nuxt Module](/nuxt-module) if you are working in Nuxt.
-- Read [Vue Guide](/vue-guide) if you are wiring Convex into a standalone Vue app.
+Pick a track above, then follow its installation guide to set up your first project.

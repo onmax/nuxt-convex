@@ -8,7 +8,7 @@ The `nuxt-convex` module wraps the Vue composables with auto-imports, `#convex` 
 
 For shared composable behavior and backend patterns, see the [Vue track](/vue).
 
-::u-page-section
+::u-page-section{orientation="vertical"}
 #title
 Start in the Nuxt layer
 
@@ -72,6 +72,8 @@ Composable details and backend patterns.
 ::
 
 ## Understand what the Nuxt layer owns
+
+The module and the shared Vue package have a clear division of responsibility.
 
 - `nuxt-convex` owns aliases, auto-imports, generated API access, and runtime wiring.
 - File storage and Cloudflare R2 live here because they depend on module scaffolding and Nuxt runtime behavior.

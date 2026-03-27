@@ -8,15 +8,15 @@ export default defineAppConfig({
       id: 'vue',
       label: 'Vue',
       to: '/vue',
-      match: ['/vue', '/vue-guide', '/api-reference', '/convex-patterns'],
-      sidebarRoots: ['/vue-guide', '/api-reference', '/convex-patterns'],
+      match: ['/vue', '/vue-guide', '/api-reference', '/convex-patterns', '/troubleshooting'],
+      sidebarRoots: ['/vue-guide', '/api-reference', '/convex-patterns', '/troubleshooting'],
     },
     {
       id: 'nuxt',
       label: 'Nuxt',
       to: '/nuxt',
-      match: ['/nuxt', '/getting-started', '/nuxt-module', '/integrations'],
-      sidebarRoots: ['/getting-started', '/nuxt-module', '/integrations'],
+      match: ['/nuxt', '/getting-started', '/nuxt-module', '/integrations', '/troubleshooting'],
+      sidebarRoots: ['/getting-started', '/nuxt-module', '/integrations', '/troubleshooting'],
     },
   ],
   header: {
@@ -76,7 +76,7 @@ export default defineAppConfig({
     },
     pageSection: {
       slots: {
-        title: 'font-semibold !leading-snug',
+        title: 'font-semibold !leading-snug text-2xl sm:text-3xl',
         description: 'text-muted max-w-2xl mx-auto',
       },
     },

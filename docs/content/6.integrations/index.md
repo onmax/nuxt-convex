@@ -3,18 +3,9 @@ title: Integrations
 description: Extend nuxt-convex with the adjacent tools that this repo currently documents and exercises.
 ---
 
-The integration guides describe the extension points that the Nuxt playground validates today. Use them after the core `nuxt-convex` setup is already in place and you want a supported path for auth or bucket storage.
+These guides cover the supported extension points for `nuxt-convex`. Set up the core module first, then follow the guide for the integration you need.
 
-The canonical validation surface lives in the playground dashboard:
-
-- `Tasks`
-- `Convex Storage`
-- `Cloudflare R2`
-- `Session & Diagnostics`
-
-The integration pages below explain the parts of that dashboard that depend on external packages or extra environment.
-
-::u-page-section
+::u-page-section{orientation="vertical"}
 #title
 Open an integration guide
 

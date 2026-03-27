@@ -8,7 +8,7 @@ Use `@onmax/convex-vue` in any Vue 3 app — no Nuxt required. This track covers
 
 Nuxt users: this is also the shared runtime underneath `nuxt-convex`. Read it to understand composable behavior; your import paths stay the same.
 
-::u-page-section
+::u-page-section{orientation="vertical"}
 #title
 Start with the Vue package
 

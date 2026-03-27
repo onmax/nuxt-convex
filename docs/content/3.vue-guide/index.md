@@ -7,9 +7,12 @@ description: Use @onmax/convex-vue directly in any Vue 3 app with full control o
 
 If you are using Nuxt, keep the Nuxt-side import paths from the Nuxt track and use this guide only for the shared runtime behavior.
 
-::u-page-section
+::u-page-section{orientation="vertical"}
 #title
 Get started with the Vue package
+
+#description
+Follow the guides in order, or jump to the topic you need.
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card

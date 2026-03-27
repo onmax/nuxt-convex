@@ -3,9 +3,9 @@ title: API Reference
 description: Review the current public API surface for nuxt-convex and @onmax/convex-vue.
 ---
 
-This reference follows the shipped code in `packages/nuxt` and `packages/vue`. It covers the shared root composables, the explicit storage and advanced entrypoints, and the Nuxt-only exports that the wrapper adds on top.
+This reference covers the public API for both `nuxt-convex` and `@onmax/convex-vue`. It documents the shared composables, storage and advanced entrypoints, and Nuxt-only exports.
 
-::u-page-section
+::u-page-section{orientation="vertical"}
 #title
 Start with the shared API
 
