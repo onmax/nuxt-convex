@@ -1,13 +1,20 @@
 ---
 title: Convex Patterns
-description: Follow the shared backend patterns that both the Nuxt module and the Vue package assume when they call Convex.
+description: Learn the shared backend model that both the Nuxt and Vue tracks expect from your Convex project.
 ---
 
-Both frontend tracks in this repo expect the same Convex backend fundamentals: a schema, generated APIs, and public functions that the browser can call.
+Both frontend tracks in this repo assume the same Convex backend foundations:
 
-::u-page-section
+- a schema that matches the data you query from the client
+- generated API files created by `npx convex dev`
+- public queries, mutations, and actions with predictable boundaries
+- a clear distinction between SSR-friendly reads and client-only realtime flows
+
+Use this section to build the mental model behind the framework-specific guides.
+
+::u-page-section{orientation="vertical"}
 #title
-Open the backend patterns
+Open a concept page
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
@@ -17,10 +24,10 @@ spotlight: true
 to: /convex-patterns/schema
 ---
 #title
-Define your schema
+Design your schema
 
 #description
-Tables and indexes that shape the frontend API.
+Define tables, validators, and indexes that support your app-facing queries.
 ::::
 
 ::::u-page-card
@@ -30,10 +37,10 @@ spotlight: true
 to: /convex-patterns/functions
 ---
 #title
-Split your functions
+Design your functions
 
 #description
-Queries, mutations, and actions boundaries.
+Split public queries, mutations, and actions by the work they actually do.
 ::::
 
 ::::u-page-card
@@ -43,19 +50,16 @@ spotlight: true
 to: /convex-patterns/realtime-and-ssr
 ---
 #title
-Handle realtime and SSR
+Reason about realtime and SSR
 
 #description
-Convex updates with server rendering and hydration.
+Understand which reads can prefetch on the server and which flows stay client-only.
 ::::
 
 :::
 ::
 
-## Why this matters
+## Related sections
 
-The frontend helpers in this repo are thin wrappers over Convex. When the backend shape is clear, the Nuxt and Vue layers stay predictable.
-
-::tip
-Read this section alongside the Vue track. The Nuxt module builds on these same backend expectations.
-::
+- Read [Vue](/vue) for shared runtime guides
+- Read [Nuxt](/nuxt) for the wrapper-specific contract

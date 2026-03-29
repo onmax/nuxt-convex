@@ -1,44 +1,66 @@
 ---
 title: Troubleshooting
-description: Common issues and solutions when working with nuxt-convex and @onmax/convex-vue.
+description: Diagnose common setup and runtime issues in nuxt-convex and @onmax/convex-vue.
 ---
 
-## `#convex/api` not found
+Use this page when the docs path is correct but the runtime still is not behaving the way you expect.
 
-The Nuxt module warns when it cannot resolve the generated Convex API.
+## `#convex/api` cannot be resolved
 
-**Cause:** `npx convex dev` has not been run, or the generated files are outside the resolved `convex.dir`.
+**Likely cause**
 
-**Fix:**
+You have not run `npx convex dev`, or the generated files are outside the resolved `convex.dir`.
+
+**How to verify**
+
+Check whether `convex/_generated/api` exists in the project or layer that owns the Convex directory.
+
+**Fix**
 
 ```bash [Terminal]
 npx convex dev
 ```
 
-Run this in the project that owns your Convex directory. The command creates `convex/_generated/api` and `convex/_generated/server`.
+Run this in the project that owns your `convex/` directory.
 
-## Missing `CONVEX_URL`
+**Confirm**
 
-The module reads the deployment URL in this order:
+The alias resolves and your app stops warning about missing generated files.
 
-1. `convex.url` in `nuxt.config.ts`
-2. `CONVEX_URL` environment variable
-3. `NUXT_PUBLIC_CONVEX_URL` environment variable
+## The Convex URL is missing
 
-If none are set, the plugin starts disconnected. Add the URL to your `.env`:
+**Likely cause**
+
+Neither `convex.url`, `CONVEX_URL`, nor `NUXT_PUBLIC_CONVEX_URL` is set.
+
+**How to verify**
+
+Check your Nuxt config and environment variables.
+
+**Fix**
 
 ```bash [.env]
 CONVEX_URL=https://your-project.convex.cloud
 ```
 
-## SSR queries return `undefined` for authenticated data
+**Confirm**
 
-Server-side query execution does not automatically forward browser auth tokens. The `ConvexHttpClient` used during SSR has no session context.
+The runtime connects instead of starting disconnected.
 
-**Fix:** Disable SSR for auth-dependent queries:
+## An authenticated SSR query returns `undefined`
+
+**Likely cause**
+
+The server-side query runs without the browser auth context.
+
+**How to verify**
+
+If the same query works after hydration or with `{ server: false }`, you are hitting an auth-sensitive SSR path.
+
+**Fix**
 
 ```ts
-const { data } = useConvexQuery(api.tasks.myTasks, args, { server: false })
+const { data } = useConvexQuery(api.tasks.myTasks, {}, { server: false })
 ```
 
 Or disable SSR globally:
@@ -52,9 +74,26 @@ export default defineNuxtConfig({
 })
 ```
 
-## Storage composables not available
+**Confirm**
 
-`useConvexStorage` and `useConvexUpload` require `storage: true` in the module config.
+The query loads correctly on the client.
+
+## `useConvexStorage` or `useConvexUpload` is not available
+
+**Likely cause**
+
+The module storage feature is not enabled, or the Vue storage plugin is not installed.
+
+**How to verify**
+
+Check whether:
+
+- Nuxt has `convex.storage: true`, or
+- Vue has `convexVueStorage` installed
+
+**Fix**
+
+For Nuxt:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
@@ -65,11 +104,23 @@ export default defineNuxtConfig({
 })
 ```
 
-The module scaffolds `convex/_hub/storage.ts` on first run if it does not exist.
+For Vue, register `convexVueStorage` with `generateUploadUrl`, `getUrl`, and `remove`.
 
-## `useConvexR2Upload` not available
+**Confirm**
 
-R2 upload support requires `r2: true` in the module config.
+The storage helpers resolve and uploads work from the client.
+
+## `useConvexR2Upload` is not available
+
+**Likely cause**
+
+The R2 module feature is not enabled.
+
+**How to verify**
+
+Check whether `convex.r2` is set to `true` in `nuxt.config.ts`.
+
+**Fix**
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
@@ -80,29 +131,44 @@ export default defineNuxtConfig({
 })
 ```
 
-Also install the Convex R2 component: `pnpm add @convex-dev/r2`. See the [R2 integration](/integrations/r2) page for the full setup.
+Also install `@convex-dev/r2` and register the Convex component.
 
-## Queries throw before `connect()`
+**Confirm**
 
-When using the [controller](/vue-guide/controller) for delayed connection, composables like `useConvexQuery` throw if called before `controller.connect()`.
+`useConvexR2Upload` is auto-imported and the upload flow starts successfully.
 
-**Fix:** Guard composable calls on connection status:
+## Queries throw before the runtime connects
 
-```ts
-const controller = useConvexController()
+**Likely cause**
 
-// Wait for connection before querying
-watch(() => controller.status.value, (status) => {
-  if (status === 'connected') {
-    // safe to use queries
-  }
-})
-```
+You installed the shared runtime without a URL and then called queries, mutations, or actions before `connect()`.
 
-Or pass `"skip"` as args until the connection is established.
+**How to verify**
 
-## Paginated queries not rendering on the server
+Check whether `controller.status.value` is still `disconnected`.
 
-`useConvexPaginatedQuery` is client-only. It does not support SSR prefetching. The first page loads after hydration through the realtime subscription.
+**Fix**
 
-This is by design — use `useConvexQuery` with server-side rendering when you need SEO for the initial data.
+Call `controller.connect({ url })` first, or guard the query with `"skip"` until the runtime is ready.
+
+**Confirm**
+
+The controller reports `connected` and the composables stop throwing.
+
+## Paginated queries do not render on the server
+
+**Likely cause**
+
+`useConvexPaginatedQuery` is client-only by design.
+
+**How to verify**
+
+The page renders after hydration but not during SSR.
+
+**Fix**
+
+Use `useConvexQuery` for the initial SSR-friendly data and keep `useConvexPaginatedQuery` for the interactive client-side feed.
+
+**Confirm**
+
+The initial content renders through the non-paginated query, and the client-side feed continues from there.

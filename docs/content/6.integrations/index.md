@@ -1,20 +1,13 @@
 ---
 title: Integrations
-description: Extend nuxt-convex with the adjacent tools that this repo currently documents and exercises.
+description: Add the Nuxt-side integrations documented and exercised in this repo.
 ---
 
-The integration guides describe the extension points that the Nuxt playground validates today. Use them after the core `nuxt-convex` setup is already in place and you want a supported path for auth or bucket storage.
+Use this section after the core module is already installed. These guides cover the supported Nuxt-side extension points around `nuxt-convex`.
 
-The canonical validation surface lives in the playground dashboard:
+## Available integrations
 
-- `Tasks`
-- `Convex Storage`
-- `Cloudflare R2`
-- `Session & Diagnostics`
-
-The integration pages below explain the parts of that dashboard that depend on external packages or extra environment.
-
-::u-page-section
+::u-page-section{orientation="vertical"}
 #title
 Open an integration guide
 
@@ -26,10 +19,10 @@ spotlight: true
 to: /integrations/better-auth
 ---
 #title
-Add Better Auth
+Better Auth
 
 #description
-Provider hook and HTTP adapter setup.
+Use Convex as the Better Auth database through the provider and HTTP adapter exported by this repo.
 ::::
 
 ::::u-page-card
@@ -39,20 +32,17 @@ spotlight: true
 to: /integrations/r2
 ---
 #title
-Add Cloudflare R2
+Cloudflare R2
 
 #description
-Bucket uploads beyond default Convex storage.
+Upload files to R2 through the Convex R2 component and the Nuxt-side upload helper.
 ::::
 
 :::
 ::
 
-## See what is included
+## Before you start
 
-- [Better Auth](/integrations/better-auth)
-- [R2](/integrations/r2)
-
-::tip
-Most integrations in this repo are Nuxt-first because the module owns the surrounding runtime wiring. The shared Vue package still provides the underlying data layer, but the supported app-facing path stays in Nuxt.
-::
+- Install and verify the core module first through [Getting Started](/getting-started/installation)
+- Keep the Nuxt-specific setup in this section
+- Use [Convex Patterns](/convex-patterns) and [API Reference](/api-reference) for the shared runtime details

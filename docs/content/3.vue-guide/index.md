@@ -1,15 +1,29 @@
 ---
 title: Guide
-description: Use @onmax/convex-vue directly in any Vue 3 app with full control over plugin installation and composable imports.
+description: Learn the shared Vue runtime for Convex: plugin setup, query and mutation patterns, pagination, storage, auth, and advanced runtime control.
 ---
 
-`@onmax/convex-vue` is the shared package behind the Nuxt module. Install it directly when you build a standalone Vue app or need full control over plugin wiring.
+This section is the task-focused guide for `@onmax/convex-vue`. Use it when you want to build with the shared Vue runtime or understand the behavior that also sits underneath the Nuxt module.
 
-If you are using Nuxt, keep the Nuxt-side import paths from the Nuxt track and use this guide only for the shared runtime behavior.
+## Read this section in order if you are new
 
-::u-page-section
+1. [Installation](/vue-guide/installation)
+2. [Queries](/vue-guide/queries)
+3. [Mutations & Actions](/vue-guide/mutations-and-actions)
+4. [Pagination](/vue-guide/pagination)
+
+Then branch into:
+
+- [File Storage](/vue-guide/file-storage)
+- [Controller](/vue-guide/controller)
+- [Authentication](/vue-guide/authentication)
+- [Connection State](/vue-guide/connection-state)
+
+## Read by task
+
+::u-page-section{orientation="vertical"}
 #title
-Get started with the Vue package
+Open a guide
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
@@ -19,10 +33,10 @@ spotlight: true
 to: /vue-guide/installation
 ---
 #title
-Installation
+Install and verify
 
 #description
-Install the plugin and verify with a first query.
+Register the plugin and run the first query.
 ::::
 
 ::::u-page-card
@@ -32,23 +46,10 @@ spotlight: true
 to: /vue-guide/queries
 ---
 #title
-Queries
+Subscribe to data
 
 #description
-Reactive subscriptions with SSR and realtime updates.
-::::
-
-::::u-page-card
----
-icon: i-lucide-pen-line
-spotlight: true
-to: /vue-guide/mutations-and-actions
----
-#title
-Mutations & Actions
-
-#description
-Write data and run server-side logic.
+Use reactive arguments, SSR-aware reads, and skip logic.
 ::::
 
 ::::u-page-card
@@ -58,23 +59,10 @@ spotlight: true
 to: /vue-guide/pagination
 ---
 #title
-Pagination
+Build paginated feeds
 
 #description
-Cursor-based pagination and infinite scroll.
-::::
-
-::::u-page-card
----
-icon: i-lucide-hard-drive
-spotlight: true
-to: /vue-guide/file-storage
----
-#title
-File Storage
-
-#description
-Upload files and display with reactive URLs.
+Load more results, reset on filter changes, and use optimistic helpers.
 ::::
 
 ::::u-page-card
@@ -84,37 +72,16 @@ spotlight: true
 to: /vue-guide/controller
 ---
 #title
-Controller
+Manage the connection
 
 #description
-Connect or disconnect the client at runtime.
-::::
-
-::::u-page-card
----
-icon: i-lucide-file-code
-spotlight: true
-to: /api-reference
----
-#title
-API Reference
-
-#description
-Composable signatures, types, and options.
-::::
-
-::::u-page-card
----
-icon: i-lucide-puzzle
-spotlight: true
-to: /convex-patterns
----
-#title
-Convex Patterns
-
-#description
-Schema, functions, and realtime patterns.
+Connect later, reconfigure the runtime, or work with the raw clients.
 ::::
 
 :::
 ::
+
+## Related sections
+
+- Read [Convex Patterns](/convex-patterns) for the backend model behind these guides
+- Read [API Reference](/api-reference) when you need exact signatures instead of walkthroughs

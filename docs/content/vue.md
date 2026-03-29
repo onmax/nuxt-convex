@@ -1,19 +1,26 @@
 ---
 title: Vue
-description: Use @onmax/convex-vue directly in any Vue 3 app for realtime data, mutations, pagination, and file storage.
+description: Use @onmax/convex-vue directly in a Vue 3 app for shared Convex queries, mutations, pagination, auth state, storage, and advanced runtime control.
 navigation: false
 ---
 
-Use `@onmax/convex-vue` in any Vue 3 app — no Nuxt required. This track covers plugin setup, queries, mutations, pagination, file storage, and the runtime controller.
+Use this track when your app is a standalone Vue 3 app or when you want to understand the shared runtime that also powers `nuxt-convex`.
 
-Nuxt users: this is also the shared runtime underneath `nuxt-convex`. Read it to understand composable behavior; your import paths stay the same.
+This track owns:
 
-::u-page-section
+- the base `convexVue` plugin
+- shared composables for reads, writes, pagination, auth, and connection state
+- the `advanced` entrypoint for delayed connection and raw clients
+- the `storage` entrypoint for upload helpers
+
+If you are building a Nuxt app, keep the Nuxt-side aliases in app code and use this track to understand the shared behavior underneath them.
+
+::u-page-section{orientation="vertical"}
 #title
-Start with the Vue package
+Start with the Vue path
 
 #description
-Follow the guides in order, or jump to the topic you need.
+Open the page that matches your current task.
 
 :::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
 ::::u-page-card
@@ -23,10 +30,10 @@ spotlight: true
 to: /vue-guide/installation
 ---
 #title
-Installation
+Install the plugin
 
 #description
-Install the plugin and verify with a first query.
+Register `convexVue`, generate the API, and verify the first query.
 ::::
 
 ::::u-page-card
@@ -36,10 +43,10 @@ spotlight: true
 to: /vue-guide/queries
 ---
 #title
-Queries
+Read data
 
 #description
-Reactive subscriptions with SSR and realtime updates.
+Use reactive query arguments, SSR-aware reads, and skip logic.
 ::::
 
 ::::u-page-card
@@ -49,36 +56,10 @@ spotlight: true
 to: /vue-guide/mutations-and-actions
 ---
 #title
-Mutations & Actions
+Write data
 
 #description
-Write data and run server-side logic.
-::::
-
-::::u-page-card
----
-icon: i-lucide-list
-spotlight: true
-to: /vue-guide/pagination
----
-#title
-Pagination
-
-#description
-Cursor-based pagination and infinite scroll.
-::::
-
-::::u-page-card
----
-icon: i-lucide-hard-drive
-spotlight: true
-to: /vue-guide/file-storage
----
-#title
-File Storage
-
-#description
-Upload files and display with reactive URLs.
+Call mutations and actions, including optimistic updates for mutations.
 ::::
 
 ::::u-page-card
@@ -88,41 +69,17 @@ spotlight: true
 to: /vue-guide/controller
 ---
 #title
-Controller
+Control the runtime
 
 #description
-Connect or disconnect the client at runtime.
-::::
-
-::::u-page-card
----
-icon: i-lucide-file-code
-spotlight: true
-to: /api-reference
----
-#title
-API Reference
-
-#description
-Composable signatures, types, and options.
-::::
-
-::::u-page-card
----
-icon: i-lucide-puzzle
-spotlight: true
-to: /convex-patterns
----
-#title
-Convex Patterns
-
-#description
-Schema, functions, and realtime patterns.
+Connect later, reconfigure at runtime, or access the raw clients.
 ::::
 
 :::
 ::
 
-::important
-If you use Nuxt, keep the `#convex*` aliases and Nuxt auto-imports in app code. Use this track to understand the shared runtime behavior underneath them.
-::
+## Related sections
+
+- Read [Convex Patterns](/convex-patterns) for the backend model both tracks assume
+- Read [API Reference](/api-reference) for exact signatures and return types
+- Read [Nuxt](/nuxt) if you are working in a Nuxt app and need the wrapper contract
