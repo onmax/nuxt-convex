@@ -82,7 +82,7 @@ export default defineAppConfig({
     },
     pageCard: {
       slots: {
-        wrapper: 'grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 items-start',
+        wrapper: 'grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 items-start text-left',
         leading: 'mb-0 mt-0.5',
         leadingIcon: 'size-5 text-primary',
         body: 'contents',
