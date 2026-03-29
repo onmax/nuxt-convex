@@ -19,6 +19,7 @@ const links = computed(() => appConfig.github && appConfig.github.url
 
 <template>
   <UHeader
+    class="flex flex-col"
     :ui="{ center: 'flex-1' }"
     :to="localePath('/')"
     :title="appConfig.header?.title || site.name"
