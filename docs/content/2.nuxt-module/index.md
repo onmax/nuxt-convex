@@ -14,6 +14,8 @@ This section documents what `nuxt-convex` adds on top of the shared Vue runtime.
 - storage scaffolding
 - the Nuxt-side Cloudflare R2 helper
 
+In other words, this section covers the public `#convex`, `#convex/api`, and `#convex/advanced` aliases, plus the Optional `#convex/storage` alias when the storage feature is enabled.
+
 ::u-page-section{orientation="vertical"}
 #title
 Open a Nuxt-specific guide
