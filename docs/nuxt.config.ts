@@ -1,5 +1,11 @@
+import { resolve } from 'node:path'
+
 export default defineNuxtConfig({
   extends: ['docus'],
+
+  alias: {
+    '@nuxt/content/utils': resolve(__dirname, 'app/utils/content-utils-patch'),
+  },
 
   ogImage: { enabled: false },
 
