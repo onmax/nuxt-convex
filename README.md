@@ -1,34 +1,65 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/onmax/nuxt-convex/main/.github/og.webp" alt="Nuxt Convex" width="100%">
-</p>
+# Nuxt Convex
 
-<h1 align="center">convex vue + nuxt</h1>
+Realtime Convex helpers for Vue 3 and Nuxt.
 
-<p align="center">Standalone Vue composables and a Nuxt module for <a href="https://convex.dev">Convex</a></p>
+This repo ships two packages that share the same core runtime:
 
-<p align="center">
-  <a href="https://npmjs.com/package/nuxt-convex"><img src="https://img.shields.io/npm/v/nuxt-convex/latest.svg?style=flat&colorA=020420&colorB=00DC82" alt="npm version"></a>
-  <a href="https://npm.chart.dev/nuxt-convex"><img src="https://img.shields.io/npm/dm/nuxt-convex.svg?style=flat&colorA=020420&colorB=00DC82" alt="npm downloads"></a>
-  <a href="https://npmjs.com/package/nuxt-convex"><img src="https://img.shields.io/npm/l/nuxt-convex.svg?style=flat&colorA=020420&colorB=00DC82" alt="License"></a>
-  <a href="https://nuxt.com"><img src="https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js" alt="Nuxt"></a>
-</p>
+- `nuxt-convex` for Nuxt apps that want module setup, auto-imports, `#convex/*` aliases, storage scaffolding, and Nuxt-side integrations
+- `@onmax/convex-vue` for standalone Vue 3 apps that want direct plugin setup and full control over runtime wiring
 
-## Packages
+## Start here
 
-- `@onmax/convex-vue`: the standalone Vue plugin and composables
-- `nuxt-convex`: the Nuxt adapter built on top of `@onmax/convex-vue`
+- Read the docs site: [nuxt-convex.onmax.me](https://nuxt-convex.onmax.me/)
+- Start with [Getting started](https://nuxt-convex.onmax.me/getting-started) if you are choosing between the Nuxt and Vue tracks
+- Open the [Nuxt track](https://nuxt-convex.onmax.me/nuxt) if you are building a Nuxt app
+- Open the [Vue track](https://nuxt-convex.onmax.me/vue) if you are building a standalone Vue 3 app
 
-## Workspace
+## Choose the right package
 
-- `packages/vue`: publishable Vue core
-- `packages/nuxt`: publishable Nuxt module
-- `examples/vue`: standalone Vite example for `@onmax/convex-vue`
-- `playground`: Nuxt integration playground
-- `docs`: shared documentation site for both layers
+### `nuxt-convex`
 
-## Documentation
+Use this package when your app runs on Nuxt and you want the framework layer handled for you.
 
-**[nuxt-convex.onmax.me](https://nuxt-convex.onmax.me/)**
+It adds:
+
+- module registration through `modules: ['nuxt-convex']`
+- auto-imports for the shared composables
+- `#convex`, `#convex/api`, `#convex/advanced`, and optional `#convex/storage`
+- Nuxt-side file storage scaffolding
+- Nuxt-side Better Auth and Cloudflare R2 integration points
+
+### `@onmax/convex-vue`
+
+Use this package when you want to install the Vue plugin directly in a Vue 3 app.
+
+It gives you:
+
+- the base `convexVue` plugin
+- shared query, mutation, action, pagination, auth, and connection-state composables
+- optional `advanced` and `storage` entrypoints
+- explicit runtime control through the controller APIs
+
+## Workspace layout
+
+- [`packages/nuxt`](/Users/maxi/nuxt/convex/packages/nuxt) publishes `nuxt-convex`
+- [`packages/vue`](/Users/maxi/nuxt/convex/packages/vue) publishes `@onmax/convex-vue`
+- [`docs`](/Users/maxi/nuxt/convex/docs) contains the public documentation site
+- [`playground`](/Users/maxi/nuxt/convex/playground) is the Nuxt reference app used to exercise the module
+- [`examples/vue`](/Users/maxi/nuxt/convex/examples/vue) is the standalone Vue example
+
+## Development
+
+```bash
+pnpm install
+pnpm docs:dev
+```
+
+Useful workspace commands:
+
+- `pnpm dev` runs the Nuxt playground through the module package
+- `pnpm dev:vue` runs the standalone Vue example
+- `pnpm test` runs the package test suites
+- `pnpm docs:build` builds the docs site
 
 ## License
 

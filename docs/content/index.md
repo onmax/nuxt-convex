@@ -1,53 +1,40 @@
 ---
 title: Nuxt Convex
-description: Realtime Vue & Nuxt apps powered by Convex. Type-safe queries, SSR-aware subscriptions, file storage, and auth — works standalone or as a Nuxt module.
+description: Realtime Convex helpers for Nuxt and Vue. Choose the track that matches your app, then install the shared data layer with the right framework wiring.
 navigation: false
 ---
 
 ::u-page-hero{class="hero-glow"}
 
 #title
-Realtime Vue & Nuxt, :br powered by Convex
+Convex for Nuxt and Vue
 
 #description
-Type-safe queries, realtime subscriptions, and file storage for Vue and Nuxt. Works standalone or as a Nuxt module.
+Build realtime apps with typed queries, mutations, pagination, storage helpers, and framework-specific setup for Nuxt or standalone Vue.
 
 #links
 :u-button{to="/getting-started" size="xl" trailing-icon="i-lucide-arrow-right" label="Get started"}
 :u-button{to="https://github.com/onmax/nuxt-convex" target="_blank" size="xl" color="neutral" variant="outline" trailing-icon="i-simple-icons-github" label="View on GitHub"}
 
 #body
-  :::code-group{class="max-w-md mx-auto"}
+  :::code-group{class="landing-install-command max-w-md mx-auto"}
   ```bash [Nuxt]
-  npx nuxi module add nuxt-convex
+  pnpm add nuxt-convex convex
   ```
   ```bash [Vue]
-  npm install @onmax/convex-vue
+  pnpm add @onmax/convex-vue convex
   ```
   :::
 ::
 
 ::u-page-section{orientation="vertical"}
 #title
-Choose your path
+Choose your starting path
 
 #description
-The same composables power both packages. Pick the one that matches your stack.
+Both packages share the same Convex runtime model. Pick the entrypoint that matches your app and follow that track.
 
   :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-6"}
-  ::::u-page-card
-  ---
-  icon: i-simple-icons-vuedotjs
-  spotlight: true
-  to: /vue
-  ---
-  #title
-  Vue standalone
-
-  #description
-  Drop into any Vue 3 app. Full control over plugin setup, queries, mutations, pagination, and file storage. No framework lock-in.
-  ::::
-
   ::::u-page-card
   ---
   icon: i-simple-icons-nuxtdotjs
@@ -55,31 +42,33 @@ The same composables power both packages. Pick the one that matches your stack.
   to: /nuxt
   ---
   #title
-  Nuxt module
+  Nuxt track
 
   #description
-  Auto-imports, file storage, Cloudflare R2, and auth. Everything wired for you.
+  Use `nuxt-convex` for module setup, auto-imports, `#convex/*` aliases, storage scaffolding, and Nuxt-side integrations.
+  ::::
+
+  ::::u-page-card
+  ---
+  icon: i-simple-icons-vuedotjs
+  spotlight: true
+  to: /vue
+  ---
+  #title
+  Vue track
+
+  #description
+  Use `@onmax/convex-vue` directly in a Vue 3 app when you want explicit plugin setup and full runtime control.
   ::::
   :::
 ::
 
 ::u-page-section{orientation="vertical"}
 #title
-See it in action
+What you get
 
 #description
-Define your schema, use a composable, get realtime data. That's it.
-
-#default
-:landing-realtime-preview
-::
-
-::u-page-section{orientation="vertical"}
-#title
-Built for realtime apps
-
-#description
-Everything you need to build reactive, type-safe applications with Convex.
+The two tracks differ in setup, but they share the same app-facing data model.
 
   :::u-page-grid{class="max-w-5xl mx-auto !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-4"}
   ::::u-page-card
@@ -87,10 +76,10 @@ Everything you need to build reactive, type-safe applications with Convex.
   icon: i-lucide-radio
   ---
   #title
-  Realtime subscriptions
+  Realtime queries
 
   #description
-  Data stays fresh without polling. Convex pushes updates to your components automatically.
+  Subscribe to Convex data and keep it fresh without polling.
   ::::
 
   ::::u-page-card
@@ -98,10 +87,10 @@ Everything you need to build reactive, type-safe applications with Convex.
   icon: i-lucide-server
   ---
   #title
-  SSR out of the box
+  SSR-aware reads
 
   #description
-  First load renders on the server, then switches to realtime. No layout shift, no spinners.
+  Use HTTP for the initial server render, then attach realtime updates on the client.
   ::::
 
   ::::u-page-card
@@ -109,21 +98,10 @@ Everything you need to build reactive, type-safe applications with Convex.
   icon: i-lucide-braces
   ---
   #title
-  End-to-end types
+  Typed APIs
 
   #description
-  Your schema flows all the way to your `<template>`. Full autocomplete and type checking everywhere.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-hard-drive
-  ---
-  #title
-  File storage
-
-  #description
-  Upload files and generate reactive URLs. Nuxt module adds Cloudflare R2 support on top.
+  Consume Convex generated types directly from your app code.
   ::::
 
   ::::u-page-card
@@ -131,10 +109,21 @@ Everything you need to build reactive, type-safe applications with Convex.
   icon: i-lucide-list
   ---
   #title
-  Pagination
+  Pagination helpers
 
   #description
-  Built-in infinite scroll with realtime updates across all loaded pages.
+  Load page-by-page feeds with reset and incremental load helpers.
+  ::::
+
+  ::::u-page-card
+  ---
+  icon: i-lucide-hard-drive
+  ---
+  #title
+  Storage helpers
+
+  #description
+  Upload files to Convex storage or Cloudflare R2, depending on your setup.
   ::::
 
   ::::u-page-card
@@ -142,116 +131,76 @@ Everything you need to build reactive, type-safe applications with Convex.
   icon: i-lucide-lock
   ---
   #title
-  Auth integration
+  Auth primitives
 
   #description
-  Built-in Better Auth support, or bring your own auth provider.
+  Track auth state in the shared runtime and wire Nuxt-side auth integrations when needed.
   ::::
   :::
 ::
 
 ::u-page-section{orientation="vertical"}
 #title
-How it works
+Read by intent
 
-  :::u-page-grid{class="max-w-4xl mx-auto !grid-cols-1 sm:!grid-cols-3 !gap-6"}
+  :::u-page-grid{class="max-w-4xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-4"}
   ::::u-page-card
   ---
-  icon: i-lucide-database
+  icon: i-lucide-rocket
+  to: /getting-started
   ---
   #title
-  1. Define your backend
+  First successful run
 
   #description
-  Write schema and functions in `convex/`. Types are generated automatically.
+  Start here if you are new to the repo and want the shortest path to a working setup.
   ::::
 
   ::::u-page-card
   ---
-  icon: i-lucide-download
+  icon: i-lucide-puzzle
+  to: /convex-patterns
   ---
   #title
-  2. Install the SDK
+  Shared backend patterns
 
   #description
-  Add the Nuxt module or the Vue plugin. One command, realtime wired for you.
+  Learn the Convex schema, function, and SSR assumptions both tracks rely on.
   ::::
 
   ::::u-page-card
   ---
-  icon: i-lucide-code
+  icon: i-lucide-book-open-text
+  to: /api-reference
   ---
   #title
-  3. Use composables
+  API reference
 
   #description
-  Call `useConvexQuery` and friends. Data flows realtime, fully typed.
-  ::::
-  :::
-::
-
-::u-page-section{orientation="vertical" class="landing-section-alt"}
-#title
-What the Nuxt module adds
-
-#description
-Everything in the Vue package, plus framework-level integrations.
-
-  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-4"}
-  ::::u-page-card
-  ---
-  icon: i-lucide-hash
-  ---
-  #title
-  Auto-imports
-
-  #description
-  All composables and helpers are auto-imported. No manual setup needed.
+  Look up exact config keys, aliases, composable signatures, and component behavior.
   ::::
 
   ::::u-page-card
   ---
-  icon: i-lucide-cloud
+  icon: i-lucide-life-buoy
+  to: /troubleshooting
   ---
   #title
-  Cloudflare R2
+  Troubleshooting
 
   #description
-  Upload files to Cloudflare R2 with metadata synced through Convex.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-shield
-  ---
-  #title
-  Better Auth
-
-  #description
-  Auth state wired into the Convex client. Drop-in setup with any Better Auth provider.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-zap
-  ---
-  #title
-  Zero config
-
-  #description
-  Detects your Convex project, registers everything, and configures SSR. Just add the module.
+  Diagnose missing generated files, auth-sensitive SSR issues, storage setup, and connection problems.
   ::::
   :::
 ::
 
 ::u-page-section{orientation="vertical"}
 #title
-Ready to build?
+Next step
 
 #description
-Pick your framework and start shipping realtime features in minutes.
+Open the getting-started page to choose the right package and verify your first query.
 
 #links
-:u-button{to="/getting-started" size="xl" label="Nuxt quickstart" trailing-icon="i-lucide-arrow-right"}
-:u-button{to="/vue-guide/installation" size="xl" color="neutral" variant="outline" label="Vue quickstart" trailing-icon="i-lucide-arrow-right"}
+:u-button{to="/getting-started" size="xl" label="Open getting started" trailing-icon="i-lucide-arrow-right"}
 ::

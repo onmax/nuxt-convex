@@ -1,63 +1,40 @@
 ---
 title: Getting Started
-description: Choose between the Nuxt module and the standalone Vue package, then generate the Convex API your app consumes.
+description: Choose the Nuxt or Vue track, confirm the shared Convex prerequisites, and route yourself to the right installation guide.
 ---
 
-Start here when you are choosing between the two runtime tracks. `nuxt-convex` is the Nuxt wrapper, while `@onmax/convex-vue` is the standalone Vue package and shared lower layer.
+Use this section when you are setting up the repo for the first time. The goal is to get you to the correct package, confirm the shared Convex requirements, and then send you to the shortest working path.
 
-::u-page-section{orientation="vertical"}
-#title
-Choose your runtime
+## Choose your app runtime
 
-:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-6"}
-::::u-page-card
----
-icon: i-simple-icons-nuxtdotjs
-spotlight: true
-to: /nuxt-module
----
-#title
-Start with the Nuxt module
+Pick one track and stay on it for setup:
 
-#description
-Auto-imports, SSR, file storage, and auth built in.
-::::
-
-::::u-page-card
----
-icon: i-simple-icons-vuedotjs
-spotlight: true
-to: /vue-guide
----
-#title
-Start with the Vue package
-
-#description
-Standalone Vue 3 with full plugin control.
-::::
-:::
-::
+- [Nuxt track](/nuxt) if your app runs on Nuxt and you want `nuxt-convex`
+- [Vue track](/vue) if your app runs on standalone Vue 3 and you want `@onmax/convex-vue`
 
 ## Shared prerequisites
 
-Both tracks assume the same Convex backend workflow.
+Both tracks assume the same Convex backend basics.
 
 ::steps
 
 ### Create or connect a Convex project
 
-Run `npx convex dev` in your app to create a deployment or connect an existing project.
+Run `npx convex dev` in the app that owns your `convex/` directory.
 
-### Keep the generated files in your Convex directory
+### Keep the generated API in sync
 
-The docs reference generated imports such as `./_generated/server` and `#convex/api`. Those only exist after Convex has generated types for your project.
+The docs use generated imports such as `convex/_generated/api`, `convex/_generated/server`, and `#convex/api`. Those imports only exist after Convex has generated types for your project.
 
-### Set a deployment URL for the frontend
+### Decide where the deployment URL comes from
 
-Both packages read a Convex deployment URL. The Nuxt module can read `CONVEX_URL` or `NUXT_PUBLIC_CONVEX_URL`. The Vue plugin receives the URL through its install options.
+The Nuxt module can read `convex.url`, `CONVEX_URL`, or `NUXT_PUBLIC_CONVEX_URL`. The standalone Vue plugin receives the URL through its install options.
+
 ::
 
 ## What both tracks share
+
+Both packages expose the same shared data-layer concepts:
 
 - `useConvexQuery`
 - `useConvexQueries`
@@ -67,13 +44,20 @@ Both packages read a Convex deployment URL. The Nuxt module can read `CONVEX_URL
 - `useConvexAuth`
 - `useConvexConnectionState`
 
-Optional capabilities stay on explicit Vue entrypoints:
+The advanced Vue entrypoint adds:
 
-- `@onmax/convex-vue/storage` for `useConvexStorage` and `useConvexUpload`
-- `@onmax/convex-vue/advanced` for `useConvexController`, `useConvexClient`, and `useConvexHttpClient`
+- `useConvexController`
+- `createConvexVueController`
+- `useConvexClient`
+- `useConvexHttpClient`
 
-In Nuxt, the module exposes that same core through `#convex`, `#convex/advanced`, optional `#convex/storage`, and Nuxt auto-imports.
+The storage entrypoint adds:
 
-## Next steps
+- `useConvexStorage`
+- `useConvexUpload`
 
-Pick a track above, then follow its installation guide to set up your first project.
+## Open the right installation guide
+
+- Read [Installation](/getting-started/installation) if you still need to choose between Nuxt and Vue at install time
+- Read [Nuxt](/nuxt) if you already know you want the Nuxt module
+- Read [Vue](/vue) if you already know you want the standalone Vue package
