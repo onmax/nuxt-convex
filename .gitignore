@@ -3,6 +3,7 @@ dist
 .nuxt
 .output
 *.log
+*.tgz
 .env
 .env.*
 test/fixtures/**/node_modules
