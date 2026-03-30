@@ -1,0 +1,88 @@
+<script setup lang="ts">
+import type { ContentNavigationItem, PageCollections } from '@nuxt/content'
+import * as nuxtUiLocales from '@nuxt/ui/locale'
+import { transformNavigation } from './utils/navigation'
+
+const { seo } = useAppConfig()
+const site = useSiteConfig()
+const route = useRoute()
+const { locale, locales, isEnabled, switchLocalePath } = useDocusI18n()
+const { isEnabled: isAssistantEnabled, panelWidth: assistantPanelWidth, shouldPushContent } = useAssistant()
+const { activeModule } = useDocsModules()
+
+const nuxtUiLocale = computed(() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales] || nuxtUiLocales.en)
+const lang = computed(() => nuxtUiLocale.value.code)
+const dir = computed(() => nuxtUiLocale.value.dir)
+const collectionName = computed(() => isEnabled.value ? `docs_${locale.value}` : 'docs')
+const hasDocsSubheader = computed(() => route.meta.layout === 'docs' && activeModule.value !== null)
+
+useHead({
+  meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }],
+  link: [{ rel: 'icon', href: '/favicon.ico' }],
+  htmlAttrs: {
+    lang,
+    dir,
+  },
+})
+
+useSeoMeta({
+  titleTemplate: seo.titleTemplate,
+  title: seo.title,
+  description: seo.description,
+  ogSiteName: site.name,
+  twitterCard: 'summary_large_image',
+})
+
+if (isEnabled.value) {
+  const defaultLocale = useRuntimeConfig().public.i18n.defaultLocale!
+  onMounted(() => {
+    const currentLocale = route.path.split('/')[1]
+    if (!locales.some(locale => locale.code === currentLocale)) {
+      return navigateTo(switchLocalePath(defaultLocale) as string)
+    }
+  })
+}
+
+const { data: navigation } = await useAsyncData(() => `navigation_${collectionName.value}`, () => queryCollectionNavigation(collectionName.value as keyof PageCollections), {
+  transform: (data: ContentNavigationItem[]) => transformNavigation(data, isEnabled.value, locale.value),
+  watch: [locale],
+})
+const { data: files } = useLazyAsyncData(`search_${collectionName.value}`, () => queryCollectionSearchSections(collectionName.value as keyof PageCollections), {
+  server: false,
+  watch: [locale],
+})
+
+provide('navigation', navigation)
+</script>
+
+<template>
+  <UApp :locale="nuxtUiLocale">
+    <NuxtLoadingIndicator color="var(--ui-primary)" />
+
+    <div
+      class="transition-[margin-right] duration-200 ease-linear will-change-[margin-right]"
+      :class="{ 'docs-app-has-subheader': hasDocsSubheader }"
+      :style="{ marginRight: shouldPushContent ? `${assistantPanelWidth}px` : '0' }"
+    >
+      <AppHeader v-if="$route.meta.header !== false" />
+
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+
+      <AppFooter v-if="$route.meta.footer !== false" />
+    </div>
+
+    <ClientOnly>
+      <LazyUContentSearch
+        :files="files"
+        :navigation="navigation"
+      />
+
+      <template v-if="isAssistantEnabled">
+        <LazyAssistantPanel />
+        <LazyAssistantFloatingInput />
+      </template>
+    </ClientOnly>
+  </UApp>
+</template>
