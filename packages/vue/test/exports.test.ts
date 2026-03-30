@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-describe('@onmax/convex-vue exports', async () => {
+describe('vue-convex exports', async () => {
   it('matches the intended entrypoint surface', async () => {
     const rootExports = await import('../dist/index.mjs')
     const advancedExports = await import('../dist/advanced.mjs')

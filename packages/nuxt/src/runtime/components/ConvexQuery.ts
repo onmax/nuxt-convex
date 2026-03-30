@@ -1,6 +1,6 @@
-import type { UseConvexQueryOptions } from '@onmax/convex-vue'
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
 import type { PropType } from 'vue'
+import type { UseConvexQueryOptions } from 'vue-convex'
 import { useConvexQuery } from '#convex'
 import { computed, defineComponent } from 'vue'
 

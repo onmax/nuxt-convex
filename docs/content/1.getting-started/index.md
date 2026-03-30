@@ -10,7 +10,7 @@ Use this section when you are setting up the repo for the first time. The goal i
 Pick one track and stay on it for setup:
 
 - [Nuxt track](/nuxt) if your app runs on Nuxt and you want `nuxt-convex`
-- [Vue track](/vue) if your app runs on standalone Vue 3 and you want `@onmax/convex-vue`
+- [Vue track](/vue) if your app runs on standalone Vue 3 and you want `vue-convex`
 
 ## Shared prerequisites
 

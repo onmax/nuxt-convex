@@ -1,9 +1,9 @@
-import type { UseConvexUploadReturn } from '@onmax/convex-vue/storage'
 import type { ComputedRef, ShallowRef } from 'vue'
+import type { UseConvexUploadReturn } from 'vue-convex/storage'
 import type { StorageId, UploadDoc, UploadId } from '../lib/model'
-import { useConvexMutation, useConvexQuery } from '@onmax/convex-vue'
-import { useConvexUpload } from '@onmax/convex-vue/storage'
 import { computed, shallowRef } from 'vue'
+import { useConvexMutation, useConvexQuery } from 'vue-convex'
+import { useConvexUpload } from 'vue-convex/storage'
 import { api } from '../lib/convex'
 
 interface UseUploadWorkspaceReturn {

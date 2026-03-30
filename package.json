@@ -20,12 +20,12 @@
     "lint:workspace:fix": "eslint . --fix --ignore-pattern docs",
     "lint:docs": "eslint docs/app docs/nuxt.config.ts",
     "lint:docs:fix": "eslint docs/app docs/nuxt.config.ts --fix",
-    "typecheck": "pnpm --filter @onmax/convex-vue typecheck && pnpm --filter nuxt-convex typecheck",
-    "test": "pnpm --filter @onmax/convex-vue test && pnpm --filter nuxt-convex test",
+    "typecheck": "pnpm --filter vue-convex typecheck && pnpm --filter nuxt-convex typecheck",
+    "test": "pnpm --filter vue-convex test && pnpm --filter nuxt-convex test",
     "validate:packages": "pnpm build && publint packages/vue && publint packages/nuxt",
-    "preview:packages": "mkdir -p .artifacts && pnpm --filter @onmax/convex-vue pack --pack-destination .artifacts && pnpm --filter nuxt-convex pack --pack-destination .artifacts",
+    "preview:packages": "mkdir -p .artifacts && pnpm --filter vue-convex pack --pack-destination .artifacts && pnpm --filter nuxt-convex pack --pack-destination .artifacts",
     "prepack": "pnpm validate:packages",
-    "publish:packages": "pnpm --filter @onmax/convex-vue publish --no-git-checks --provenance --access public && pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public",
+    "publish:packages": "pnpm --filter vue-convex publish --no-git-checks --provenance --access public && pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public",
     "release": "bumpp && git push --follow-tags"
   },
   "devDependencies": {

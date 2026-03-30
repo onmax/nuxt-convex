@@ -7,9 +7,9 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@onmax/convex-vue": "workspace:*",
     "convex": "catalog:convex",
-    "vue": "catalog:nuxt"
+    "vue": "catalog:nuxt",
+    "vue-convex": "workspace:*"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "catalog:vite",

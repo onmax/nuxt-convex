@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-pnpm
         with:
-          install-command: pnpm install --filter @onmax/convex-vue... --filter nuxt-convex...
+          install-command: pnpm install --filter vue-convex... --filter nuxt-convex...
       - run: pnpm exec eslint . --ignore-pattern docs
       - run: pnpm build
       - run: pnpm typecheck
@@ -30,6 +30,6 @@ jobs:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup-pnpm
         with:
-          install-command: pnpm install --filter @onmax/convex-vue... --filter nuxt-convex...
+          install-command: pnpm install --filter vue-convex... --filter nuxt-convex...
       - run: pnpm validate:packages
       - run: pnpm preview:packages

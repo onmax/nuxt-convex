@@ -36,14 +36,14 @@ function search(pattern: string): string {
 
 describe('docs contract', () => {
   it('does not document storage helpers on the root Vue entrypoint', () => {
-    expect(search(`import { useConvexStorage } from '@onmax/convex-vue'`)).toBe('')
-    expect(search(`import { useConvexUpload } from '@onmax/convex-vue'`)).toBe('')
+    expect(search(`import { useConvexStorage } from 'vue-convex'`)).toBe('')
+    expect(search(`import { useConvexUpload } from 'vue-convex'`)).toBe('')
   })
 
   it('does not document advanced helpers on the root Vue entrypoint', () => {
-    expect(search(`import { useConvexClient } from '@onmax/convex-vue'`)).toBe('')
-    expect(search(`import { useConvexHttpClient } from '@onmax/convex-vue'`)).toBe('')
-    expect(search(`import { useConvexController } from '@onmax/convex-vue'`)).toBe('')
-    expect(search(`import { createConvexVueController } from '@onmax/convex-vue'`)).toBe('')
+    expect(search(`import { useConvexClient } from 'vue-convex'`)).toBe('')
+    expect(search(`import { useConvexHttpClient } from 'vue-convex'`)).toBe('')
+    expect(search(`import { useConvexController } from 'vue-convex'`)).toBe('')
+    expect(search(`import { createConvexVueController } from 'vue-convex'`)).toBe('')
   })
 })

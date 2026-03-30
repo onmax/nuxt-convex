@@ -285,7 +285,7 @@ function resolveConvexVueImport(
   if (existsSync(localSourceEntry) || existsSync(`${localSourceEntry}.ts`) || existsSync(`${localSourceEntry}.js`))
     return toImportPath(fromDir, localSourceEntry)
 
-  return entry === 'index' ? '@onmax/convex-vue' : `@onmax/convex-vue/${entry}`
+  return entry === 'index' ? 'vue-convex' : `vue-convex/${entry}`
 }
 
 async function scaffoldStorageFunctions(nuxt: Nuxt): Promise<void> {

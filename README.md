@@ -5,7 +5,7 @@ Realtime Convex helpers for Vue 3 and Nuxt.
 This repo ships two packages that share the same core runtime:
 
 - `nuxt-convex` for Nuxt apps that want module setup, auto-imports, `#convex/*` aliases, storage scaffolding, and Nuxt-side integrations
-- `@onmax/convex-vue` for standalone Vue 3 apps that want direct plugin setup and full control over runtime wiring
+- `vue-convex` for standalone Vue 3 apps that want direct plugin setup and full control over runtime wiring
 
 ## Start here
 
@@ -28,7 +28,7 @@ It adds:
 - Nuxt-side file storage scaffolding
 - Nuxt-side Better Auth and Cloudflare R2 integration points
 
-### `@onmax/convex-vue`
+### `vue-convex`
 
 Use this package when you want to install the Vue plugin directly in a Vue 3 app.
 
@@ -42,7 +42,7 @@ It gives you:
 ## Workspace layout
 
 - [`packages/nuxt`](/Users/maxi/nuxt/convex/packages/nuxt) publishes `nuxt-convex`
-- [`packages/vue`](/Users/maxi/nuxt/convex/packages/vue) publishes `@onmax/convex-vue`
+- [`packages/vue`](/Users/maxi/nuxt/convex/packages/vue) publishes `vue-convex`
 - [`docs`](/Users/maxi/nuxt/convex/docs) contains the public documentation site
 - [`playground`](/Users/maxi/nuxt/convex/playground) is the Nuxt reference app used to exercise the module
 - [`examples/vue`](/Users/maxi/nuxt/convex/examples/vue) is the standalone Vue example

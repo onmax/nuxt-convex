@@ -1,4 +1,4 @@
-import type { ConvexVueOptions } from '@onmax/convex-vue'
+import type { ConvexVueOptions } from 'vue-convex'
 import { convexVue } from '#convex'
 import { defineNuxtPlugin, useRuntimeConfig } from '#imports'
 import { getStorageRefs } from '#nuxt-convex/storage-refs-runtime'

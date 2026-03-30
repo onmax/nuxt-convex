@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useConvexConnectionState } from '@onmax/convex-vue'
 import { computed } from 'vue'
+import { useConvexConnectionState } from 'vue-convex'
 import TaskWorkspace from './components/TaskWorkspace.vue'
 import UploadWorkspace from './components/UploadWorkspace.vue'
 import { convexUrl, demoUserId } from './lib/convex'
@@ -25,7 +25,7 @@ const connectionLabel = computed(() => {
           Prove the Vue package on its own.
         </h1>
         <p class="hero-panel__lede">
-          This Vite app uses the supported `@onmax/convex-vue` entrypoints directly: root reads and writes for tasks, plus the storage feature entrypoint for uploads and reactive file URLs.
+          This Vite app uses the supported `vue-convex` entrypoints directly: root reads and writes for tasks, plus the storage feature entrypoint for uploads and reactive file URLs.
         </p>
       </div>
 

@@ -3,7 +3,7 @@ title: Guide
 description: Learn the shared Vue runtime for Convex: plugin setup, query and mutation patterns, pagination, storage, auth, and advanced runtime control.
 ---
 
-This section is the task-focused guide for `@onmax/convex-vue`. Use it when you want to build with the shared Vue runtime or understand the behavior that also sits underneath the Nuxt module.
+This section is the task-focused guide for `vue-convex`. Use it when you want to build with the shared Vue runtime or understand the behavior that also sits underneath the Nuxt module.
 
 ## Read this section in order if you are new
 

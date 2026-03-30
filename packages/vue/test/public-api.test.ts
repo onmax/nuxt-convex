@@ -16,7 +16,7 @@ const advanced = await import('../src/advanced')
 const root = await import('../src/index')
 const storage = await import('../src/storage')
 
-describe('@onmax/convex-vue public API', () => {
+describe('vue-convex public API', () => {
   let originalFetch: typeof globalThis.fetch | undefined
 
   beforeEach(() => {

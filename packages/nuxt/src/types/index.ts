@@ -13,15 +13,15 @@ export type {
   UseConvexPaginatedQueryReturn,
   UseConvexQueryOptions,
   UseConvexQueryReturn,
-} from '@onmax/convex-vue'
+} from 'vue-convex'
 export type {
   ConvexControllerConnectOptions,
   ConvexControllerStatus,
   ConvexVueController,
-} from '@onmax/convex-vue/advanced'
+} from 'vue-convex/advanced'
 export type {
   ConvexStorageOptions,
   ConvexStorageReturn,
   UseConvexUploadOptions,
   UseConvexUploadReturn,
-} from '@onmax/convex-vue/storage'
+} from 'vue-convex/storage'

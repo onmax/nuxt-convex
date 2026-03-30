@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { UploadDoc, UploadId } from '../lib/model'
-import { useConvexStorage } from '@onmax/convex-vue/storage'
 import { computed } from 'vue'
+import { useConvexStorage } from 'vue-convex/storage'
 import { formatRelativeTime } from '../lib/format'
 
 const props = defineProps<{

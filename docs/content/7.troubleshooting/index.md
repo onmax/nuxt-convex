@@ -1,6 +1,6 @@
 ---
 title: Troubleshooting
-description: Diagnose common setup and runtime issues in nuxt-convex and @onmax/convex-vue.
+description: Diagnose common setup and runtime issues in nuxt-convex and vue-convex.
 ---
 
 Use this page when the docs path is correct but the runtime still is not behaving the way you expect.

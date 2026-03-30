@@ -43,7 +43,7 @@ export default defineNuxtConfig({
     description: 'Convex integration docs for Nuxt and Vue.',
     full: {
       title: 'Nuxt Convex',
-      description: 'Reference and guides for nuxt-convex and @onmax/convex-vue.',
+      description: 'Reference and guides for nuxt-convex and vue-convex.',
     },
   },
 

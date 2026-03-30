@@ -1,7 +1,7 @@
 import type { ComputedRef, ShallowRef } from 'vue'
 import type { TaskDoc, TaskId } from '../lib/model'
-import { useConvexMutation, useConvexQuery } from '@onmax/convex-vue'
 import { computed, shallowRef } from 'vue'
+import { useConvexMutation, useConvexQuery } from 'vue-convex'
 import { api } from '../lib/convex'
 
 interface UseTaskWorkspaceReturn {

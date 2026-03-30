@@ -260,15 +260,15 @@ importers:
 
   examples/vue:
     dependencies:
-      '@onmax/convex-vue':
-        specifier: workspace:*
-        version: link:../../packages/vue
       convex:
         specifier: catalog:convex
         version: 1.34.0(react@19.2.3)
       vue:
         specifier: catalog:nuxt
         version: 3.5.30(typescript@5.9.3)
+      vue-convex:
+        specifier: workspace:*
+        version: link:../../packages/vue
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: catalog:vite
@@ -285,9 +285,6 @@ importers:
       '@nuxt/kit':
         specifier: catalog:prod
         version: 4.4.2(magicast@0.5.2)
-      '@onmax/convex-vue':
-        specifier: workspace:*
-        version: link:../vue
       better-auth:
         specifier: '>=1.4.9 <1.6.0'
         version: 1.4.9(432b3a0ee69ef6278a4b50ecead715bb)
@@ -303,6 +300,9 @@ importers:
       pathe:
         specifier: catalog:prod
         version: 2.0.3
+      vue-convex:
+        specifier: workspace:*
+        version: link:../vue
     devDependencies:
       ofetch:
         specifier: 'catalog:'

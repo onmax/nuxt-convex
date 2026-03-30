@@ -8,7 +8,7 @@ function run(args) {
   })
 }
 
-run(['--filter', '@onmax/convex-vue', 'build'])
+run(['--filter', 'vue-convex', 'build'])
 run(['--filter', 'nuxt-convex', 'build'])
 
 if (process.env.WORKERS_CI) {

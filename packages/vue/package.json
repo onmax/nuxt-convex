@@ -1,5 +1,5 @@
 {
-  "name": "@onmax/convex-vue",
+  "name": "vue-convex",
   "type": "module",
   "version": "0.0.6",
   "description": "Vue composables and plugin for Convex",

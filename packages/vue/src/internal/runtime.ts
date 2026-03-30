@@ -50,7 +50,7 @@ export interface ConvexRuntimeContext {
   authStateRef: ShallowRef<ConvexAuthState>
 }
 
-export const CONVEX_VUE_KEY: InjectionKey<ConvexRuntimeContext> = Symbol('onmax-convex-vue')
+export const CONVEX_VUE_KEY: InjectionKey<ConvexRuntimeContext> = Symbol('vue-convex')
 
 function resolveOptions(options: ConvexVueOptions = {}): ResolvedConvexVueOptions {
   return {

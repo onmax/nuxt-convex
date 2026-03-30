@@ -48,12 +48,12 @@ describe('docs contract', () => {
     expect(search('#convex/storage-refs')).toBe('')
   })
 
-  it('does not recommend direct @onmax/convex-vue runtime imports in Nuxt-facing docs', () => {
+  it('does not recommend direct vue-convex runtime imports in Nuxt-facing docs', () => {
     const nuxtModuleDoc = read('docs/content/2.nuxt-module/index.md')
     const virtualModulesDoc = read('docs/content/5.api-reference/2.virtual-modules.md')
 
-    expect(nuxtModuleDoc).not.toContain(`from '@onmax/convex-vue`)
-    expect(virtualModulesDoc).not.toContain(`from '@onmax/convex-vue`)
+    expect(nuxtModuleDoc).not.toContain(`from 'vue-convex`)
+    expect(virtualModulesDoc).not.toContain(`from 'vue-convex`)
   })
 
   it('documents the public Nuxt alias matrix consistently', () => {

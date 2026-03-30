@@ -59,7 +59,7 @@ const {
 
     <div class="workspace-card__status-row">
       <p class="workspace-card__status">
-        {{ uploadState.isUploading.value ? `Upload progress ${uploadState.progress.value}%` : 'Uploads flow through @onmax/convex-vue/storage and save metadata through a mutation.' }}
+        {{ uploadState.isUploading.value ? `Upload progress ${uploadState.progress.value}%` : 'Uploads flow through vue-convex/storage and save metadata through a mutation.' }}
       </p>
     </div>
 

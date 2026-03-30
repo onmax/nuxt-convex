@@ -3,6 +3,7 @@ name: release
 permissions:
   id-token: write
   contents: write
+  actions: read
 
 on:
   push:
@@ -18,22 +19,31 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup-pnpm
         with:
-          install-command: pnpm install --filter @onmax/convex-vue... --filter nuxt-convex...
+          install-command: pnpm install --filter vue-convex... --filter nuxt-convex...
+          registry-url: 'https://registry.npmjs.org'
       - run: pnpm validate:packages
+
+      - name: Determine npm tag
+        id: npm-tag
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          if [[ "$TAG" == *"-alpha"* ]]; then
+            echo "tag=alpha" >> $GITHUB_OUTPUT
+          elif [[ "$TAG" == *"-beta"* ]]; then
+            echo "tag=beta" >> $GITHUB_OUTPUT
+          elif [[ "$TAG" == *"-rc"* ]]; then
+            echo "tag=rc" >> $GITHUB_OUTPUT
+          else
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          fi
 
       - name: GitHub Release
         run: pnpm dlx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish @onmax/convex-vue
-        env:
-          NPM_CONFIG_PROVENANCE: true
-          NPM_CONFIG_ACCESS: public
-        run: pnpm --filter @onmax/convex-vue publish --no-git-checks --provenance --access public
+      - name: Publish vue-convex
+        run: pnpm --filter vue-convex publish --no-git-checks --provenance --access public --tag ${{ steps.npm-tag.outputs.tag }}
 
       - name: Publish nuxt-convex
-        env:
-          NPM_CONFIG_PROVENANCE: true
-          NPM_CONFIG_ACCESS: public
-        run: pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public
+        run: pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public --tag ${{ steps.npm-tag.outputs.tag }}

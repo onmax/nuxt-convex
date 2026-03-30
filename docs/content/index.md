@@ -22,7 +22,7 @@ Build realtime apps with typed queries, mutations, pagination, storage helpers, 
   pnpm add nuxt-convex convex
   ```
   ```bash [Vue]
-  pnpm add @onmax/convex-vue convex
+  pnpm add vue-convex convex
   ```
   :::
 ::
@@ -58,7 +58,7 @@ Both packages share the same Convex runtime model. Pick the entrypoint that matc
   Vue track
 
   #description
-  Use `@onmax/convex-vue` directly in a Vue 3 app when you want explicit plugin setup and full runtime control.
+  Use `vue-convex` directly in a Vue 3 app when you want explicit plugin setup and full runtime control.
   ::::
   :::
 ::

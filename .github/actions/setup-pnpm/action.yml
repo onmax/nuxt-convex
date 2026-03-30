@@ -10,6 +10,10 @@ inputs:
     description: Command used to install dependencies
     required: false
     default: pnpm install
+  registry-url:
+    description: npm registry URL for OIDC provenance
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -26,6 +30,7 @@ runs:
       with:
         node-version: ${{ inputs.node-version }}
         cache: pnpm
+        registry-url: ${{ inputs.registry-url || '' }}
 
     - shell: bash
       run: ${{ inputs.install-command }}

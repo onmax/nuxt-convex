@@ -1,6 +1,6 @@
-import { convexVue } from '@onmax/convex-vue'
-import { convexVueStorage } from '@onmax/convex-vue/storage'
 import { createApp } from 'vue'
+import { convexVue } from 'vue-convex'
+import { convexVueStorage } from 'vue-convex/storage'
 import App from './App.vue'
 import { convexUrl, storageApi } from './lib/convex'
 import './style.css'

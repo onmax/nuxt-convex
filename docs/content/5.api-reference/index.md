@@ -1,6 +1,6 @@
 ---
 title: API Reference
-description: Look up the public API surface for nuxt-convex and @onmax/convex-vue.
+description: Look up the public API surface for nuxt-convex and vue-convex.
 ---
 
 Use this section for precise lookup. These pages document the public config keys, aliases, composables, components, and feature entrypoints that ship from this repo.

@@ -1,6 +1,6 @@
 ---
 title: Vue
-description: Use @onmax/convex-vue directly in a Vue 3 app for shared Convex queries, mutations, pagination, auth state, storage, and advanced runtime control.
+description: Use vue-convex directly in a Vue 3 app for shared Convex queries, mutations, pagination, auth state, storage, and advanced runtime control.
 navigation: false
 ---
 

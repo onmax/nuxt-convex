@@ -2,7 +2,7 @@
   "name": "nuxt-convex",
   "type": "module",
   "version": "0.0.6",
-  "description": "Nuxt module for Convex powered by @onmax/convex-vue",
+  "description": "Nuxt module for Convex powered by vue-convex",
   "author": "onmax",
   "license": "MIT",
   "homepage": "https://github.com/onmax/nuxt-convex#readme",
@@ -71,10 +71,10 @@
   },
   "dependencies": {
     "@nuxt/kit": "catalog:prod",
-    "@onmax/convex-vue": "workspace:*",
     "consola": "catalog:prod",
     "defu": "catalog:prod",
-    "pathe": "catalog:prod"
+    "pathe": "catalog:prod",
+    "vue-convex": "workspace:*"
   },
   "devDependencies": {
     "ofetch": "catalog:",

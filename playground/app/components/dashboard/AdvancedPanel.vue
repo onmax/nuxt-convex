@@ -52,7 +52,7 @@ async function runHttpQuery() {
 const optimisticTitle = ref('')
 const { mutate: addTaskOptimistic, isPending: isOptimisticAdding } = useConvexMutation(api.tasks.add, {
   optimisticUpdate: async (localStore, args) => {
-    const { insertAtTop } = await import('@onmax/convex-vue')
+    const { insertAtTop } = await import('vue-convex')
     insertAtTop({
       paginatedQuery: api.tasks.listPaginated,
       argsToMatch: { userId: args.userId },
