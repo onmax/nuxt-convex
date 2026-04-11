@@ -41,11 +41,11 @@ It gives you:
 
 ## Workspace layout
 
-- [`packages/nuxt`](/Users/maxi/nuxt/convex/packages/nuxt) publishes `nuxt-convex`
-- [`packages/vue`](/Users/maxi/nuxt/convex/packages/vue) publishes `vue-convex`
-- [`docs`](/Users/maxi/nuxt/convex/docs) contains the public documentation site
-- [`playground`](/Users/maxi/nuxt/convex/playground) is the Nuxt reference app used to exercise the module
-- [`examples/vue`](/Users/maxi/nuxt/convex/examples/vue) is the standalone Vue example
+- [`packages/nuxt`](/packages/nuxt) publishes `nuxt-convex`
+- [`packages/vue`](/packages/vue) publishes `vue-convex`
+- [`docs`](/docs) contains the public documentation site
+- [`playground`](/playground) is the Nuxt reference app used to exercise the module
+- [`examples/vue`](/examples/vue) is the standalone Vue example
 
 ## Development
 
