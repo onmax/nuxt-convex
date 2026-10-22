@@ -1,6 +1,6 @@
 ---
 title: Nuxt
-description: Use nuxt-convex in a Nuxt app for module setup, auto-imports, virtual modules, storage scaffolding, and Nuxt-side integrations.
+description: Use nuxt-convex in a Nuxt app for server-rendered live queries, authenticated SSR, server helpers, auto-imports, storage and integrations.
 navigation: false
 ---
 
@@ -26,7 +26,7 @@ export default defineNuxtConfig({
 
 ### Query from a page
 
-Run `npx convex dev` to generate `convex/_generated/`, set `CONVEX_URL` in `.env`, and await your first query.
+Run `npx convex dev` to create a deployment and generate `convex/_generated/`. The module reads the URL it writes to `.env.local`, so you can await your first query right away.
 
 ```vue [app/pages/index.vue]
 <script setup lang="ts">
@@ -42,45 +42,44 @@ const { data: tasks } = await useConvexQuery(api.tasks.list)
 
 `nuxt-convex` owns the Nuxt-facing contract:
 
-- module registration
-- `#convex/*` aliases
-- auto-imports
-- generated API access through `#convex/api`
-- optional storage scaffolding
-- Nuxt-side Better Auth and Cloudflare R2 integrations
+- server rendering of awaited queries, hydrated from the payload
+- the request's user on the server, through Better Auth or your own `convex:token` hook
+- server helpers for Nitro routes, such as `serverConvexQuery` and `requireConvexAuth`
+- `#convex/*` aliases, generated API access through `#convex/api`, and auto-imports
+- optional storage scaffolding, and the Better Auth and Cloudflare R2 integrations
 
-For shared composable behavior such as queries, mutations, pagination, and auth state, read the [Vue track](/vue). In a Nuxt app, keep the Nuxt import paths and aliases.
+The composables themselves (queries, mutations, pagination, auth state) are shared with plain Vue; their guides live in the [Vue track](/vue). In a Nuxt app, keep the auto-imports and `#convex/*` aliases.
 
 ## Start with the Nuxt path
 
-Open the page that matches your job: install the module, configure its public surface, or add a Nuxt-specific integration.
+Open the page that matches your job.
 
 ::card-group
 :::card
 ---
-icon: i-lucide-download
-to: /getting-started/installation
-title: Install the module
+icon: i-lucide-server
+to: /nuxt-module/ssr-and-hydration
+title: Render on the server
 ---
-Add `nuxt-convex`, generate the API, and verify your first query.
+How awaited queries render, hydrate, and stay live.
 :::
 
 :::card
 ---
-icon: i-lucide-settings
-to: /nuxt-module
-title: Configure the Nuxt layer
+icon: i-lucide-shield-check
+to: /nuxt-module/authenticated-ssr
+title: Render signed-in pages
 ---
-Learn the module config, aliases, auto-imports, storage scaffolding, and wrapper-specific behavior.
+Resolve the user's token on the server with Better Auth or your own provider.
 :::
 
 :::card
 ---
-icon: i-lucide-plug
-to: /integrations
-title: Add integrations
+icon: i-lucide-route
+to: /nuxt-module/server-routes
+title: Call Convex from server routes
 ---
-Wire Better Auth or Cloudflare R2 through the supported Nuxt-side entrypoints.
+Run queries, mutations and actions as the request's user from Nitro.
 :::
 
 :::card
@@ -89,7 +88,7 @@ icon: i-lucide-book-open-text
 to: /api-reference/module-configuration
 title: Look up the public API
 ---
-Check config keys, aliases, components, and the Nuxt-only upload helper.
+Check config keys, environment variables, aliases and runtime config.
 :::
 ::
 
@@ -106,4 +105,4 @@ The Nuxt module does not replace the shared data layer. These behaviors still co
 
 ## Next step
 
-Open [Nuxt Module](/nuxt-module) for the wrapper contract, or go straight to [Integrations](/integrations) if you already have the core module installed.
+Open [Nuxt Module](/nuxt-module) for every guide, or [Deployment](/nuxt-module/deployment) when you're ready to ship.

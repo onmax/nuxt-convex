@@ -8,7 +8,7 @@ Both frontend tracks in this repo assume the same Convex backend foundations:
 - a schema that matches the data you query from the client
 - generated API files created by `npx convex dev`
 - public queries, mutations, and actions with predictable boundaries
-- a clear distinction between SSR-friendly reads and client-only realtime flows
+- queries that can render on the server and then stay live over the WebSocket
 
 Use this section to build the mental model behind the framework-specific guides.
 
@@ -39,7 +39,7 @@ icon: i-lucide-radio
 to: /convex-patterns/realtime-and-ssr
 title: 'Reason about realtime and SSR'
 ---
-Understand which reads can prefetch on the server and which flows stay client-only.
+Follow a query from the server render to the WebSocket subscription.
 :::
 ::
 

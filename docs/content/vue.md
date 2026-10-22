@@ -70,7 +70,7 @@ icon: i-lucide-search
 to: /vue-guide/queries
 title: Read data
 ---
-Use reactive query arguments, SSR-aware reads, and skip logic.
+Use reactive arguments, `status` and errors, auth modes and skip logic.
 :::
 
 :::card
@@ -94,6 +94,7 @@ Connect later, reconfigure at runtime, or access the raw clients.
 
 ## Related sections
 
+- Read [Server Rendering](/vue-guide/server-rendering) if you render Vue on the server yourself
 - Read [Convex Patterns](/convex-patterns) for the backend model both tracks assume
 - Read [API Reference](/api-reference) for exact signatures and return types
 - Read [Nuxt](/nuxt) if you are working in a Nuxt app and need the wrapper contract

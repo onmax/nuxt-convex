@@ -11,7 +11,7 @@ highlight: server-rendered and live
 description: Await a query to render it on the server, then keep it live over the WebSocket. Typed end to end from your Convex functions.
 badge:
   label: Awaitable queries with SSR hydration
-  to: /convex-patterns/realtime-and-ssr
+  to: /nuxt-module/ssr-and-hydration
 links:
   - label: Get started
     to: /getting-started
@@ -105,7 +105,7 @@ items:
     description: "`await useConvexQuery()` blocks SSR until data is in and never rejects. Leave out `await` and it loads on the client."
   - icon: i-lucide-shield-check
     title: Authenticated SSR
-    description: Use Convex as the Better Auth database. Tokens resolve on the server; only `isAuthenticated` reaches the client.
+    description: Better Auth runs inside Convex, or bring your own provider. Tokens resolve on the server; only `isAuthenticated` reaches the client.
   - icon: i-lucide-cloud-upload
     title: File storage and R2 uploads
     description: "`useConvexUpload` for Convex storage and `useConvexR2Upload` for Cloudflare R2, both reporting upload progress."
@@ -165,8 +165,8 @@ steps:
     description: The client opens a WebSocket subscription and swaps in new values as Convex pushes them.
     label: ConvexClient · WebSocket
 link:
-  label: Read about realtime and SSR
-  to: /convex-patterns/realtime-and-ssr
+  label: Read about SSR and hydration
+  to: /nuxt-module/ssr-and-hydration
 ---
 ::
 

@@ -18,6 +18,7 @@ Then branch into:
 - [Controller](/vue-guide/controller)
 - [Authentication](/vue-guide/authentication)
 - [Connection State](/vue-guide/connection-state)
+- [Server Rendering](/vue-guide/server-rendering), only if you run your own SSR
 
 ## Read by task
 
@@ -37,7 +38,7 @@ icon: i-lucide-search
 to: /vue-guide/queries
 title: 'Subscribe to data'
 ---
-Use reactive arguments, SSR-aware reads, and skip logic.
+Use reactive arguments, `status` and errors, auth modes and skip logic.
 :::
 
 :::card
