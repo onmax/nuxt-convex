@@ -34,7 +34,7 @@ describe('nuxt-convex r2', () => {
     const res = await fixture.fetch<{
       convex: {
         r2: boolean
-        server: boolean
+        ssr: boolean
         storage: boolean
         url: string
       }
@@ -42,7 +42,7 @@ describe('nuxt-convex r2', () => {
 
     expect(res.convex).toEqual({
       r2: true,
-      server: true,
+      ssr: true,
       storage: false,
       url: 'https://test.convex.cloud',
     })
@@ -53,5 +53,6 @@ describe('nuxt-convex r2', () => {
 
     expect(html).toContain('https://test.convex.cloud')
     expect(html).toContain('function,function')
+    expect(html).toContain('<span data-testid="uploading">false</span>')
   })
 })

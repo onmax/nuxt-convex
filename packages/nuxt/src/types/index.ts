@@ -1,5 +1,6 @@
 export type { ConvexR2Api, UseConvexR2UploadOptions, UseConvexR2UploadReturn } from '../runtime/composables/useConvexR2Upload'
-export type { ConvexConfig, ResolvedConvexConfig } from './config'
+export type { ConvexServer, ConvexServerEvent, ConvexTokenContext } from '../runtime/server/utils/convex'
+export type { ConvexAuthConfig, ConvexClientConfig, ConvexConfig, ConvexPublicRuntimeConfig, ResolvedConvexAuthConfig } from './config'
 export type {
   ConvexHydrationAdapter,
   ConvexHydrationEntry,

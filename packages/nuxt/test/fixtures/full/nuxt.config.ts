@@ -5,5 +5,7 @@ export default defineNuxtConfig({
   convex: {
     url: 'https://test.convex.cloud',
     storage: true,
+    auth: { provider: 'better-auth' },
+    clientOptions: { verbose: true },
   },
 })

@@ -27,10 +27,6 @@
     ".": {
       "types": "./dist/types.d.mts",
       "import": "./dist/module.mjs"
-    },
-    "./better-auth": {
-      "types": "./dist/runtime/better-auth/adapter.d.ts",
-      "import": "./dist/runtime/better-auth/adapter.js"
     }
   },
   "main": "./dist/module.mjs",
@@ -54,18 +50,14 @@
     "playground:prepare": "nuxi prepare ../../playground",
     "test": "nuxt-module-build build && vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
-    "typecheck": "nuxt-module-build build && tsc -p tsconfig.runtime.json"
+    "typecheck": "nuxt-module-build build && tsc -p tsconfig.runtime.json && nuxi prepare test/fixtures/full && tsc --noEmit -p test/fixtures/full/.nuxt/tsconfig.server.json"
   },
   "peerDependencies": {
     "@convex-dev/r2": ">=0.9.1",
-    "better-auth": ">=1.4.9 <2",
-    "convex": ">=1.0.0"
+    "convex": ">=1.25.0"
   },
   "peerDependenciesMeta": {
     "@convex-dev/r2": {
-      "optional": true
-    },
-    "better-auth": {
       "optional": true
     }
   },
@@ -77,6 +69,7 @@
     "vue-convex": "workspace:*"
   },
   "devDependencies": {
+    "@nuxtjs/better-auth": "catalog:playground",
     "ofetch": "catalog:",
     "ufo": "catalog:",
     "yaml": "catalog:"

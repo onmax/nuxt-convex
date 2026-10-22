@@ -26,6 +26,7 @@ interface SubprocessE2EFixture {
   alias: (key: string) => string | undefined
   buildDir: () => string
   fetch: <T>(path: string, requestOptions?: FetchOptions<'json'>) => Promise<T>
+  url: (path: string) => string
 }
 
 function assertState<T>(value: T | undefined, message: string): T {
@@ -145,6 +146,7 @@ export function setupSubprocessE2E(options: SubprocessE2EOptions): SubprocessE2E
           HOST: '127.0.0.1',
           PORT: String(port),
           NODE_ENV: 'test',
+          ...options.env?.(),
         },
         stdio: 'inherit',
       })
@@ -170,6 +172,9 @@ export function setupSubprocessE2E(options: SubprocessE2EOptions): SubprocessE2E
     },
     buildDir() {
       return assertState(state, 'Fixture state is not available').buildDir
+    },
+    url(path: string) {
+      return joinURL(assertState(serverUrl, 'Server URL is not available'), path)
     },
     async fetch<T>(path: string, requestOptions?: FetchOptions<'json'>) {
       return await $fetch<T>(joinURL(assertState(serverUrl, 'Server URL is not available'), path), requestOptions)
