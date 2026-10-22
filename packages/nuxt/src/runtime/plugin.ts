@@ -1,16 +1,14 @@
 import type { ConvexHydrationEntry, ConvexVueOptions } from 'vue-convex'
 import type { ConvexStorageOptions } from 'vue-convex/storage'
+import type { ConvexPublicRuntimeConfig } from '../types/config'
 import { convexVue } from '#convex'
 import { defineNuxtPlugin, useRequestEvent, useRuntimeConfig, useState } from '#imports'
 import { getStorageRefs } from '#nuxt-convex/storage-refs-runtime'
 
-interface RuntimeConvexConfig {
-  url?: string
-  storage?: boolean
-  server?: boolean
-}
+// `server` is what nuxt-convex <= 0.0.7 wrote for `ssr`
+type RuntimeConvexConfig = Partial<ConvexPublicRuntimeConfig> & { server?: boolean }
 
-/** Set by the nuxt-convex Nitro plugin: resolves the current request's Convex JWT (memoized per request). */
+/** Set by the nuxt-convex server middleware: resolves the current request's Convex JWT (memoized per request). */
 type ConvexTokenResolver = () => Promise<string | null | undefined>
 
 const PAYLOAD_PREFIX = '$convex:'
@@ -47,11 +45,14 @@ export default defineNuxtPlugin({
     const payload = nuxtApp.payload.data as Record<string, ConvexHydrationEntry | undefined>
     const options: ConvexVueOptions = {
       url: config.url || undefined,
-      server: config.server ?? true,
+      server: config.ssr ?? config.server ?? true,
       serverAuth,
       initialAuth: authState.value ?? undefined,
-      // Hold queries until the token is in place, so they don't run anonymously first.
-      clientOptions: import.meta.client && authState.value?.isAuthenticated ? { expectAuth: true } : undefined,
+      clientOptions: {
+        ...config.clientOptions,
+        // Hold queries until the token is in place, so they don't run anonymously first.
+        ...(import.meta.client && authState.value?.isAuthenticated ? { expectAuth: true } : {}),
+      },
       hydration: {
         set: (key, entry) => {
           payload[PAYLOAD_PREFIX + key] = entry
