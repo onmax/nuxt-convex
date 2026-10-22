@@ -12,6 +12,8 @@ import { afterAll, beforeAll } from 'vitest'
 interface SubprocessE2EOptions {
   rootDir: string
   server?: boolean
+  /** Extra runtime env for the server, given its URL. */
+  env?: (serverUrl: string) => NodeJS.ProcessEnv
 }
 
 interface LoadedFixtureState {
@@ -139,6 +141,7 @@ export function setupSubprocessE2E(options: SubprocessE2EOptions): SubprocessE2E
         cwd: options.rootDir,
         env: {
           ...process.env,
+          ...options.env?.(serverUrl),
           HOST: '127.0.0.1',
           PORT: String(port),
           NODE_ENV: 'test',
