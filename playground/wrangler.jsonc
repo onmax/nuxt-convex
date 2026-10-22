@@ -15,6 +15,6 @@
     "enabled": true
   },
   "vars": {
-    "NUXT_PUBLIC_SITE_URL": "https://nuxt-convex-playground.je-cf9.workers.dev"
+    "NUXT_PUBLIC_SITE_URL": "https://demo-nuxt-convex.onmax.me"
   }
 }
