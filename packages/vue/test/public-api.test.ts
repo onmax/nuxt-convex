@@ -112,10 +112,10 @@ describe('vue-convex public API', () => {
     const harness = createHarness()
 
     expect(() => harness.run(() => advanced.useConvexClient())).toThrow(
-      '[convex-vue/advanced] Convex realtime client is not connected. Use useConvexController() to connect first.',
+      '[vue-convex/advanced] Convex realtime client is not connected. Use useConvexController() to connect first.',
     )
     expect(() => harness.run(() => advanced.useConvexHttpClient())).toThrow(
-      '[convex-vue/advanced] Convex HTTP client is not connected. Use useConvexController() to connect first.',
+      '[vue-convex/advanced] Convex HTTP client is not connected. Use useConvexController() to connect first.',
     )
 
     harness.stop()
@@ -229,7 +229,7 @@ describe('vue-convex public API', () => {
     const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
 
     expect(() => harness.run(() => storage.useConvexStorage())).toThrow(
-      '[convex-vue/storage] Storage feature is not configured. Install convexVueStorage first.',
+      '[vue-convex/storage] Storage feature is not configured. Install convexVueStorage first.',
     )
 
     harness.stop()
@@ -285,7 +285,7 @@ describe('vue-convex public API', () => {
     const file = new globalThis.File(['hello'], 'hello.txt', { type: 'text/plain' })
 
     await expect(upload.upload(file)).resolves.toBeNull()
-    expect(upload.error.value?.message).toBe('[convex-vue/storage] Upload response did not include a storageId')
+    expect(upload.error.value?.message).toBe('[vue-convex/storage] Upload response did not include a storageId')
     expect(onError).toHaveBeenCalledTimes(1)
 
     harness.stop()
@@ -306,7 +306,7 @@ describe('vue-convex public API', () => {
     const file = new globalThis.File(['hello'], 'hello.txt', { type: 'text/plain' })
 
     await expect(upload.upload(file)).resolves.toBeNull()
-    expect(upload.error.value?.message).toBe('[convex-vue/storage] Upload failed: 500 Server Error')
+    expect(upload.error.value?.message).toBe('[vue-convex/storage] Upload failed: 500 Server Error')
     expect(onError).toHaveBeenCalledTimes(1)
 
     harness.stop()

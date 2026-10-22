@@ -5,7 +5,7 @@ export function useConvexClient(): ConvexClient {
   const { clientRef } = useConvexRuntimeContext()
 
   if (!clientRef.value)
-    throw new Error('[convex-vue/advanced] Convex realtime client is not connected. Use useConvexController() to connect first.')
+    throw new Error('[vue-convex/advanced] Convex realtime client is not connected. Use useConvexController() to connect first.')
 
   return clientRef.value
 }
@@ -15,7 +15,7 @@ export function useConvexHttpClient(): ConvexHttpClient {
   const httpClient = useConvexRuntimeContext().getHttpClient()
 
   if (!httpClient)
-    throw new Error('[convex-vue/advanced] Convex HTTP client is not connected. Use useConvexController() to connect first.')
+    throw new Error('[vue-convex/advanced] Convex HTTP client is not connected. Use useConvexController() to connect first.')
 
   return httpClient
 }

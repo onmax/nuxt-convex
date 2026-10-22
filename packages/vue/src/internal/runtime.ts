@@ -86,7 +86,7 @@ function createHttpClient(options: ResolvedConvexVueOptions & { url: string }): 
 
 function requireUrl(options: ResolvedConvexVueOptions): ResolvedConvexVueOptions & { url: string } {
   if (!options.url)
-    throw new Error('[convex-vue] reconfigure() requires a configured Convex URL. Use connect({ url }) first.')
+    throw new Error('[vue-convex] reconfigure() requires a configured Convex URL. Use connect({ url }) first.')
   return options as ResolvedConvexVueOptions & { url: string }
 }
 
@@ -121,7 +121,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
 
     authedHttpClient ??= options.serverAuth.getToken()
       .catch((error) => {
-        console.error('[convex-vue] serverAuth.getToken() failed; running SSR queries anonymously.', error)
+        console.error('[vue-convex] serverAuth.getToken() failed; running SSR queries anonymously.', error)
         return null
       })
       .then((token) => {

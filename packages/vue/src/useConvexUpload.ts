@@ -31,9 +31,9 @@ function post(url: string, file: File, signal: AbortSignal | undefined, onProgre
       if (xhr.status >= 200 && xhr.status < 300)
         resolve(xhr.responseText)
       else
-        reject(new Error(`[convex-vue/storage] Upload failed: ${xhr.status} ${xhr.statusText}`))
+        reject(new Error(`[vue-convex/storage] Upload failed: ${xhr.status} ${xhr.statusText}`))
     }
-    xhr.onerror = () => reject(new Error('[convex-vue/storage] Upload failed: network error'))
+    xhr.onerror = () => reject(new Error('[vue-convex/storage] Upload failed: network error'))
     xhr.onabort = () => reject(signal?.reason ?? new DOMException('Upload aborted', 'AbortError'))
     if (signal?.aborted)
       return onAbort()
@@ -57,7 +57,7 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
   return {
     async upload(file, { signal } = {}) {
       if (typeof window === 'undefined')
-        return fail(new Error('[convex-vue/storage] Uploads are only available on the client'))
+        return fail(new Error('[vue-convex/storage] Uploads are only available on the client'))
 
       isUploading.value = true
       progress.value = 0
@@ -73,7 +73,7 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
 
         const { storageId } = JSON.parse(body) as { storageId?: unknown }
         if (typeof storageId !== 'string' || storageId.length === 0)
-          throw new Error('[convex-vue/storage] Upload response did not include a storageId')
+          throw new Error('[vue-convex/storage] Upload response did not include a storageId')
 
         progress.value = 100
         await options.onSuccess?.(storageId, file)

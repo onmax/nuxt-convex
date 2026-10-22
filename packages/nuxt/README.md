@@ -19,7 +19,7 @@ export default defineNuxtConfig({
 })
 ```
 
-Run `npx convex dev` to generate `convex/_generated/`, and set `CONVEX_URL` in `.env` to the deployment URL it prints.
+Run `npx convex dev`. It generates `convex/_generated/` and writes the deployment URL to `.env.local`, which the module reads in dev. In production, set `CONVEX_URL` at build time or `NUXT_PUBLIC_CONVEX_URL` at runtime.
 
 ## Use
 

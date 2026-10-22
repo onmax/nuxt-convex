@@ -152,7 +152,7 @@ export function createPaginationResource<Item>(
         break
       if (result instanceof Error) {
         if (isInvalidCursor(result)) {
-          console.warn(`[convex-vue] Restarting paginated query after: ${result.message}`)
+          console.warn(`[vue-convex] Restarting paginated query after: ${result.message}`)
           start(current.args)
           return
         }

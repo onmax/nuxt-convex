@@ -58,11 +58,7 @@ Start Convex. It creates a deployment, pushes your functions, and generates `con
 npx convex dev
 ```
 
-Put the deployment URL it prints in `.env`. The module also reads `NUXT_PUBLIC_CONVEX_URL` or `convex.url` in `nuxt.config.ts`.
-
-```bash
-CONVEX_URL=https://your-deployment.convex.cloud
-```
+It writes the deployment URL to `.env.local`, which the module reads in dev. For production builds, set `CONVEX_URL` (or `NUXT_PUBLIC_CONVEX_URL` at runtime, or `convex.url` in `nuxt.config.ts`).
 
 Use it in a page. `useConvexQuery` and `useConvexMutation` are auto-imported:
 
