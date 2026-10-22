@@ -15,6 +15,8 @@
     "enabled": true
   },
   "vars": {
+    "NUXT_PUBLIC_CONVEX_URL": "https://hip-capybara-414.convex.cloud",
+    "NUXT_PUBLIC_CONVEX_SITE_URL": "https://hip-capybara-414.convex.site",
     "NUXT_PUBLIC_SITE_URL": "https://demo-nuxt-convex.onmax.me"
   }
 }
