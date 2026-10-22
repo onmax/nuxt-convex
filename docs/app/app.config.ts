@@ -30,7 +30,7 @@ export default defineAppConfig({
     rootDir: 'docs',
   },
   socials: {
-    npm: 'https://www.npmjs.com/package/nuxt-convex',
+    npm: 'https://npmx.dev/package/nuxt-convex',
   },
   assistant: { enabled: false, explainWithAi: false },
   toc: {

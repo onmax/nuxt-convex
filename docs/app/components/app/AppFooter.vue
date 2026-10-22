@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const links = [
   { label: 'GitHub', to: 'https://github.com/onmax/nuxt-convex', icon: 'i-simple-icons-github' },
-  { label: 'nuxt-convex', to: 'https://www.npmjs.com/package/nuxt-convex', icon: 'i-simple-icons-npm' },
-  { label: 'vue-convex', to: 'https://www.npmjs.com/package/vue-convex', icon: 'i-simple-icons-npm' },
+  { label: 'nuxt-convex', to: 'https://npmx.dev/package/nuxt-convex', icon: 'i-simple-icons-npm' },
+  { label: 'vue-convex', to: 'https://npmx.dev/package/vue-convex', icon: 'i-simple-icons-npm' },
   { label: 'Convex docs', to: 'https://docs.convex.dev', icon: 'i-simple-icons-convex' },
 ]
 </script>
