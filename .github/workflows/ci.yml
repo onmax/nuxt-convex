@@ -5,31 +5,45 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # release.yml and pkg.yml reuse these checks
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref to verify
+        required: false
+        type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
-  cancel-in-progress: ${{ github.event_name != 'push' }}
+  group: ci-${{ github.workflow }}-${{ github.event.number || inputs.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
 
 jobs:
-  verify:
+  ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/setup-pnpm
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          install-command: pnpm install --filter vue-convex... --filter nuxt-convex...
-      - run: pnpm exec eslint . --ignore-pattern docs
+          persist-credentials: false
+          ref: ${{ inputs.ref || github.sha }}
+      - uses: ./.github/actions/setup-pnpm
+      - run: pnpm lint
+      # The Nuxt module imports vue-convex's built output, so build before anything type-aware.
       - run: pnpm build
       - run: pnpm typecheck
       - run: pnpm test
-
-  package-check:
-    needs: verify
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: ./.github/actions/setup-pnpm
-        with:
-          install-command: pnpm install --filter vue-convex... --filter nuxt-convex...
       - run: pnpm validate:packages
-      - run: pnpm preview:packages
+
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.ref || github.sha }}
+      - uses: ./.github/actions/setup-pnpm
+      - run: pnpm docs:build

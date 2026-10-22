@@ -1,36 +1,22 @@
 name: setup-pnpm
-description: Enable corepack, set up Node.js with pnpm cache, and install dependencies
+description: Enable corepack, set up Node.js with the pnpm cache, and install dependencies
 
 inputs:
-  node-version:
-    description: Node.js version to use
-    required: false
-    default: '22'
   install-command:
     description: Command used to install dependencies
     required: false
-    default: pnpm install
-  registry-url:
-    description: npm registry URL for OIDC provenance
-    required: false
-    default: ''
+    default: pnpm install --frozen-lockfile
 
 runs:
   using: composite
   steps:
     - shell: bash
-      run: npm i -g --force corepack && corepack enable
+      run: corepack enable
 
-    - shell: bash
-      run: |
-        git config --global --add url."https://github.com/".insteadOf git@github.com:
-        git config --global --add url."https://github.com/".insteadOf ssh://git@github.com/
-
-    - uses: actions/setup-node@v5
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
-        node-version: ${{ inputs.node-version }}
+        node-version-file: .node-version
         cache: pnpm
-        registry-url: ${{ inputs.registry-url || '' }}
 
     - shell: bash
       run: ${{ inputs.install-command }}

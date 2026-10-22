@@ -1,0 +1,57 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "dependencyDashboard": true,
+  "automergeType": "pr",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "before 5am on monday"
+    ],
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "description": "Automerge low-risk dev dependency updates once required checks pass.",
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "groupName": "dev dependencies",
+      "automerge": true
+    },
+    {
+      "description": "Automerge patch updates for regular runtime dependencies once required checks pass.",
+      "matchDepTypes": [
+        "dependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Keep major updates manual.",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Keep Convex and Better Auth manual: their client APIs are the packages' contract.",
+      "matchPackageNames": [
+        "convex",
+        "/^@convex-dev\\//",
+        "better-auth",
+        "@nuxtjs/better-auth"
+      ],
+      "automerge": false
+    }
+  ]
+}
