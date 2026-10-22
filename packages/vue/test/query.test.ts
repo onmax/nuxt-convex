@@ -1,3 +1,4 @@
+import { makeFunctionReference } from 'convex/server'
 import { ConvexError } from 'convex/values'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { computed, nextTick, ref } from 'vue'
@@ -47,6 +48,21 @@ describe('useConvexQuery', () => {
     expect(isConvexError(state.error.value, 'NOT_FOUND')).toBe(true)
     expect(isConvexError(state.error.value, 'OTHER')).toBe(false)
 
+    harness.stop()
+  })
+
+  it('takes no args for a query without any', () => {
+    const harness = createHarness({ options: { url } })
+    const client = getLastRealtimeClient()
+    const noArgsRef = makeFunctionReference<'query', Record<string, never>, number>('tasks:count')
+    const state = harness.run(() => useConvexQuery(noArgsRef))
+
+    expect(client.listeners[0]!.args).toEqual({})
+    client.listeners[0]!.onResult(3)
+    expect(state.data.value).toBe(3)
+
+    // @ts-expect-error a query with args still requires them
+    harness.run(() => useConvexQuery(queryRef))
     harness.stop()
   })
 

@@ -1,6 +1,6 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
-import type { PropType, SetupContext, SlotsType, VNodeChild } from 'vue'
-import type { ConvexQueryError, UseConvexQueryOptions } from 'vue-convex'
+import type { MaybeRefOrGetter, PropType, SetupContext, SlotsType, VNodeChild } from 'vue'
+import type { ConvexQueryError, UseConvexQueryArgs, UseConvexQueryOptions } from 'vue-convex'
 import { defineComponent } from 'vue'
 import { useConvexQuery } from '#convex'
 
@@ -27,7 +27,8 @@ function isEmpty(value: unknown): boolean {
 }
 
 export default defineComponent(<Query extends QueryReference>(props: ConvexQueryProps<Query>, { slots }: SetupContext<Record<never, never>, ConvexQuerySlots>) => {
-  const state = useConvexQuery(() => props.query, () => props.args ?? ({} as FunctionArgs<Query>), props.options)
+  const args = (() => props.args ?? {}) as MaybeRefOrGetter<FunctionArgs<Query> | 'skip'>
+  const state = useConvexQuery(() => props.query, ...([args, props.options] as UseConvexQueryArgs<Query>))
 
   const render = (): VNodeChild => {
     if (state.isPending.value)

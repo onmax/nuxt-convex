@@ -18,4 +18,4 @@ export type { UseConvexPaginatedQueryOptions, UseConvexPaginatedQueryReturn } fr
 export { useConvexQueries } from './useConvexQueries'
 export type { QueryEntry, UseConvexQueriesReturn } from './useConvexQueries'
 export { useConvexQuery } from './useConvexQuery'
-export type { ConvexQueryError, UseConvexQueryOptions, UseConvexQueryReturn } from './useConvexQuery'
+export type { ConvexQueryError, UseConvexQueryArgs, UseConvexQueryOptions, UseConvexQueryReturn } from './useConvexQuery'

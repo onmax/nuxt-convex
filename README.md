@@ -71,8 +71,8 @@ Use it in a page. `useConvexQuery` and `useConvexMutation` are auto-imported:
 <script setup lang="ts">
 import { api } from '#convex/api'
 
-const { data: tasks, suspense } = useConvexQuery(api.tasks.list, {})
-await suspense() // fetch during SSR, then stay subscribed in the browser
+// fetched during SSR, then kept live over the WebSocket
+const { data: tasks } = await useConvexQuery(api.tasks.list)
 
 const { mutate: addTask, isPending } = useConvexMutation(api.tasks.add)
 const text = ref('')
@@ -123,7 +123,7 @@ createApp(App)
 import { useConvexQuery } from 'vue-convex'
 import { api } from '../convex/_generated/api'
 
-const { data: tasks } = useConvexQuery(api.tasks.list, {})
+const { data: tasks } = useConvexQuery(api.tasks.list)
 </script>
 ```
 
@@ -131,7 +131,7 @@ const { data: tasks } = useConvexQuery(api.tasks.list, {})
 
 Both packages:
 
-- `useConvexQuery` returns typed `data`, `error`, and `isPending` refs. Arguments can be refs or getters, and `'skip'` pauses the query. `suspense()` fetches over HTTP during SSR, and the browser then subscribes over WebSocket.
+- `useConvexQuery` returns typed `data`, `error` and `status` refs. Arguments can be refs or getters, and `'skip'` pauses the query. Awaiting it fetches during SSR, the result travels in the page payload, and the browser picks up from there over the WebSocket without fetching again.
 - `useConvexQueries` subscribes to a record of queries at once.
 - `useConvexMutation` returns `mutate` and `useConvexAction` returns `execute`, each with `error` and `isPending`. Mutations accept Convex optimistic updates.
 - `useConvexPaginatedQuery` loads pages on the client, with `insertAtTop`, `insertAtPosition`, `insertAtBottomIfLoaded`, and `optimisticallyUpdateValueInPaginatedQuery` for optimistic updates.

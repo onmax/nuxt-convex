@@ -27,8 +27,7 @@ Run `npx convex dev` to generate `convex/_generated/`, and set `CONVEX_URL` in `
 <script setup lang="ts">
 import { api } from '#convex/api'
 
-const { data: tasks, suspense } = useConvexQuery(api.tasks.list, {})
-await suspense()
+const { data: tasks } = await useConvexQuery(api.tasks.list)
 
 const { mutate: addTask } = useConvexMutation(api.tasks.add)
 </script>

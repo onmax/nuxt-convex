@@ -6,6 +6,8 @@ import { createQueryResource } from './internal/query'
 import { useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 
 type QueryReference = FunctionReference<'query'>
+// convex/server's EmptyObject isn't exported
+type EmptyObject = Record<string, never>
 
 /** Errors are plain `Error`s, or `ConvexError`s carrying the data thrown by your function. See `isConvexError`. */
 export type ConvexQueryError = Error | ConvexError<Value>
@@ -29,6 +31,11 @@ export interface UseConvexQueryReturn<Query extends QueryReference> {
   suspense: () => Promise<FunctionReturnType<Query> | undefined>
 }
 
+/** Args are optional when the query takes none, like `useQuery` in `convex/react`. */
+export type UseConvexQueryArgs<Query extends QueryReference> = FunctionArgs<Query> extends EmptyObject
+  ? [args?: MaybeRefOrGetter<EmptyObject | 'skip'>, options?: UseConvexQueryOptions]
+  : [args: MaybeRefOrGetter<FunctionArgs<Query> | 'skip'>, options?: UseConvexQueryOptions]
+
 /**
  * Subscribes to a Convex query. Await the return value to wait for the first
  * result: on the server that fetches over HTTP, on the client it resolves
@@ -36,8 +43,7 @@ export interface UseConvexQueryReturn<Query extends QueryReference> {
  */
 export function useConvexQuery<Query extends QueryReference>(
   query: MaybeRefOrGetter<Query>,
-  args: MaybeRefOrGetter<FunctionArgs<Query> | 'skip'>,
-  options?: UseConvexQueryOptions,
+  ...[args, options]: UseConvexQueryArgs<Query>
 ): UseConvexQueryReturn<Query> & PromiseLike<UseConvexQueryReturn<Query>> {
-  return createQueryResource(useConvexRuntimeContext(), query, args, options)
+  return createQueryResource(useConvexRuntimeContext(), query, args as MaybeRefOrGetter<Record<string, unknown> | 'skip' | undefined>, options)
 }

@@ -26,9 +26,8 @@ const code = [
   '«t|<script» «a|setup» «a|lang»«p|=»«s|"ts"»«t|>»',
   '«k|import» «p|{» api «p|}» «k|from» «s|\'#convex/api\'»',
   '',
-  '«k|const» «p|{» data«p|:» tasks«p|,» suspense «p|}» «p|=»',
-  '  «f|useConvexQuery»«p|(»api«p|.»tasks«p|.»list«p|,» «p|{})»',
-  '«k|await» «f|suspense»«p|()»',
+  '«k|const» «p|{» data«p|:» tasks «p|}» «p|=»',
+  '  «k|await» «f|useConvexQuery»«p|(»api«p|.»tasks«p|.»list«p|)»',
   '«t|</script>»',
   '',
   '«t|<template>»',
@@ -136,7 +135,7 @@ p b{color:#e4e4e7;font-weight:500}
 .line span{white-space:pre}
 .line::before{content:counter(n);counter-increment:n;width:46px;padding-right:18px;text-align:right;color:#3f3f46;flex:none}
 .code{counter-reset:n}
-.line:nth-child(4),.line:nth-child(5),.line:nth-child(6){background:linear-gradient(90deg,rgb(229 106 59/.10),rgb(229 106 59/.02) 70%,transparent);box-shadow:inset 2px 0 0 #e56a3b}
+.line:nth-child(4),.line:nth-child(5){background:linear-gradient(90deg,rgb(229 106 59/.10),rgb(229 106 59/.02) 70%,transparent);box-shadow:inset 2px 0 0 #e56a3b}
 .k{color:#f0854e}.s{color:#e9d8a6}.f{color:#5eead4}.t{color:#7dd3a8}.a{color:#a5b4fc}.p{color:#71717a}
 
 .list{position:absolute;left:${l.list.left}px;top:${l.list.top}px;width:${l.list.width}px;border:1px solid #2e2e33;border-radius:14px;background:#141417;padding:16px 16px 14px;

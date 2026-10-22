@@ -30,7 +30,7 @@ createApp(App)
 import { useConvexMutation, useConvexQuery } from 'vue-convex'
 import { api } from '../convex/_generated/api'
 
-const { data: tasks } = useConvexQuery(api.tasks.list, {})
+const { data: tasks } = useConvexQuery(api.tasks.list)
 const { mutate: addTask } = useConvexMutation(api.tasks.add)
 </script>
 
