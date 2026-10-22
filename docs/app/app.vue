@@ -25,12 +25,22 @@ useHead({
   },
 })
 
+// Every page shares one Open Graph image, drawn by `pnpm docs:og`. Pages set their own og:url and
+// og:type through Docus' useSeo; these are the fallbacks.
+const siteUrl = site.url.replace(/\/$/, '')
+const ogImage = `${siteUrl}/og/home.png`
+const ogImageAlt = 'Nuxt Convex: Convex for Nuxt and Vue'
+
 useSeoMeta({
   titleTemplate: seo.titleTemplate,
   title: seo.title,
   description: seo.description,
   ogSiteName: site.name,
+  ogType: 'website',
+  ogUrl: () => `${siteUrl}${route.path}`,
+  ogImage: { url: ogImage, width: 1200, height: 630, type: 'image/png', alt: ogImageAlt },
   twitterCard: 'summary_large_image',
+  twitterImage: { url: ogImage, alt: ogImageAlt },
 })
 
 if (isEnabled.value) {
