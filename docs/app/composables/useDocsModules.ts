@@ -31,16 +31,20 @@ export function useDocsModules(): {
     return activeModule.value?.id === module.id
   }
 
+  // Pages match exactly, so a section's index page isn't highlighted alongside the page you're on
+  function markPagesExact(item: ContentNavigationItem): ContentNavigationItem {
+    return item.children?.length
+      ? { ...item, children: item.children.map(markPagesExact) }
+      : { ...item, exact: true }
+  }
+
   function filterNavigation(items?: ContentNavigationItem[]): ContentNavigationItem[] {
     if (!items?.length)
       return []
 
     const roots = activeModule.value?.sidebarRoots
-
-    if (!roots?.length)
-      return items
-
-    return items.filter(item => roots.some(root => matchesPath(item.path, root)))
+    const filtered = roots?.length ? items.filter(item => roots.some(root => matchesPath(item.path, root))) : items
+    return filtered.map(markPagesExact)
   }
 
   return {

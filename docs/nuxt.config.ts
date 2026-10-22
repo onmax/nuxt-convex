@@ -3,6 +3,11 @@ export default defineNuxtConfig({
 
   ogImage: { enabled: false },
 
+  // Docus turns its paid AI assistant on whenever a Vercel build has VERCEL_OIDC_TOKEN
+  docus: {
+    assistant: { enabled: false },
+  },
+
   css: ['~/assets/css/main.css'],
 
   content: {
