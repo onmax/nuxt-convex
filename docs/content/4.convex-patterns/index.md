@@ -12,50 +12,34 @@ Both frontend tracks in this repo assume the same Convex backend foundations:
 
 Use this section to build the mental model behind the framework-specific guides.
 
-::u-page-section{orientation="vertical"}
-#title
-Open a concept page
+## Open a concept page
 
-:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-::::u-page-card
+::card-group
+:::card
 ---
 icon: i-lucide-database
-spotlight: true
 to: /convex-patterns/schema
+title: 'Design your schema'
 ---
-#title
-Design your schema
-
-#description
 Define tables, validators, and indexes that support your app-facing queries.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-split
-spotlight: true
 to: /convex-patterns/functions
+title: 'Design your functions'
 ---
-#title
-Design your functions
-
-#description
 Split public queries, mutations, and actions by the work they actually do.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-radio
-spotlight: true
 to: /convex-patterns/realtime-and-ssr
+title: 'Reason about realtime and SSR'
 ---
-#title
-Reason about realtime and SSR
-
-#description
 Understand which reads can prefetch on the server and which flows stay client-only.
-::::
-
 :::
 ::
 

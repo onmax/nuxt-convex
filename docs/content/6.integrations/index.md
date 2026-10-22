@@ -7,37 +7,23 @@ Use this section after the core module is already installed. These guides cover 
 
 ## Available integrations
 
-::u-page-section{orientation="vertical"}
-#title
-Open an integration guide
-
-:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-::::u-page-card
+::card-group
+:::card
 ---
 icon: i-lucide-shield
-spotlight: true
 to: /integrations/better-auth
+title: 'Better Auth'
 ---
-#title
-Better Auth
-
-#description
 Use Convex as the Better Auth database through the provider and HTTP adapter exported by this repo.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-cloud
-spotlight: true
 to: /integrations/r2
+title: 'Cloudflare R2'
 ---
-#title
-Cloudflare R2
-
-#description
 Upload files to R2 through the Convex R2 component and the Nuxt-side upload helper.
-::::
-
 :::
 ::
 

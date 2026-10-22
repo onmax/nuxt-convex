@@ -1,6 +1,6 @@
 ---
 title: Guide
-description: Learn the shared Vue runtime for Convex: plugin setup, query and mutation patterns, pagination, storage, auth, and advanced runtime control.
+description: "Learn the shared Vue runtime for Convex: plugin setup, query and mutation patterns, pagination, storage, auth, and advanced runtime control."
 ---
 
 This section is the task-focused guide for `vue-convex`. Use it when you want to build with the shared Vue runtime or understand the behavior that also sits underneath the Nuxt module.
@@ -21,63 +21,41 @@ Then branch into:
 
 ## Read by task
 
-::u-page-section{orientation="vertical"}
-#title
-Open a guide
-
-:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-::::u-page-card
+::card-group
+:::card
 ---
 icon: i-lucide-download
-spotlight: true
 to: /vue-guide/installation
+title: 'Install and verify'
 ---
-#title
-Install and verify
-
-#description
 Register the plugin and run the first query.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-search
-spotlight: true
 to: /vue-guide/queries
+title: 'Subscribe to data'
 ---
-#title
-Subscribe to data
-
-#description
 Use reactive arguments, SSR-aware reads, and skip logic.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-list
-spotlight: true
 to: /vue-guide/pagination
+title: 'Build paginated feeds'
 ---
-#title
-Build paginated feeds
-
-#description
 Load more results, reset on filter changes, and use optimistic helpers.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-sliders-horizontal
-spotlight: true
 to: /vue-guide/controller
+title: 'Manage the connection'
 ---
-#title
-Manage the connection
-
-#description
 Connect later, reconfigure the runtime, or work with the raw clients.
-::::
-
 :::
 ::
 
