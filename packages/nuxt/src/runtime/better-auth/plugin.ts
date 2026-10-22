@@ -2,13 +2,13 @@ import type { EffectScope } from 'vue'
 import type { ConvexPublicRuntimeConfig } from '../../types/config'
 import { effectScope, watch } from 'vue'
 import { useConvexAuth } from '#convex'
-import { useConvexController } from '#convex/advanced'
 import { defineNuxtPlugin, useRuntimeConfig, useUserSession } from '#imports'
 import { createBetterAuthTokenFetcher } from './token'
 
 /**
  * Keeps the Convex client's identity in sync with the Better Auth session:
  * sign-in sets auth, sign-out clears it so the previous user's JWT is never reused.
+ * Server-side, the Convex plugin reads the token from `event.context.$convexToken`.
  */
 export default defineNuxtPlugin({
   name: 'nuxt-convex:better-auth',
@@ -16,7 +16,6 @@ export default defineNuxtPlugin({
   setup(nuxtApp) {
     const config = useRuntimeConfig().public.convex as ConvexPublicRuntimeConfig
     const { session, ready } = useUserSession()
-    const controller = useConvexController()
     let scope: EffectScope | undefined
 
     const whenReady = (): Promise<void> => new Promise((resolve) => {
@@ -50,9 +49,9 @@ export default defineNuxtPlugin({
         authenticate()
         return
       }
+      // Disposing the scope clears the client's auth
       scope?.stop()
       scope = undefined
-      controller.getClient()?.clearAuth()
     })
   },
 })

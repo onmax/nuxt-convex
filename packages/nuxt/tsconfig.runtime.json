@@ -10,7 +10,5 @@
     "types": ["node"],
     "noEmit": true
   },
-  "include": ["src/runtime", "test/types"],
-  // Owned by the better-auth integration, which has its own pending type errors.
-  "exclude": ["src/runtime/better-auth"]
+  "include": ["src/runtime", "test/types"]
 }

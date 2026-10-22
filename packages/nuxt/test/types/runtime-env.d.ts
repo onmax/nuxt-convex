@@ -4,6 +4,8 @@
 
 declare module '#imports' {
   export * from 'nuxt/app'
+  // Auto-imported by @nuxtjs/better-auth
+  export { useUserSession } from '@nuxtjs/better-auth/composables'
 }
 
 declare module '#convex' {
