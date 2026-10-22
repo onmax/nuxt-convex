@@ -146,7 +146,6 @@ export function setupSubprocessE2E(options: SubprocessE2EOptions): SubprocessE2E
           HOST: '127.0.0.1',
           PORT: String(port),
           NODE_ENV: 'test',
-          ...options.env?.(),
         },
         stdio: 'inherit',
       })
