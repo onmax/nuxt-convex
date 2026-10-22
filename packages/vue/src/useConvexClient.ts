@@ -10,11 +10,12 @@ export function useConvexClient(): ConvexClient {
   return clientRef.value
 }
 
+/** An unauthenticated HTTP client, created on first use. */
 export function useConvexHttpClient(): ConvexHttpClient {
-  const { httpClientRef } = useConvexRuntimeContext()
+  const httpClient = useConvexRuntimeContext().getHttpClient()
 
-  if (!httpClientRef.value)
+  if (!httpClient)
     throw new Error('[convex-vue/advanced] Convex HTTP client is not connected. Use useConvexController() to connect first.')
 
-  return httpClientRef.value
+  return httpClient
 }

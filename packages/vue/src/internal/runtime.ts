@@ -1,17 +1,30 @@
 import type { ConvexClientOptions } from 'convex/browser'
-import type { DeepReadonly, InjectionKey, Ref, ShallowRef } from 'vue'
+import type { FunctionReference } from 'convex/server'
+import type { InjectionKey, Ref, ShallowRef } from 'vue'
+import type { ConvexHydrationAdapter, Settled } from './hydration'
 import { ConvexClient, ConvexHttpClient } from 'convex/browser'
-import { readonly, shallowRef } from 'vue'
+import { shallowReadonly, shallowRef } from 'vue'
+import { decodeHydrated, encodeSettled } from './hydration'
+
+export interface ConvexServerAuth {
+  /** Returns the JWT for the current request. Called at most once per app instance. */
+  getToken: () => Promise<string | null | undefined>
+}
 
 export interface ConvexVueOptions {
   url?: string
   clientOptions?: ConvexClientOptions
+  /** Run awaited queries during SSR over HTTP. Defaults to `true`. */
   server?: boolean
+  /** Transfers SSR query results to the client. Without it the client starts empty. */
+  hydration?: ConvexHydrationAdapter
+  /** Authenticates SSR queries. Only used on the server; the token is never serialized. */
+  serverAuth?: ConvexServerAuth
+  /** Auth state known before the client connects (e.g. from SSR), so auth-gated UI renders and hydrates without flipping. */
+  initialAuth?: { isAuthenticated: boolean }
 }
 
-export interface ResolvedConvexVueOptions {
-  url?: string
-  clientOptions?: ConvexClientOptions
+export interface ResolvedConvexVueOptions extends ConvexVueOptions {
   server: boolean
 }
 
@@ -22,8 +35,8 @@ export interface ConvexControllerConnectOptions extends Omit<ConvexVueOptions, '
 }
 
 export interface ConvexVueController {
-  options: DeepReadonly<Ref<ResolvedConvexVueOptions>>
-  status: DeepReadonly<Ref<ConvexControllerStatus>>
+  options: Readonly<Ref<ResolvedConvexVueOptions>>
+  status: Readonly<Ref<ConvexControllerStatus>>
   connect: (options: ConvexControllerConnectOptions) => void
   reconfigure: (options: Partial<ConvexControllerConnectOptions>) => void
   disconnect: () => void
@@ -43,108 +56,161 @@ export const DISCONNECTED_AUTH_STATE: ConvexAuthState = {
 
 export interface ConvexRuntimeContext {
   controller: ConvexVueController
+  isServer: boolean
   optionsRef: ShallowRef<ResolvedConvexVueOptions>
   statusRef: ShallowRef<ConvexControllerStatus>
   clientRef: ShallowRef<ConvexClient | undefined>
-  httpClientRef: ShallowRef<ConvexHttpClient | undefined>
   authStateRef: ShallowRef<ConvexAuthState>
+  /** Auth state the server rendered with, if known. */
+  initialAuth: ConvexAuthState | undefined
+  /** Created on first use, so browsers that never need HTTP don't pay for it. */
+  getHttpClient: () => ConvexHttpClient | undefined
+  /** Server only: runs a query once per app instance and records it for hydration. */
+  fetchServerQuery: (key: string, query: FunctionReference<'query'>, args: Record<string, unknown>, anonymous: boolean) => Promise<Settled | undefined>
+  /** Client only: returns the SSR result for `key` while the app is hydrating. */
+  readHydrated: (key: string) => Settled | undefined
 }
 
 export const CONVEX_VUE_KEY: InjectionKey<ConvexRuntimeContext> = Symbol('vue-convex')
 
 function resolveOptions(options: ConvexVueOptions = {}): ResolvedConvexVueOptions {
-  return {
-    clientOptions: options.clientOptions,
-    server: options.server ?? true,
-    url: options.url,
-  }
+  return { ...options, server: options.server ?? true }
 }
 
-function createHttpClient(options: ConvexControllerConnectOptions): ConvexHttpClient {
+function createHttpClient(options: ResolvedConvexVueOptions & { url: string }): ConvexHttpClient {
   return new ConvexHttpClient(options.url, {
     logger: options.clientOptions?.logger,
     skipConvexDeploymentUrlCheck: options.clientOptions?.skipConvexDeploymentUrlCheck,
   })
 }
 
-function createRealtimeClient(options: ConvexControllerConnectOptions): ConvexClient | undefined {
-  if (typeof window === 'undefined')
-    return undefined
-
-  return new ConvexClient(options.url, options.clientOptions)
-}
-
-function requireUrl(options: ResolvedConvexVueOptions, action: 'connect' | 'reconfigure'): ConvexControllerConnectOptions {
-  if (!options.url) {
-    throw new Error(
-      action === 'connect'
-        ? '[convex-vue] connect() requires a Convex URL'
-        : '[convex-vue] reconfigure() requires a configured Convex URL. Use connect({ url }) first.',
-    )
-  }
-
-  return options as ConvexControllerConnectOptions
+function requireUrl(options: ResolvedConvexVueOptions): ResolvedConvexVueOptions & { url: string } {
+  if (!options.url)
+    throw new Error('[convex-vue] reconfigure() requires a configured Convex URL. Use connect({ url }) first.')
+  return options as ResolvedConvexVueOptions & { url: string }
 }
 
 export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}): ConvexRuntimeContext {
+  const isServer = typeof window === 'undefined'
   const optionsRef = shallowRef(resolveOptions(initialOptions))
   const statusRef = shallowRef<ConvexControllerStatus>('disconnected')
   const clientRef = shallowRef<ConvexClient>()
-  const httpClientRef = shallowRef<ConvexHttpClient>()
-  const authStateRef = shallowRef<ConvexAuthState>({ ...DISCONNECTED_AUTH_STATE })
+  const initialAuth = initialOptions.initialAuth
+    ? { isLoading: false, isAuthenticated: initialOptions.initialAuth.isAuthenticated }
+    : undefined
+  const authStateRef = shallowRef<ConvexAuthState>(initialAuth ?? { ...DISCONNECTED_AUTH_STATE })
 
-  const closeExistingClient = (): void => {
-    if (clientRef.value && typeof clientRef.value.close === 'function')
-      clientRef.value.close()
+  let httpClient: ConvexHttpClient | undefined
+  let authedHttpClient: Promise<ConvexHttpClient> | undefined
+  const serverQueries = new Map<string, Promise<Settled | undefined>>()
+
+  const getHttpClient = (): ConvexHttpClient | undefined => {
+    const options = optionsRef.value
+    if (!httpClient && options.url)
+      httpClient = createHttpClient(options as ResolvedConvexVueOptions & { url: string })
+    return httpClient
   }
 
-  const applyConnectedOptions = (nextOptions: ConvexControllerConnectOptions): void => {
-    closeExistingClient()
-    optionsRef.value = resolveOptions(nextOptions)
-    httpClientRef.value = createHttpClient(nextOptions)
-    clientRef.value = createRealtimeClient(nextOptions)
+  // Resolve the request token once and keep it on a dedicated client, so the
+  // anonymous client stays anonymous for `auth: 'none'` queries.
+  const getServerHttpClient = async (anonymous: boolean): Promise<ConvexHttpClient | undefined> => {
+    const options = optionsRef.value
+    const anonymousClient = getHttpClient()
+    if (anonymous || !options.serverAuth || !anonymousClient)
+      return anonymousClient
+
+    authedHttpClient ??= options.serverAuth.getToken()
+      .catch((error) => {
+        console.error('[convex-vue] serverAuth.getToken() failed; running SSR queries anonymously.', error)
+        return null
+      })
+      .then((token) => {
+        if (!token)
+          return anonymousClient
+        const client = createHttpClient(options as ResolvedConvexVueOptions & { url: string })
+        client.setAuth(token)
+        return client
+      })
+    return await authedHttpClient
+  }
+
+  const fetchServerQuery: ConvexRuntimeContext['fetchServerQuery'] = (key, query, args, anonymous) => {
+    const dedupeKey = `${anonymous ? 'anon' : 'auth'}|${key}`
+    let promise = serverQueries.get(dedupeKey)
+    if (!promise) {
+      promise = (async () => {
+        const client = await getServerHttpClient(anonymous)
+        if (!client)
+          return undefined
+        const settled: Settled = await client.query(query, args).then(
+          value => ({ value }),
+          error => ({ error: error instanceof Error ? error : new Error(String(error)) }),
+        )
+        optionsRef.value.hydration?.set(key, encodeSettled(settled))
+        return settled
+      })()
+      serverQueries.set(dedupeKey, promise)
+    }
+    return promise
+  }
+
+  const readHydrated: ConvexRuntimeContext['readHydrated'] = (key) => {
+    const hydration = optionsRef.value.hydration
+    if (isServer || !hydration?.isHydrating())
+      return undefined
+    const entry = hydration.get(key)
+    return entry ? decodeHydrated(entry) : undefined
+  }
+
+  const closeClient = (): void => {
+    void clientRef.value?.close()
+    clientRef.value = undefined
+  }
+
+  const applyConnectedOptions = (nextOptions: ResolvedConvexVueOptions & { url: string }): void => {
+    closeClient()
+    optionsRef.value = nextOptions
+    httpClient = undefined
+    authedHttpClient = undefined
+    serverQueries.clear()
+    clientRef.value = isServer ? undefined : new ConvexClient(nextOptions.url, nextOptions.clientOptions)
     statusRef.value = 'connected'
   }
 
   const controller: ConvexVueController = {
-    options: readonly(optionsRef) as DeepReadonly<Ref<ResolvedConvexVueOptions>>,
-    status: readonly(statusRef) as DeepReadonly<Ref<ConvexControllerStatus>>,
+    options: shallowReadonly(optionsRef),
+    status: shallowReadonly(statusRef),
     connect(options) {
-      applyConnectedOptions(options)
+      applyConnectedOptions(resolveOptions({ ...optionsRef.value, ...options }) as ResolvedConvexVueOptions & { url: string })
     },
     reconfigure(options) {
-      const merged = resolveOptions({
-        ...optionsRef.value,
-        ...options,
-      })
-
-      applyConnectedOptions(requireUrl(merged, 'reconfigure'))
+      applyConnectedOptions(requireUrl(resolveOptions({ ...optionsRef.value, ...options })))
     },
     disconnect() {
-      closeExistingClient()
-      optionsRef.value = resolveOptions({ ...optionsRef.value, url: undefined })
-      clientRef.value = undefined
-      httpClientRef.value = undefined
+      closeClient()
+      optionsRef.value = { ...optionsRef.value, url: undefined }
+      httpClient = undefined
+      authedHttpClient = undefined
       authStateRef.value = { ...DISCONNECTED_AUTH_STATE }
       statusRef.value = 'disconnected'
     },
-    getClient() {
-      return clientRef.value
-    },
-    getHttpClient() {
-      return httpClientRef.value
-    },
+    getClient: () => clientRef.value,
+    getHttpClient,
   }
 
   if (optionsRef.value.url)
-    applyConnectedOptions(requireUrl(optionsRef.value, 'connect'))
+    applyConnectedOptions(optionsRef.value as ResolvedConvexVueOptions & { url: string })
 
   return {
     controller,
+    isServer,
     optionsRef,
     statusRef,
     clientRef: clientRef as ShallowRef<ConvexClient | undefined>,
-    httpClientRef: httpClientRef as ShallowRef<ConvexHttpClient | undefined>,
     authStateRef,
+    initialAuth,
+    getHttpClient,
+    fetchServerQuery,
+    readHydrated,
   }
 }

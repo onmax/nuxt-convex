@@ -16,6 +16,7 @@ describe('vue-convex exports', async () => {
       'insertAtBottomIfLoaded',
       'insertAtPosition',
       'insertAtTop',
+      'isConvexError',
       'optimisticallyUpdateValueInPaginatedQuery',
       'useConvexAction',
       'useConvexAuth',
@@ -48,7 +49,7 @@ describe('vue-convex exports', async () => {
     expect(rootTypes).not.toContain('useConvexStorage')
     expect(rootTypes).not.toContain('useConvexUpload')
     expect(rootTypes).not.toContain('manualInit')
-    expect(rootTypes).not.toContain('auth?:')
+    expect(rootTypes).not.toContain('getHttpClient')
 
     expect(advancedTypes).not.toContain('CONVEX_VUE_KEY')
     expect(advancedTypes).not.toContain('ConvexRuntimeContext')
