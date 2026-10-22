@@ -24,10 +24,11 @@ export function useDocsModules(): {
 
   const modules = computed(() => (appConfig.docsModules || []) as DocsModule[])
 
+  // The first module that matches wins, so a path listed by two modules highlights one tab
   const activeModule = computed(() => modules.value.find(module => module.match.some(prefix => matchesPath(route.path, prefix))) || null)
 
   function isModuleActive(module: DocsModule): boolean {
-    return module.match.some(prefix => matchesPath(route.path, prefix))
+    return activeModule.value?.id === module.id
   }
 
   function filterNavigation(items?: ContentNavigationItem[]): ContentNavigationItem[] {

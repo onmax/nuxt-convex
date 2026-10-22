@@ -3,22 +3,22 @@ export default defineAppConfig({
     locale: 'en',
     assistant: false,
   },
-  // Nuxt is the primary package, so it comes first. Shared sections (troubleshooting) resolve to
-  // the first module that matches.
+  // Nuxt is the primary package, so it comes first. Shared sections (Convex patterns, API reference,
+  // integrations, troubleshooting) belong to the Nuxt tab; the Vue sidebar still lists them.
   docsModules: [
     {
       id: 'nuxt',
       label: 'Nuxt',
       to: '/nuxt',
-      match: ['/nuxt', '/getting-started', '/nuxt-module', '/integrations', '/troubleshooting'],
-      sidebarRoots: ['/getting-started', '/nuxt-module', '/integrations', '/troubleshooting'],
+      match: ['/nuxt', '/getting-started', '/nuxt-module', '/convex-patterns', '/api-reference', '/integrations', '/troubleshooting'],
+      sidebarRoots: ['/getting-started', '/nuxt-module', '/convex-patterns', '/api-reference', '/integrations', '/troubleshooting'],
     },
     {
       id: 'vue',
       label: 'Vue',
       to: '/vue',
-      match: ['/vue', '/vue-guide', '/api-reference', '/convex-patterns', '/troubleshooting'],
-      sidebarRoots: ['/vue-guide', '/api-reference', '/convex-patterns', '/troubleshooting'],
+      match: ['/vue', '/vue-guide'],
+      sidebarRoots: ['/vue-guide', '/convex-patterns', '/api-reference', '/troubleshooting'],
     },
   ],
   header: {
