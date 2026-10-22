@@ -176,4 +176,4 @@ Releases are cut by [uppt](https://github.com/danielroe/uppt) from [conventional
 
 ## License
 
-MIT
+[MIT](./LICENSE)
