@@ -1,7 +1,7 @@
 import type { FunctionReference } from 'convex/server'
 import type { DeepReadonly, Ref } from 'vue'
 import { readonly, ref } from 'vue'
-import { useConvexClient } from '#nuxt-convex/advanced-runtime'
+import { useConvexController } from '#nuxt-convex/advanced-runtime'
 
 export interface ConvexR2Api {
   generateUploadUrl: FunctionReference<'mutation'>
@@ -34,7 +34,7 @@ function uploadWithProgress(
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
     xhr.open('PUT', url)
-    xhr.setRequestHeader('Content-Type', file.type)
+    xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream')
 
     if (onProgress) {
       xhr.upload.onprogress = (event) => {
@@ -56,7 +56,8 @@ function uploadWithProgress(
 }
 
 export function useConvexR2Upload(api: ConvexR2Api, options: UseConvexR2UploadOptions = {}): UseConvexR2UploadReturn {
-  const client = useConvexClient()
+  // Resolve the client per upload: there is none during SSR, and it changes on reconnect.
+  const controller = useConvexController()
   const isUploading = ref(false)
   const progress = ref(0)
   const error = ref<Error | null>(null)
@@ -77,6 +78,9 @@ export function useConvexR2Upload(api: ConvexR2Api, options: UseConvexR2UploadOp
       error.value = null
 
       try {
+        const client = controller.getClient()
+        if (!client)
+          throw new Error('[nuxt-convex] Convex realtime client is not connected')
         const { key, url } = await client.mutation(api.generateUploadUrl, {}) as SignedUploadUrl
 
         await uploadWithProgress(url, file, (nextProgress) => {

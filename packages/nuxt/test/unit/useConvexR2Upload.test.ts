@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useConvexR2Upload } from '../../src/runtime/composables/useConvexR2Upload'
 
-const { mutation, useConvexClient } = vi.hoisted(() => {
+const { getClient, mutation } = vi.hoisted(() => {
   const mutation = vi.fn()
-  const useConvexClient = vi.fn(() => ({ mutation }))
-  return { mutation, useConvexClient }
+  const getClient = vi.fn((): { mutation: typeof mutation } | undefined => ({ mutation }))
+  return { getClient, mutation }
 })
 
 vi.mock('#nuxt-convex/advanced-runtime', () => {
   return {
-    useConvexClient,
+    useConvexController: () => ({ getClient }),
   }
 })
 
@@ -33,19 +33,23 @@ class MockXMLHttpRequest {
 describe('useConvexR2Upload', () => {
   beforeEach(() => {
     mutation.mockReset()
-    useConvexClient.mockClear()
+    getClient.mockClear()
     vi.stubGlobal('XMLHttpRequest', MockXMLHttpRequest)
   })
 
-  it('captures the Convex client during setup', () => {
+  it('can be set up without a realtime client, as during SSR', async () => {
+    getClient.mockReturnValueOnce(undefined)
+    const onError = vi.fn()
     const api = {
       generateUploadUrl: { _name: 'r2:generateUploadUrl' },
       syncMetadata: { _name: 'r2:syncMetadata' },
     }
 
-    useConvexR2Upload(api)
+    const { upload } = useConvexR2Upload(api, { onError })
 
-    expect(useConvexClient).toHaveBeenCalledTimes(1)
+    expect(getClient).not.toHaveBeenCalled()
+    await expect(upload(new File(['x'], 'x.txt'))).resolves.toBeNull()
+    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: '[nuxt-convex] Convex realtime client is not connected' }))
   })
 
   it('uploads via the Convex client and syncs metadata', async () => {
@@ -62,12 +66,11 @@ describe('useConvexR2Upload', () => {
     }
 
     const { error, isUploading, progress, upload } = useConvexR2Upload(api, { onProgress, onSuccess })
-    expect(useConvexClient).toHaveBeenCalledTimes(1)
 
     const key = await upload(file)
 
     expect(key).toBe('file-key')
-    expect(useConvexClient).toHaveBeenCalledTimes(1)
+    expect(getClient).toHaveBeenCalledTimes(1)
     expect(mutation).toHaveBeenNthCalledWith(1, api.generateUploadUrl, {})
     expect(mutation).toHaveBeenNthCalledWith(2, api.syncMetadata, { key: 'file-key' })
     expect(progress.value).toBe(100)
