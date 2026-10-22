@@ -14,7 +14,7 @@ icon: i-lucide-shield
 to: /integrations/better-auth
 title: 'Better Auth'
 ---
-Use Convex as the Better Auth database through the provider and HTTP adapter exported by this repo.
+Run Better Auth inside Convex, proxy it through your app, and render signed-in pages on the server.
 :::
 
 :::card
@@ -31,4 +31,5 @@ Upload files to R2 through the Convex R2 component and the Nuxt-side upload help
 
 - Install and verify the core module first through [Getting Started](/getting-started/installation)
 - Keep the Nuxt-specific setup in this section
+- Use [Authenticated SSR](/nuxt-module/authenticated-ssr) for providers other than Better Auth
 - Use [Convex Patterns](/convex-patterns) and [API Reference](/api-reference) for the shared runtime details

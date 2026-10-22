@@ -50,7 +50,7 @@ describe('docs contract', () => {
 
   it('does not recommend direct vue-convex runtime imports in Nuxt-facing docs', () => {
     const nuxtModuleDoc = read('docs/content/2.nuxt-module/index.md')
-    const virtualModulesDoc = read('docs/content/5.api-reference/2.virtual-modules.md')
+    const virtualModulesDoc = read('docs/content/5.api-reference/02.virtual-modules.md')
 
     expect(nuxtModuleDoc).not.toContain(`from 'vue-convex`)
     expect(virtualModulesDoc).not.toContain(`from 'vue-convex`)
@@ -58,8 +58,8 @@ describe('docs contract', () => {
 
   it('documents the public Nuxt alias matrix consistently', () => {
     const nuxtModuleDoc = read('docs/content/2.nuxt-module/index.md')
-    const moduleConfigurationDoc = read('docs/content/5.api-reference/1.module-configuration.md')
-    const virtualModulesDoc = read('docs/content/5.api-reference/2.virtual-modules.md')
+    const moduleConfigurationDoc = read('docs/content/5.api-reference/01.module-configuration.md')
+    const virtualModulesDoc = read('docs/content/5.api-reference/02.virtual-modules.md')
 
     expect(nuxtModuleDoc).toContain('`#convex`, `#convex/api`, and `#convex/advanced` aliases')
     expect(nuxtModuleDoc).toContain('Optional `#convex/storage` alias')
@@ -87,13 +87,32 @@ describe('docs contract', () => {
 
     expect(betterAuthDoc).toContain('email/password')
     expect(betterAuthDoc).toContain('optional and secondary')
-    expect(betterAuthDoc).toContain('Session & Diagnostics')
+    expect(betterAuthDoc).toContain('Diagnostics')
     expect(betterAuthDoc).toContain('playground')
+  })
+
+  it('documents Better Auth running inside Convex, not the removed database provider', () => {
+    const betterAuthDoc = read('docs/content/6.integrations/1.better-auth.md')
+
+    expect(betterAuthDoc).toContain('clientOnly: true')
+    expect(betterAuthDoc).toContain('Failed to decrypt private key')
+    expect(betterAuthDoc).toContain('adapter:deleteMany')
+    expect(search(`provider: 'convex',`)).toBe('')
+    expect(search('nuxt-convex/better-auth\'')).toBe('')
+    expect(search('@onmax/convex-vue')).toBe('')
+    expect(search('onmax/nuxt-better-auth')).toBe('')
+  })
+
+  it('documents the ssr module option instead of the deprecated server option', () => {
+    const moduleConfigurationDoc = read('docs/content/5.api-reference/01.module-configuration.md')
+
+    expect(moduleConfigurationDoc).toContain('| `ssr` | `boolean` | `true` |')
+    expect(search('convex.server = false')).toBe('')
   })
 
   it('documents the supported R2 path without inventing new aliases', () => {
     const r2Doc = read('docs/content/6.integrations/2.r2.md')
-    const nuxtR2Doc = read('docs/content/2.nuxt-module/2.cloudflare-r2.md')
+    const nuxtR2Doc = read('docs/content/2.nuxt-module/6.cloudflare-r2.md')
 
     expect(r2Doc).toContain('useConvexR2Upload')
     expect(r2Doc).toContain('Cloudflare R2')
