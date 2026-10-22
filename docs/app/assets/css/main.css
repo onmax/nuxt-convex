@@ -2,28 +2,55 @@
 @import '@nuxt/ui';
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/*
+ * Convex accent ramp. One orange hue family sitting between the Convex brand red (#EE342F) and
+ * amber (#F3B01C), built in OKLCH and kept inside sRGB. 600 is the light-mode text/fill step
+ * (4.6:1 on white), 400 the dark-mode one (8.4:1 on zinc-950).
+ */
 @theme static {
-  --color-convex-50: #fef5f0;
-  --color-convex-100: #fee8db;
-  --color-convex-200: #fccdb3;
-  --color-convex-300: #f9a880;
-  --color-convex-400: #f0854e;
-  --color-convex-500: #e56a3b;
-  --color-convex-600: #c85425;
-  --color-convex-700: #a6411a;
-  --color-convex-800: #873616;
-  --color-convex-900: #6f2e14;
-  --color-convex-950: #3d1508;
+  --color-convex-50: oklch(0.975 0.011 50);
+  --color-convex-100: oklch(0.948 0.025 48);
+  --color-convex-200: oklch(0.895 0.052 46);
+  --color-convex-300: oklch(0.825 0.09 44);
+  --color-convex-400: oklch(0.745 0.14 42);
+  --color-convex-500: oklch(0.675 0.185 40);
+  --color-convex-600: oklch(0.585 0.19 38);
+  --color-convex-700: oklch(0.505 0.165 36);
+  --color-convex-800: oklch(0.43 0.135 36);
+  --color-convex-900: oklch(0.37 0.11 36);
+  --color-convex-950: oklch(0.265 0.078 36);
+
+  /* Brand gradient stops, for decoration only (never behind text). */
+  --color-brand-red: oklch(0.627 0.222 27.5);
+  --color-brand-amber: oklch(0.79 0.163 77);
 }
 
 :root {
-  --ui-radius: 0.75rem;
-  --ui-bg: #f9f3e0;
-  --ui-bg-elevated: #ffffff;
-  --ui-text-highlighted: #1a1a1a;
+  --ui-radius: 0.5rem;
+  --ui-primary: var(--ui-color-primary-600);
+  --ui-header-height: 4rem;
+
+  --landing-grid-line: oklch(0 0 0 / 0.06);
+  --landing-glow: oklch(0.745 0.14 42 / 0.22);
+}
+
+.dark {
+  --ui-primary: var(--ui-color-primary-400);
+
+  --ui-bg: var(--ui-color-neutral-950);
+  --ui-bg-muted: var(--ui-color-neutral-900);
+  --ui-bg-elevated: var(--ui-color-neutral-900);
+  --ui-bg-accented: var(--ui-color-neutral-800);
+  --ui-border: var(--ui-color-neutral-800);
+  --ui-border-muted: var(--ui-color-neutral-800);
+  --ui-border-accented: var(--ui-color-neutral-700);
+
+  --landing-grid-line: oklch(1 0 0 / 0.06);
+  --landing-glow: oklch(0.675 0.185 40 / 0.18);
 }
 
 @media (min-width: 1024px) {
@@ -32,73 +59,80 @@
   }
 }
 
-.dark {
-  --ui-bg: var(--color-zinc-950);
-  --ui-bg-elevated: var(--color-zinc-900);
-  --ui-text-highlighted: #f5f5f5;
-}
-
-.hero-glow {
-  position: relative;
-  overflow: hidden;
-}
-.hero-glow::before {
-  content: '';
-  position: absolute;
-  top: -20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 80%;
-  background: radial-gradient(ellipse, oklch(from var(--color-convex-500) l c h / 0.12), transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.landing-section-alt {
-  background: oklch(from var(--color-convex-50) l c h / 0.3);
-}
-.dark .landing-section-alt {
-  background: oklch(from var(--color-zinc-900) l c h / 0.5);
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(1rem);
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s ease-out both;
-}
 
-.realtime-preview-pulse {
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 0.4;
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
   }
-  50% {
-    opacity: 1;
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: oklch(0.745 0.14 42 / 0.3);
+  }
+
+  :focus-visible {
+    outline-color: var(--ui-primary);
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: from-font;
   }
 }
 
-.realtime-preview-item-enter {
-  animation: slide-in 0.4s ease-out both;
+/* Code never uses programming ligatures; `=>` and `!==` stay literal. */
+.shiki {
+  font-variant-ligatures: none;
 }
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateX(-0.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+
+/* The landing editor window is always dark, so its Shiki tokens always use the dark theme. */
+.code-window .shiki span {
+  color: var(--shiki-dark) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
+.text-gradient-brand {
+  /* Light mode keeps every stop at 3:1 or better on white (large text). */
+  background-image: linear-gradient(
+    100deg in oklch,
+    var(--color-convex-700),
+    var(--color-brand-red) 55%,
+    var(--color-convex-500)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark .text-gradient-brand {
+  background-image: linear-gradient(
+    100deg in oklch,
+    var(--color-brand-red),
+    var(--color-convex-400) 50%,
+    var(--color-brand-amber)
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

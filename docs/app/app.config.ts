@@ -3,20 +3,22 @@ export default defineAppConfig({
     locale: 'en',
     assistant: false,
   },
+  // Nuxt is the primary package, so it comes first. Shared sections (troubleshooting) resolve to
+  // the first module that matches.
   docsModules: [
-    {
-      id: 'vue',
-      label: 'Vue',
-      to: '/vue',
-      match: ['/vue', '/vue-guide', '/api-reference', '/convex-patterns', '/troubleshooting'],
-      sidebarRoots: ['/vue-guide', '/api-reference', '/convex-patterns', '/troubleshooting'],
-    },
     {
       id: 'nuxt',
       label: 'Nuxt',
       to: '/nuxt',
       match: ['/nuxt', '/getting-started', '/nuxt-module', '/integrations', '/troubleshooting'],
       sidebarRoots: ['/getting-started', '/nuxt-module', '/integrations', '/troubleshooting'],
+    },
+    {
+      id: 'vue',
+      label: 'Vue',
+      to: '/vue',
+      match: ['/vue', '/vue-guide', '/api-reference', '/convex-patterns', '/troubleshooting'],
+      sidebarRoots: ['/vue-guide', '/api-reference', '/convex-patterns', '/troubleshooting'],
     },
   ],
   header: {
@@ -29,7 +31,6 @@ export default defineAppConfig({
   },
   socials: {
     npm: 'https://www.npmjs.com/package/nuxt-convex',
-    nuxt: 'https://nuxt.com',
   },
   assistant: { enabled: false, explainWithAi: false },
   toc: {
@@ -67,27 +68,21 @@ export default defineAppConfig({
         linkLabelExternalIcon: 'size-2.5',
       },
     },
-    pageHero: {
+    pageHeader: {
       slots: {
-        title: 'font-semibold sm:text-5xl lg:text-6xl',
-        description: 'text-lg sm:text-xl text-muted max-w-2xl mx-auto',
-        links: 'gap-3',
+        // Long composable names such as useConvexConnectionState must fit a 390px screen.
+        title: 'text-[1.75rem]/tight sm:text-4xl/tight font-semibold tracking-[-0.02em] text-balance [overflow-wrap:anywhere]',
+        description: 'text-base/7 sm:text-lg/8 text-muted text-pretty',
       },
     },
-    pageSection: {
-      slots: {
-        title: 'font-semibold !leading-snug text-2xl sm:text-3xl',
-        description: 'text-muted max-w-2xl mx-auto',
-      },
-    },
-    pageCard: {
-      slots: {
-        wrapper: 'grid grid-cols-[auto_1fr] gap-x-2 gap-y-0.5 items-start text-left',
-        leading: 'mb-0 mt-0.5',
-        leadingIcon: 'size-5 text-primary',
-        body: 'contents',
-        title: 'font-semibold',
-        description: 'text-muted font-normal col-span-2',
+    prose: {
+      card: {
+        slots: {
+          base: 'rounded-xl',
+          icon: 'size-5',
+          title: 'text-[15px] font-semibold text-highlighted',
+          description: 'text-sm/6 text-muted [&_code]:text-[13px]',
+        },
       },
     },
   },

@@ -9,6 +9,19 @@ export default defineNuxtConfig({
     experimental: {
       sqliteConnector: 'native',
     },
+    build: {
+      markdown: {
+        // GitHub's themes read better than Nuxt UI's material defaults. Nuxt UI also sets a `light`
+        // key, which wins over `default` once color mode adds the `.light` class, so set all three.
+        highlight: {
+          theme: {
+            default: 'github-light',
+            light: 'github-light',
+            dark: 'github-dark',
+          },
+        },
+      },
+    },
   },
 
   site: {
