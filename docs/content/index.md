@@ -1,206 +1,184 @@
 ---
 title: Nuxt Convex
-description: Realtime Convex helpers for Nuxt and Vue. Choose the track that matches your app, then install the shared data layer with the right framework wiring.
+description: Convex for Nuxt and Vue. Await a query, render it on the server, and keep it live over the WebSocket, typed end to end from your Convex functions.
 navigation: false
 ---
 
-::u-page-hero{class="hero-glow"}
+::landing-hero
+---
+title: Convex for Nuxt and Vue, server-rendered and live
+highlight: server-rendered and live
+description: Await a query to render it on the server, then keep it live over the WebSocket. Typed end to end from your Convex functions.
+badge:
+  label: Awaitable queries with SSR hydration
+  to: /convex-patterns/realtime-and-ssr
+links:
+  - label: Get started
+    to: /getting-started
+    trailingIcon: i-lucide-arrow-right
+  - label: GitHub
+    to: https://github.com/onmax/nuxt-convex
+    target: _blank
+    icon: i-simple-icons-github
+---
 
-#title
-Convex for Nuxt and Vue
+#backend
+```ts [convex/tasks.ts]
+import { v } from 'convex/values'
+import { mutation, query } from './_generated/server'
 
-#description
-Build realtime apps with typed queries, mutations, pagination, storage helpers, and framework-specific setup for Nuxt or standalone Vue.
+export const list = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query('tasks').order('desc').take(20)
+  },
+})
 
-#links
-:u-button{to="/getting-started" size="xl" trailing-icon="i-lucide-arrow-right" label="Get started"}
-:u-button{to="https://github.com/onmax/nuxt-convex" target="_blank" size="xl" color="neutral" variant="outline" trailing-icon="i-simple-icons-github" label="View on GitHub"}
+export const add = mutation({
+  args: { text: v.string() },
+  handler: async (ctx, { text }) => {
+    await ctx.db.insert('tasks', { text, isCompleted: false })
+  },
+})
+```
 
-#body
-  :::code-group{class="landing-install-command max-w-md mx-auto"}
-  ```bash [Nuxt]
-  pnpm add nuxt-convex convex
-  ```
-  ```bash [Vue]
-  pnpm add vue-convex convex
-  ```
-  :::
+#nuxt
+```vue [app/pages/index.vue]
+<script setup lang="ts">
+import { api } from '#convex/api'
+
+// Rendered on the server, hydrated from the payload, then live.
+const { data: tasks } = await useConvexQuery(api.tasks.list)
+const { mutate: addTask } = useConvexMutation(api.tasks.add)
+</script>
+
+<template>
+  <button @click="addTask({ text: 'Ship it' })">
+    Add task
+  </button>
+  <ul>
+    <li v-for="task in tasks" :key="task._id">
+      {{ task.text }}
+    </li>
+  </ul>
+</template>
+```
+
+#vue
+```vue [src/App.vue]
+<script setup lang="ts">
+import { useConvexMutation, useConvexQuery } from 'vue-convex'
+import { api } from '../convex/_generated/api'
+
+// Subscribes over the WebSocket and updates as data changes.
+const { data: tasks } = useConvexQuery(api.tasks.list)
+const { mutate: addTask } = useConvexMutation(api.tasks.add)
+</script>
+
+<template>
+  <button @click="addTask({ text: 'Ship it' })">
+    Add task
+  </button>
+  <ul>
+    <li v-for="task in tasks" :key="task._id">
+      {{ task.text }}
+    </li>
+  </ul>
+</template>
+```
 ::
 
-::u-page-section{orientation="vertical"}
-#title
-Choose your starting path
-
-#description
-Both packages share the same Convex runtime model. Pick the entrypoint that matches your app and follow that track.
-
-  :::u-page-grid{class="max-w-3xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-6"}
-  ::::u-page-card
-  ---
-  icon: i-simple-icons-nuxtdotjs
-  spotlight: true
-  to: /nuxt
-  ---
-  #title
-  Nuxt track
-
-  #description
-  Use `nuxt-convex` for module setup, auto-imports, `#convex/*` aliases, storage scaffolding, and Nuxt-side integrations.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-simple-icons-vuedotjs
-  spotlight: true
-  to: /vue
-  ---
-  #title
-  Vue track
-
-  #description
-  Use `vue-convex` directly in a Vue 3 app when you want explicit plugin setup and full runtime control.
-  ::::
-  :::
+::landing-features
+---
+eyebrow: Why nuxt-convex
+title: The Convex client, shaped for Nuxt
+description: One set of composables for reads, writes, auth and uploads. The Nuxt module adds SSR, aliases and auto-imports on top.
+items:
+  - icon: i-lucide-server
+    title: SSR that hands off to realtime
+    description: Awaited queries run once on the server, hydrate from the payload without refetching, then subscribe over the WebSocket.
+  - icon: i-lucide-braces
+    title: Types from your functions
+    description: Arguments and results are inferred from your Convex functions through `#convex/api`. Rename a field and the page stops compiling.
+  - icon: i-lucide-hourglass
+    title: Awaitable composables
+    description: "`await useConvexQuery()` blocks SSR until data is in and never rejects. Leave out `await` and it loads on the client."
+  - icon: i-lucide-shield-check
+    title: Authenticated SSR
+    description: Use Convex as the Better Auth database. Tokens resolve on the server; only `isAuthenticated` reaches the client.
+  - icon: i-lucide-cloud-upload
+    title: File storage and R2 uploads
+    description: "`useConvexUpload` for Convex storage and `useConvexR2Upload` for Cloudflare R2, both reporting upload progress."
+  - icon: i-simple-icons-vuedotjs
+    title: Works in plain Vue too
+    description: "`vue-convex` is the same runtime as a Vue 3 plugin: `app.use(convexVue, { url })` and the same composables."
+---
 ::
 
-::u-page-section{orientation="vertical"}
-#title
-What you get
-
-#description
-The two tracks differ in setup, but they share the same app-facing data model.
-
-  :::u-page-grid{class="max-w-5xl mx-auto !grid-cols-1 sm:!grid-cols-2 lg:!grid-cols-3 !gap-4"}
-  ::::u-page-card
-  ---
-  icon: i-lucide-radio
-  ---
-  #title
-  Realtime queries
-
-  #description
-  Subscribe to Convex data and keep it fresh without polling.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-server
-  ---
-  #title
-  SSR-aware reads
-
-  #description
-  Use HTTP for the initial server render, then attach realtime updates on the client.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-braces
-  ---
-  #title
-  Typed APIs
-
-  #description
-  Consume Convex generated types directly from your app code.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-list
-  ---
-  #title
-  Pagination helpers
-
-  #description
-  Load page-by-page feeds with reset and incremental load helpers.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-hard-drive
-  ---
-  #title
-  Storage helpers
-
-  #description
-  Upload files to Convex storage or Cloudflare R2, depending on your setup.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-lock
-  ---
-  #title
-  Auth primitives
-
-  #description
-  Track auth state in the shared runtime and wire Nuxt-side auth integrations when needed.
-  ::::
-  :::
+::landing-tracks
+---
+eyebrow: Two packages
+title: Pick the track that matches your app
+description: Both packages share one runtime. Nuxt adds the framework wiring; Vue gives you the plugin and full control.
+tracks:
+  - id: nuxt
+    package: nuxt-convex
+    title: Nuxt module
+    description: Register the module and the composables are auto-imported, with SSR and the request's session handled for you.
+    points:
+      - Auto-imports and `#convex/*` aliases
+      - Server-rendered queries with payload hydration
+      - Better Auth, file storage and Cloudflare R2
+    snippet: "export default defineNuxtConfig({\n  modules: ['nuxt-convex'],\n})"
+    to: /nuxt
+    cta: Read the Nuxt track
+  - id: vue
+    package: vue-convex
+    title: Vue plugin
+    description: Install the plugin in any Vue 3 app and use the same composables, with explicit control over the connection.
+    points:
+      - Queries, mutations, actions and pagination
+      - Connect later or swap deployments at runtime
+      - Storage uploads through `vue-convex/storage`
+    snippet: "app.use(convexVue, {\n  url: import.meta.env.VITE_CONVEX_URL,\n})"
+    to: /vue
+    cta: Read the Vue track
+---
 ::
 
-::u-page-section{orientation="vertical"}
-#title
-Read by intent
-
-  :::u-page-grid{class="max-w-4xl mx-auto !grid-cols-1 sm:!grid-cols-2 !gap-4"}
-  ::::u-page-card
-  ---
-  icon: i-lucide-rocket
-  to: /getting-started
-  ---
-  #title
-  First successful run
-
-  #description
-  Start here if you are new to the repo and want the shortest path to a working setup.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-puzzle
-  to: /convex-patterns
-  ---
-  #title
-  Shared backend patterns
-
-  #description
-  Learn the Convex schema, function, and SSR assumptions both tracks rely on.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-book-open-text
-  to: /api-reference
-  ---
-  #title
-  API reference
-
-  #description
-  Look up exact config keys, aliases, composable signatures, and component behavior.
-  ::::
-
-  ::::u-page-card
-  ---
-  icon: i-lucide-life-buoy
-  to: /troubleshooting
-  ---
-  #title
-  Troubleshooting
-
-  #description
-  Diagnose missing generated files, auth-sensitive SSR issues, storage setup, and connection problems.
-  ::::
-  :::
+::landing-how-it-works
+---
+eyebrow: How it works
+title: One query, three hops
+description: The same call serves the first paint and every update after it.
+steps:
+  - icon: i-lucide-server-cog
+    title: Render on the server
+    description: "`await` runs the query once over `ConvexHttpClient`. Identical queries in one request share a fetch."
+    label: ConvexHttpClient
+  - icon: i-lucide-package
+    title: Ship it in the payload
+    description: The result is stored in the Nuxt payload, so hydration matches the server HTML without another request.
+    label: Nuxt payload
+  - icon: i-lucide-radio-tower
+    title: Subscribe in the browser
+    description: The client opens a WebSocket subscription and swaps in new values as Convex pushes them.
+    label: ConvexClient · WebSocket
+link:
+  label: Read about realtime and SSR
+  to: /convex-patterns/realtime-and-ssr
+---
 ::
 
-::u-page-section{orientation="vertical"}
-#title
-Next step
-
-#description
-Open the getting-started page to choose the right package and verify your first query.
-
-#links
-:u-button{to="/getting-started" size="xl" label="Open getting started" trailing-icon="i-lucide-arrow-right"}
+::landing-cta
+---
+title: Ship your first live query
+description: Install the module, run npx convex dev, and await your first query.
+links:
+  - label: Get started
+    to: /getting-started/installation
+    trailingIcon: i-lucide-arrow-right
+  - label: Browse the API reference
+    to: /api-reference
+---
 ::
