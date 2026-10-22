@@ -76,6 +76,12 @@ export default defineAppConfig({
       },
     },
     prose: {
+      pre: {
+        slots: {
+          // Scroll long signatures sideways instead of wrapping them mid-type on small screens.
+          base: 'whitespace-pre',
+        },
+      },
       card: {
         slots: {
           base: 'rounded-xl',
