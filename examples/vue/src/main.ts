@@ -2,20 +2,18 @@ import { createApp } from 'vue'
 import { convexVue } from 'vue-convex'
 import { convexVueStorage } from 'vue-convex/storage'
 import App from './App.vue'
-import { convexUrl, storageApi } from './lib/convex'
+import { api, convexUrl } from './lib/convex'
 import './style.css'
 
 const app = createApp(App)
 
-app.use(convexVue, {
-  server: false,
-  url: convexUrl || undefined,
-})
+// Without a URL the runtime starts disconnected, and App.vue shows the setup steps
+app.use(convexVue, { url: convexUrl || undefined })
 
 app.use(convexVueStorage, {
-  generateUploadUrl: storageApi.generateUploadUrl,
-  getUrl: storageApi.getUrl,
-  remove: storageApi.removeByStorageId,
+  generateUploadUrl: api.files.generateUploadUrl,
+  getUrl: api.files.getUrl,
+  remove: api.files.remove,
 })
 
 app.mount('#app')

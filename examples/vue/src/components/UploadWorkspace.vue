@@ -3,21 +3,8 @@ import { useUploadWorkspace } from '../composables/useUploadWorkspace'
 import { formatBytes } from '../lib/format'
 import UploadPreviewCard from './UploadPreviewCard.vue'
 
-const props = defineProps<{
-  userId: string
-}>()
-
-const {
-  deletingId,
-  error,
-  isPending,
-  removeUploadById,
-  selectFile,
-  selectedFile,
-  uploadSelectedFile,
-  uploadState,
-  uploads,
-} = useUploadWorkspace(props.userId)
+const { busyId, error, files, removeFile, selectFile, selectedFile, status, uploadSelectedFile, uploadState } = useUploadWorkspace()
+const { isUploading, progress } = uploadState
 </script>
 
 <template>
@@ -33,7 +20,7 @@ const {
       </div>
 
       <p class="workspace-card__count">
-        {{ uploads.length }} saved file{{ uploads.length === 1 ? '' : 's' }}
+        {{ files.length }} saved file{{ files.length === 1 ? '' : 's' }}
       </p>
     </div>
 
@@ -43,8 +30,8 @@ const {
         <input class="workspace-card__picker-input" type="file" accept="image/*,.pdf,.txt" @change="selectFile">
       </label>
 
-      <button class="workspace-card__button" type="button" :disabled="!selectedFile || uploadState.isUploading.value" @click="uploadSelectedFile">
-        {{ uploadState.isUploading.value ? 'Uploading…' : 'Upload file' }}
+      <button class="workspace-card__button" type="button" :disabled="!selectedFile || isUploading" @click="uploadSelectedFile">
+        {{ isUploading ? 'Uploading…' : 'Upload file' }}
       </button>
     </div>
 
@@ -59,29 +46,30 @@ const {
 
     <div class="workspace-card__status-row">
       <p class="workspace-card__status">
-        {{ uploadState.isUploading.value ? `Upload progress ${uploadState.progress.value}%` : 'Uploads flow through vue-convex/storage and save metadata through a mutation.' }}
+        {{ isUploading ? `Upload progress ${progress}%` : 'Uploads go through vue-convex/storage, then a mutation saves the file name and size.' }}
       </p>
     </div>
 
-    <p v-if="error" class="workspace-card__error">
+    <p v-if="error" class="workspace-card__error" role="alert">
       {{ error.message }}
     </p>
-    <p v-else-if="isPending" class="workspace-card__status">
-      Syncing the current upload gallery…
+
+    <p v-if="status === 'pending'" class="workspace-card__status">
+      Loading saved files…
     </p>
 
-    <div v-else-if="uploads.length" class="workspace-card__gallery">
+    <div v-else-if="files.length" class="workspace-card__gallery">
       <UploadPreviewCard
-        v-for="upload in uploads"
-        :key="upload._id"
-        :is-deleting="deletingId === upload._id"
-        :upload="upload"
-        @remove="removeUploadById"
+        v-for="file in files"
+        :key="file._id"
+        :file="file"
+        :is-deleting="busyId === file.storageId"
+        @remove="removeFile"
       />
     </div>
 
-    <p v-else class="workspace-card__status">
-      No files yet. Upload one to verify the storage entrypoint and reactive preview URL.
+    <p v-else-if="status === 'success'" class="workspace-card__status">
+      No files yet. Upload one to see its URL resolve through a live query.
     </p>
   </section>
 </template>

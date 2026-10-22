@@ -3,11 +3,7 @@ import { useTaskWorkspace } from '../composables/useTaskWorkspace'
 import TaskComposer from './TaskComposer.vue'
 import TaskList from './TaskList.vue'
 
-const props = defineProps<{
-  userId: string
-}>()
-
-const { deletingId, draftTitle, error, isAdding, isPending, submitTask, tasks, deleteTaskById } = useTaskWorkspace(props.userId)
+const { busyId, draftTitle, errorMessage, isAdding, remaining, removeTask, status, submitTask, tasks, toggleTask } = useTaskWorkspace()
 </script>
 
 <template>
@@ -15,7 +11,7 @@ const { deletingId, draftTitle, error, isAdding, isPending, submitTask, tasks, d
     <div class="workspace-card__header">
       <div>
         <p class="workspace-card__eyebrow">
-          Query + Mutation
+          Query + Mutations
         </p>
         <h2 class="workspace-card__title">
           Task board
@@ -23,17 +19,18 @@ const { deletingId, draftTitle, error, isAdding, isPending, submitTask, tasks, d
       </div>
 
       <p class="workspace-card__count">
-        {{ tasks.length }} live item{{ tasks.length === 1 ? '' : 's' }}
+        {{ remaining }} open of {{ tasks.length }}
       </p>
     </div>
 
     <TaskComposer v-model="draftTitle" :disabled="isAdding" @submit="submitTask" />
     <TaskList
-      :deleting-id="deletingId"
-      :error-message="error?.message ?? null"
-      :is-pending="isPending"
+      :busy-id="busyId"
+      :error-message="errorMessage"
+      :status="status"
       :tasks="tasks"
-      @remove="deleteTaskById"
+      @toggle="toggleTask"
+      @remove="removeTask"
     />
   </section>
 </template>

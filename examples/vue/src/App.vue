@@ -3,14 +3,16 @@ import { computed } from 'vue'
 import { useConvexConnectionState } from 'vue-convex'
 import TaskWorkspace from './components/TaskWorkspace.vue'
 import UploadWorkspace from './components/UploadWorkspace.vue'
-import { convexUrl, demoUserId } from './lib/convex'
+import { convexUrl } from './lib/convex'
 
-const { isConnected } = useConvexConnectionState()
+const { isConnected, state } = useConvexConnectionState()
 const hasConfiguration = computed(() => convexUrl.length > 0)
 const connectionLabel = computed(() => {
   if (!hasConfiguration.value)
     return 'Missing VITE_CONVEX_URL'
-  return isConnected.value ? 'Realtime connected' : 'Waiting for first connection'
+  if (isConnected.value)
+    return 'Realtime connected'
+  return state.value?.hasEverConnected ? 'Reconnecting…' : 'Connecting…'
 })
 </script>
 
@@ -19,13 +21,13 @@ const connectionLabel = computed(() => {
     <section class="hero-panel">
       <div class="hero-panel__copy">
         <p class="hero-panel__eyebrow">
-          Standalone validation app
+          vue-convex example
         </p>
         <h1 class="hero-panel__title">
-          Prove the Vue package on its own.
+          Convex in a plain Vue app.
         </h1>
         <p class="hero-panel__lede">
-          This Vite app uses the supported `vue-convex` entrypoints directly: root reads and writes for tasks, plus the storage feature entrypoint for uploads and reactive file URLs.
+          A Vite app using `vue-convex` on its own: live queries with `status`, mutations that throw `ConvexError`s the UI can read, and uploads through the `vue-convex/storage` entrypoint.
         </p>
       </div>
 
@@ -41,10 +43,10 @@ const connectionLabel = computed(() => {
 
         <article class="meta-card">
           <p class="meta-card__label">
-            User scope
+            Functions
           </p>
           <p class="meta-card__value meta-card__value--mono">
-            {{ demoUserId }}
+            examples/vue/convex
           </p>
         </article>
 
@@ -60,8 +62,8 @@ const connectionLabel = computed(() => {
     </section>
 
     <section v-if="hasConfiguration" class="workspace-grid">
-      <TaskWorkspace :user-id="demoUserId" />
-      <UploadWorkspace :user-id="demoUserId" />
+      <TaskWorkspace />
+      <UploadWorkspace />
     </section>
 
     <section v-else class="setup-panel">
@@ -69,12 +71,11 @@ const connectionLabel = computed(() => {
         Quick start
       </p>
       <ol class="setup-panel__steps">
-        <li>Run `npx convex dev` from the `playground/convex` directory.</li>
-        <li>Start the example with `pnpm dev:vue`.</li>
-        <li>Set `VITE_CONVEX_URL` and optionally `VITE_CONVEX_USER_ID` in your shell.</li>
+        <li>In `examples/vue`, run `npx convex dev`. It deploys `convex/` and writes `VITE_CONVEX_URL` to `.env.local`. Add `CONVEX_AGENT_MODE=anonymous` to run a local backend without an account.</li>
+        <li>From the repository root, start the example with `pnpm dev:vue`.</li>
       </ol>
       <p class="setup-panel__note">
-        The app stays intentionally disconnected until you provide a real deployment URL, so the example remains honest about the package contract.
+        The app stays disconnected until it has a deployment URL. The demo functions have no sign-in, so use a development deployment.
       </p>
     </section>
   </main>

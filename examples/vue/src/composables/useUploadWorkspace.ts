@@ -1,79 +1,72 @@
-import type { ComputedRef, ShallowRef } from 'vue'
+import type { ComputedRef, Ref, ShallowRef } from 'vue'
+import type { QueryStatus } from 'vue-convex'
 import type { UseConvexUploadReturn } from 'vue-convex/storage'
-import type { StorageId, UploadDoc, UploadId } from '../lib/model'
+import type { FileDoc, StorageId } from '../lib/model'
 import { computed, shallowRef } from 'vue'
 import { useConvexMutation, useConvexQuery } from 'vue-convex'
-import { useConvexUpload } from 'vue-convex/storage'
+import { useConvexStorage, useConvexUpload } from 'vue-convex/storage'
 import { api } from '../lib/convex'
 
 interface UseUploadWorkspaceReturn {
-  deletingId: ShallowRef<UploadId | null>
+  busyId: ShallowRef<StorageId | null>
   error: ComputedRef<Error | null>
-  isPending: ComputedRef<boolean>
-  removeUploadById: (id: UploadId) => Promise<void>
-  selectFile: (event: Event) => void
+  status: Readonly<Ref<QueryStatus>>
+  files: ComputedRef<FileDoc[]>
   selectedFile: ShallowRef<File | null>
-  uploadSelectedFile: () => Promise<void>
   uploadState: UseConvexUploadReturn
-  uploads: ComputedRef<UploadDoc[]>
+  selectFile: (event: Event) => void
+  uploadSelectedFile: () => Promise<void>
+  removeFile: (storageId: StorageId) => Promise<void>
 }
 
-export function useUploadWorkspace(userId: string): UseUploadWorkspaceReturn {
+export function useUploadWorkspace(): UseUploadWorkspaceReturn {
   const selectedFile = shallowRef<File | null>(null)
-  const deletingId = shallowRef<UploadId | null>(null)
-  const { data, error: queryError, isPending } = useConvexQuery(
-    api._hub.storage.list,
-    computed(() => ({ userId })),
-    { server: false },
-  )
-  const { mutate: saveFile, error: saveError } = useConvexMutation(api._hub.storage.saveFile)
-  const { mutate: deleteUpload, error: deleteError } = useConvexMutation(api._hub.storage.remove)
-  const upload = useConvexUpload({
+  const busyId = shallowRef<StorageId | null>(null)
+  const removeError = shallowRef<Error | null>(null)
+
+  const { data, error: queryError, status } = useConvexQuery(api.files.list)
+  const { mutate: saveFile, error: saveError } = useConvexMutation(api.files.save)
+  const storage = useConvexStorage()
+
+  // Uploads the file to Convex storage, then records it with our own mutation
+  const uploadState = useConvexUpload({
     onSuccess: async (storageId, file) => {
       await saveFile({
-        name: file.name,
         storageId: storageId as StorageId,
+        name: file.name,
         type: file.type || 'application/octet-stream',
-        userId,
+        size: file.size,
       })
       selectedFile.value = null
     },
   })
 
-  const uploads = computed(() => data.value ?? [])
-  const error = computed(() => upload.error.value ?? saveError.value ?? deleteError.value ?? queryError.value)
+  const files = computed(() => data.value ?? [])
+  const error = computed(() => uploadState.error.value ?? saveError.value ?? removeError.value ?? queryError.value)
 
   function selectFile(event: Event): void {
-    const input = event.target as HTMLInputElement
-    selectedFile.value = input.files?.[0] ?? null
+    selectedFile.value = (event.target as HTMLInputElement).files?.[0] ?? null
   }
 
   async function uploadSelectedFile(): Promise<void> {
-    if (!selectedFile.value)
-      return
-
-    await upload.upload(selectedFile.value)
+    if (selectedFile.value)
+      await uploadState.upload(selectedFile.value)
   }
 
-  async function removeUploadById(id: UploadId): Promise<void> {
-    deletingId.value = id
+  async function removeFile(storageId: StorageId): Promise<void> {
+    busyId.value = storageId
+    removeError.value = null
     try {
-      await deleteUpload({ id })
+      // The storage plugin's `remove` is files.remove, which also deletes the metadata row
+      await storage.remove(storageId)
+    }
+    catch (cause) {
+      removeError.value = cause instanceof Error ? cause : new Error(String(cause))
     }
     finally {
-      deletingId.value = null
+      busyId.value = null
     }
   }
 
-  return {
-    deletingId,
-    error,
-    isPending,
-    removeUploadById,
-    selectFile,
-    selectedFile,
-    uploadSelectedFile,
-    uploadState: upload,
-    uploads,
-  }
+  return { busyId, error, status, files, selectedFile, uploadState, selectFile, uploadSelectedFile, removeFile }
 }

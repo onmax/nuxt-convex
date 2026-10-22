@@ -10,7 +10,8 @@ const emit = defineEmits<{
 }>()
 const model = defineModel<string>({ required: true })
 
-const canSubmit = computed(() => !props.disabled && model.value.trim().length > 0)
+// Empty titles still go through, so the ConvexError from tasks.add shows up in the UI
+const canSubmit = computed(() => !props.disabled)
 
 function handleSubmit() {
   if (!canSubmit.value)
@@ -28,7 +29,7 @@ function handleSubmit() {
         v-model="model"
         class="task-composer__input"
         type="text"
-        placeholder="Document the edge case, tighten the contract, ship the fix"
+        placeholder="Try submitting it empty to see a ConvexError"
       >
     </label>
 

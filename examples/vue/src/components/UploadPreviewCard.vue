@@ -1,52 +1,47 @@
 <script setup lang="ts">
-import type { UploadDoc, UploadId } from '../lib/model'
+import type { FileDoc, StorageId } from '../lib/model'
 import { computed } from 'vue'
 import { useConvexStorage } from 'vue-convex/storage'
-import { formatRelativeTime } from '../lib/format'
+import { formatBytes, formatRelativeTime } from '../lib/format'
 
 const props = defineProps<{
   isDeleting: boolean
-  upload: UploadDoc
+  file: FileDoc
 }>()
 
 const emit = defineEmits<{
-  remove: [id: UploadId]
+  remove: [storageId: StorageId]
 }>()
 
-const { getUrl } = useConvexStorage()
-const reactiveUrl = getUrl(props.upload.storageId)
-const previewUrl = computed(() => reactiveUrl.value ?? props.upload.url ?? null)
-const isImage = computed(() => props.upload.type.startsWith('image/') && Boolean(previewUrl.value))
-
-function handleRemove() {
-  emit('remove', props.upload._id)
-}
+// A live query: `null` while it loads, then the file's URL
+const url = useConvexStorage().getUrl(() => props.file.storageId)
+const isImage = computed(() => props.file.type.startsWith('image/') && Boolean(url.value))
 </script>
 
 <template>
   <article class="upload-card">
     <div class="upload-card__media">
-      <img v-if="isImage" class="upload-card__image" :src="previewUrl!" :alt="upload.name">
+      <img v-if="isImage" class="upload-card__image" :src="url!" :alt="file.name">
       <div v-else class="upload-card__fallback">
-        {{ upload.name.slice(0, 2).toUpperCase() }}
+        {{ file.name.slice(0, 2).toUpperCase() }}
       </div>
     </div>
 
     <div class="upload-card__body">
       <div class="upload-card__copy">
         <p class="upload-card__name">
-          {{ upload.name }}
+          {{ file.name }}
         </p>
         <p class="upload-card__meta">
-          {{ upload.type || 'Stored file' }} · {{ formatRelativeTime(upload.createdAt) }}
+          {{ formatBytes(file.size) }} · {{ formatRelativeTime(file.createdAt) }}
         </p>
       </div>
 
       <div class="upload-card__actions">
-        <a v-if="previewUrl" class="upload-card__link" :href="previewUrl" target="_blank" rel="noreferrer">
+        <a v-if="url" class="upload-card__link" :href="url" target="_blank" rel="noreferrer">
           Open
         </a>
-        <button class="upload-card__button" type="button" :disabled="isDeleting" @click="handleRemove">
+        <button class="upload-card__button" type="button" :disabled="isDeleting" @click="emit('remove', file.storageId)">
           {{ isDeleting ? 'Removing…' : 'Remove' }}
         </button>
       </div>

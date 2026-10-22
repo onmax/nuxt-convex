@@ -1,58 +1,58 @@
 <script setup lang="ts">
+import type { QueryStatus } from 'vue-convex'
 import type { TaskDoc, TaskId } from '../lib/model'
-import { computed } from 'vue'
 import { formatRelativeTime } from '../lib/format'
 
-const props = defineProps<{
-  deletingId: TaskId | null
+defineProps<{
+  busyId: TaskId | null
   errorMessage: string | null
-  isPending: boolean
+  status: QueryStatus
   tasks: TaskDoc[]
 }>()
 
 const emit = defineEmits<{
+  toggle: [id: TaskId]
   remove: [id: TaskId]
 }>()
-
-const isEmpty = computed(() => !props.isPending && props.tasks.length === 0)
-
-function handleRemove(id: TaskId) {
-  emit('remove', id)
-}
 </script>
 
 <template>
   <div class="task-list">
-    <p v-if="isPending" class="task-list__state">
-      Syncing the current task set…
-    </p>
-
-    <p v-else-if="errorMessage" class="task-list__error">
+    <p v-if="errorMessage" class="task-list__error" role="alert">
       {{ errorMessage }}
     </p>
 
-    <p v-else-if="isEmpty" class="task-list__state">
-      No tasks yet. Add one above to prove the standalone mutation flow.
+    <p v-if="status === 'pending'" class="task-list__state">
+      Loading tasks over the WebSocket…
     </p>
 
-    <ul v-else class="task-list__items">
-      <li v-for="task in tasks" :key="task._id" class="task-list__item">
-        <div class="task-list__copy">
-          <p class="task-list__title">
-            {{ task.title }}
-          </p>
-          <p class="task-list__meta">
-            Added {{ formatRelativeTime(task.createdAt) }}
-          </p>
-        </div>
+    <p v-else-if="status === 'success' && tasks.length === 0" class="task-list__state">
+      No tasks yet. Add one above, then open this page in a second tab to watch it sync.
+    </p>
+
+    <ul v-else-if="status === 'success'" class="task-list__items">
+      <li v-for="task in tasks" :key="task._id" class="task-list__item" :class="{ 'task-list__item--done': task.isCompleted }">
+        <label class="task-list__copy">
+          <input
+            class="task-list__check"
+            type="checkbox"
+            :checked="task.isCompleted"
+            :disabled="busyId === task._id"
+            @change="emit('toggle', task._id)"
+          >
+          <span>
+            <span class="task-list__title">{{ task.title }}</span>
+            <span class="task-list__meta">Added {{ formatRelativeTime(task.createdAt) }}</span>
+          </span>
+        </label>
 
         <button
           class="task-list__button"
           type="button"
-          :disabled="deletingId === task._id"
-          @click="handleRemove(task._id)"
+          :disabled="busyId === task._id"
+          @click="emit('remove', task._id)"
         >
-          {{ deletingId === task._id ? 'Removing…' : 'Remove' }}
+          Remove
         </button>
       </li>
     </ul>
@@ -101,17 +101,36 @@ function handleRemove(id: TaskId) {
 }
 
 .task-list__copy {
+  align-items: start;
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+}
+
+.task-list__copy > span {
   display: grid;
   gap: 0.35rem;
 }
 
+.task-list__check {
+  accent-color: var(--accent);
+  height: 1.1rem;
+  margin: 0.2rem 0 0;
+  width: 1.1rem;
+}
+
+.task-list__item--done .task-list__title {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+
 .task-list__title {
-  margin: 0;
+  display: block;
 }
 
 .task-list__meta {
   color: var(--muted);
-  margin: 0;
+  display: block;
   font-size: 0.92rem;
 }
 
