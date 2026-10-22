@@ -6,8 +6,8 @@ on:
     paths:
       - 'playground/**'
       - 'packages/**'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/playground.yml'
+      - pnpm-lock.yaml
+      - .github/workflows/playground.yml
   workflow_dispatch:
 
 concurrency:
