@@ -52,6 +52,13 @@
         "@nuxtjs/better-auth"
       ],
       "automerge": false
+    },
+    {
+      "description": "@convex-dev/better-auth needs better-auth <1.7 (https://github.com/get-convex/better-auth/pull/444); see pnpm-workspace.yaml.",
+      "matchPackageNames": [
+        "better-auth"
+      ],
+      "allowedVersions": "<1.7.0"
     }
   ]
 }

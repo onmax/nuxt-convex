@@ -8,6 +8,14 @@ trustPolicyExclude:
   - chokidar
   - semver
 
+# @convex-dev/better-auth (<= 0.12.5) needs better-auth <1.7: it imports
+# better-auth/plugins/oidc-provider, which 1.7 removed. @nuxtjs/better-auth asks for >=1.7,
+# but its client-only mode works with 1.6. Drop this once 1.7 support ships:
+# https://github.com/get-convex/better-auth/pull/444
+peerDependencyRules:
+  allowedVersions:
+    '@nuxtjs/better-auth>better-auth': 1.6.33
+
 shellEmulator: true
 
 packages:
@@ -71,7 +79,7 @@ catalogs:
   playground:
     '@nuxthub/core': ^0.10.10
     '@nuxtjs/better-auth': ^0.3.12
-    better-auth: ^1.7.12
+    better-auth: 1.6.33
     wrangler: ^4.151.3
   prod:
     '@nuxt/kit': ^4.6.2
