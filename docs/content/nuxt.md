@@ -4,7 +4,41 @@ description: Use nuxt-convex in a Nuxt app for module setup, auto-imports, virtu
 navigation: false
 ---
 
-Use this track when your app runs on Nuxt and you want the framework wrapper around the shared Vue runtime.
+Use this track when your app runs on Nuxt and you want the framework wrapper around the shared Vue runtime. Queries you `await` render on the server, hydrate from the payload, and then stay live over the WebSocket.
+
+## Set up in three steps
+
+::steps{level="3"}
+
+### Install the module
+
+```bash [Terminal]
+pnpm add nuxt-convex convex
+```
+
+### Register it
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['nuxt-convex'],
+})
+```
+
+### Query from a page
+
+Run `npx convex dev` to generate `convex/_generated/`, set `CONVEX_URL` in `.env`, and await your first query.
+
+```vue [app/pages/index.vue]
+<script setup lang="ts">
+import { api } from '#convex/api'
+
+const { data: tasks } = await useConvexQuery(api.tasks.list)
+</script>
+```
+
+::
+
+## What the module owns
 
 `nuxt-convex` owns the Nuxt-facing contract:
 
@@ -17,66 +51,45 @@ Use this track when your app runs on Nuxt and you want the framework wrapper aro
 
 For shared composable behavior such as queries, mutations, pagination, and auth state, read the [Vue track](/vue). In a Nuxt app, keep the Nuxt import paths and aliases.
 
-::u-page-section{orientation="vertical"}
-#title
-Start with the Nuxt path
+## Start with the Nuxt path
 
-#description
 Open the page that matches your job: install the module, configure its public surface, or add a Nuxt-specific integration.
 
-:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-::::u-page-card
+::card-group
+:::card
 ---
 icon: i-lucide-download
-spotlight: true
 to: /getting-started/installation
+title: Install the module
 ---
-#title
-Install the module
-
-#description
 Add `nuxt-convex`, generate the API, and verify your first query.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-settings
-spotlight: true
 to: /nuxt-module
+title: Configure the Nuxt layer
 ---
-#title
-Configure the Nuxt layer
-
-#description
 Learn the module config, aliases, auto-imports, storage scaffolding, and wrapper-specific behavior.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-plug
-spotlight: true
 to: /integrations
+title: Add integrations
 ---
-#title
-Add integrations
-
-#description
 Wire Better Auth or Cloudflare R2 through the supported Nuxt-side entrypoints.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-book-open-text
-spotlight: true
 to: /api-reference/module-configuration
+title: Look up the public API
 ---
-#title
-Look up the public API
-
-#description
 Check config keys, aliases, components, and the Nuxt-only upload helper.
-::::
-
 :::
 ::
 

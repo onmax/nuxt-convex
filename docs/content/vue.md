@@ -6,7 +6,42 @@ navigation: false
 
 Use this track when your app is a standalone Vue 3 app or when you want to understand the shared runtime that also powers `nuxt-convex`.
 
-This track owns:
+## Set up in three steps
+
+::steps{level="3"}
+
+### Install the package
+
+```bash [Terminal]
+pnpm add vue-convex convex
+```
+
+### Register the plugin
+
+```ts [src/main.ts]
+import { convexVue } from 'vue-convex'
+import { createApp } from 'vue'
+import App from './App.vue'
+
+createApp(App)
+  .use(convexVue, { url: import.meta.env.VITE_CONVEX_URL })
+  .mount('#app')
+```
+
+### Query from a component
+
+```vue [src/App.vue]
+<script setup lang="ts">
+import { useConvexQuery } from 'vue-convex'
+import { api } from '../convex/_generated/api'
+
+const { data: tasks } = useConvexQuery(api.tasks.list)
+</script>
+```
+
+::
+
+## What this track owns
 
 - the base `convexVue` plugin
 - shared composables for reads, writes, pagination, auth, and connection state
@@ -15,66 +50,45 @@ This track owns:
 
 If you are building a Nuxt app, keep the Nuxt-side aliases in app code and use this track to understand the shared behavior underneath them.
 
-::u-page-section{orientation="vertical"}
-#title
-Start with the Vue path
+## Start with the Vue path
 
-#description
 Open the page that matches your current task.
 
-:::u-page-grid{class="!grid-cols-1 lg:!grid-cols-2 !gap-3"}
-::::u-page-card
+::card-group
+:::card
 ---
 icon: i-lucide-download
-spotlight: true
 to: /vue-guide/installation
+title: Install the plugin
 ---
-#title
-Install the plugin
-
-#description
 Register `convexVue`, generate the API, and verify the first query.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-search
-spotlight: true
 to: /vue-guide/queries
+title: Read data
 ---
-#title
-Read data
-
-#description
 Use reactive query arguments, SSR-aware reads, and skip logic.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-pen-line
-spotlight: true
 to: /vue-guide/mutations-and-actions
+title: Write data
 ---
-#title
-Write data
-
-#description
 Call mutations and actions, including optimistic updates for mutations.
-::::
+:::
 
-::::u-page-card
+:::card
 ---
 icon: i-lucide-sliders-horizontal
-spotlight: true
 to: /vue-guide/controller
+title: Control the runtime
 ---
-#title
-Control the runtime
-
-#description
 Connect later, reconfigure at runtime, or access the raw clients.
-::::
-
 :::
 ::
 
