@@ -4,7 +4,7 @@ import { getPlaygroundSiteUrl, getPlaygroundWorkerName, isGitHubAuthEnabled } fr
 const env = process.env
 
 export default defineNuxtConfig({
-  modules: ['nuxt-convex', '@nuxt/ui', '@nuxthub/core', '@onmax/nuxt-better-auth'],
+  modules: ['nuxt-convex', '@nuxt/ui', '@nuxthub/core', '@nuxtjs/better-auth'],
 
   hub: {},
 

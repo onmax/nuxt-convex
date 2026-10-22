@@ -1,4 +1,4 @@
-import { defineServerAuth } from '@onmax/nuxt-better-auth/config'
+import { defineServerAuth } from '@nuxtjs/better-auth/config'
 import { parseBooleanFlag } from '../utils/playground-env'
 
 export default defineServerAuth(({ runtimeConfig }) => {

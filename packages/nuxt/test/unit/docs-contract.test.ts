@@ -75,9 +75,9 @@ describe('docs contract', () => {
     const betterAuthDoc = read('docs/content/6.integrations/1.better-auth.md')
 
     expect(betterAuthDoc).toContain('dependency-constrained')
-    expect(betterAuthDoc).toContain('@onmax/nuxt-better-auth@0.0.2-alpha.31')
-    expect(betterAuthDoc).toContain('@convex-dev/better-auth@0.11.3')
-    expect(betterAuthDoc).toContain('better-auth@1.5.6')
+    expect(betterAuthDoc).toContain('@nuxtjs/better-auth@0.3.12')
+    expect(betterAuthDoc).toContain('@convex-dev/better-auth@0.12.5')
+    expect(betterAuthDoc).toContain('better-auth@1.7.12')
   })
 
   it('documents the supported Better Auth boundary through the playground flow', () => {

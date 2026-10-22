@@ -1,11 +1,11 @@
 {
   "name": "vue-convex",
   "type": "module",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Vue composables and plugin for Convex",
   "author": "onmax",
   "license": "MIT",
-  "homepage": "https://github.com/onmax/nuxt-convex#readme",
+  "homepage": "https://nuxt-convex.onmax.me",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/onmax/nuxt-convex.git",
@@ -65,7 +65,8 @@
     "dev": "tsdown --watch",
     "test": "pnpm build && vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
-    "typecheck": "pnpm build && tsc --noEmit -p tsconfig.json"
+    "typecheck": "pnpm build && tsc --noEmit -p tsconfig.json",
+    "prepack": "tsdown"
   },
   "peerDependencies": {
     "convex": ">=1.0.0",

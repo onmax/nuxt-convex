@@ -1,9 +1,8 @@
 {
   "name": "convex-monorepo",
   "type": "module",
-  "version": "0.0.7",
   "private": true,
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@11.28.5",
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "pnpm --filter nuxt-convex dev",
@@ -23,10 +22,7 @@
     "typecheck": "pnpm --filter vue-convex typecheck && pnpm --filter nuxt-convex typecheck",
     "test": "pnpm --filter vue-convex test && pnpm --filter nuxt-convex test",
     "validate:packages": "pnpm build && publint packages/vue && publint packages/nuxt",
-    "preview:packages": "mkdir -p .artifacts && pnpm --filter vue-convex pack --pack-destination .artifacts && pnpm --filter nuxt-convex pack --pack-destination .artifacts",
-    "prepack": "pnpm validate:packages",
-    "publish:packages": "pnpm --filter vue-convex publish --no-git-checks --provenance --access public && pnpm --filter nuxt-convex publish --no-git-checks --provenance --access public",
-    "release": "bumpp && git push --follow-tags"
+    "preview:packages": "mkdir -p .artifacts && pnpm --filter vue-convex pack --pack-destination .artifacts && pnpm --filter nuxt-convex pack --pack-destination .artifacts"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
