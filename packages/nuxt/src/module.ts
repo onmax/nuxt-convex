@@ -104,6 +104,7 @@ export const db = undefined
     })
 
     addPlugin(resolve('./runtime/plugin'))
+    dedupeConvex(nuxt)
     setupConvexApiAlias(nuxt)
     setupConvexExports(nuxt, resolve)
     setupConvexAdvanced(nuxt, resolve)
@@ -141,6 +142,23 @@ function resolveConfig(options: ConvexConfig): ResolvedConvexConfig {
     || ''
 
   return defu(options, { url, dir: 'convex', storage: false, r2: false, server: true }) as ResolvedConvexConfig
+}
+
+/**
+ * Resolve `convex` once, from the app root, in every Vite environment.
+ *
+ * Besides keeping a single Convex client instance, this keeps `convex/*` imports bare in the
+ * SSR build. Without it, Nuxt's `nuxt:resolve-externals` plugin rewrites `convex/browser`
+ * imported from an inlined dependency (vue-convex) into an absolute path to
+ * `convex/dist/esm/browser/index-node.js`. Nitro cannot map that file back to a package
+ * export, so it inlines Convex and emits Convex's internal `../index.js` import as a broken
+ * relative path.
+ */
+function dedupeConvex(nuxt: Nuxt): void {
+  nuxt.options.vite.resolve ||= {}
+  const dedupe = nuxt.options.vite.resolve.dedupe ||= []
+  if (!dedupe.includes('convex'))
+    dedupe.push('convex')
 }
 
 function setupConvexExports(nuxt: Nuxt, resolve: (path: string) => string): void {
