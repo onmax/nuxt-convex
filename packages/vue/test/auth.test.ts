@@ -70,4 +70,30 @@ describe('useConvexAuth', () => {
 
     harness.stop()
   })
+
+  it('signs the client out when the registering scope is disposed', () => {
+    const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
+    const auth = harness.run(() => root.useConvexAuth({ fetchToken: async () => 'token' }))
+    const client = getLastRealtimeClient()
+    emitAuthState(client, true)
+
+    harness.stop()
+
+    expect(client.client.clearAuth).toHaveBeenCalledTimes(1)
+    expect(auth.isAuthenticated.value).toBe(false)
+  })
+
+  it('keeps the SSR auth snapshot until the client confirms it', () => {
+    const harness = createHarness({ options: { url: 'https://test.convex.cloud', initialAuth: { isAuthenticated: true } } })
+    const auth = harness.run(() => root.useConvexAuth({ fetchToken: async () => 'token' }))
+    const client = getLastRealtimeClient()
+
+    expect(auth.isLoading.value).toBe(false)
+    expect(auth.isAuthenticated.value).toBe(true)
+
+    emitAuthState(client, false)
+    expect(auth.isAuthenticated.value).toBe(false)
+
+    harness.stop()
+  })
 })
