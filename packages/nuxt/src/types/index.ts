@@ -1,8 +1,13 @@
 export type { ConvexR2Api, UseConvexR2UploadOptions, UseConvexR2UploadReturn } from '../runtime/composables/useConvexR2Upload'
 export type { ConvexConfig, ResolvedConvexConfig } from './config'
 export type {
+  ConvexHydrationAdapter,
+  ConvexHydrationEntry,
+  ConvexQueryError,
+  ConvexServerAuth,
   ConvexVueOptions,
-  ResolvedConvexVueOptions,
+  QueryAuthMode,
+  QueryStatus,
   UseConvexActionReturn,
   UseConvexAuthOptions,
   UseConvexAuthReturn,
@@ -18,6 +23,7 @@ export type {
   ConvexControllerConnectOptions,
   ConvexControllerStatus,
   ConvexVueController,
+  ResolvedConvexVueOptions,
 } from 'vue-convex/advanced'
 export type {
   ConvexStorageOptions,
