@@ -17,13 +17,12 @@ const deletingKey = ref<string | null>(null)
 
 const {
   data: objects,
-  pages,
   isDone,
   isLoadingMore,
   loadMore,
   reset,
   isPending,
-} = useConvexPaginatedQuery(r2Api.r2.listMetadata, computed(() => ({})), { numItems: 8 })
+} = useConvexPaginatedQuery(r2Api.r2.listMetadata, {}, { numItems: 8, auth: 'required' })
 
 const { mutate: deleteObject } = useConvexMutation(r2Api.r2.deleteObject, {
   onError: (error: Error) => {
@@ -164,13 +163,13 @@ function formatSize(bytes?: number): string {
         </div>
 
         <div class="flex items-center gap-3 border-t border-default pt-4">
-          <UButton v-if="!isDone" size="sm" :loading="isLoadingMore" @click="loadMore">
+          <UButton v-if="!isDone" size="sm" :loading="isLoadingMore" @click="loadMore()">
             Load more
           </UButton>
           <UBadge v-else color="success" variant="subtle">
             All loaded
           </UBadge>
-          <span class="text-sm text-muted">{{ objectCount }} across {{ pages.length }} page{{ pages.length === 1 ? '' : 's' }}</span>
+          <span class="text-sm text-muted">{{ objectCount }} loaded</span>
         </div>
       </div>
 

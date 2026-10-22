@@ -1,23 +1,5 @@
 import { defineServerAuth } from '@nuxtjs/better-auth/config'
-import { parseBooleanFlag } from '../utils/playground-env'
 
-export default defineServerAuth(({ runtimeConfig }) => {
-  const enableGitHubAuth = parseBooleanFlag(runtimeConfig.public.enableGitHubAuth, false)
-
-  return {
-    appName: 'nuxt-convex Playground',
-    ...(enableGitHubAuth
-      ? {
-          socialProviders: {
-            github: {
-              clientId: runtimeConfig.github?.clientId || '',
-              clientSecret: runtimeConfig.github?.clientSecret || '',
-            },
-          },
-        }
-      : {}),
-    session: {
-      cookieCache: { enabled: true, maxAge: 7 * 24 * 60 * 60, strategy: 'jwe' },
-    },
-  }
-})
+// Unused while `auth.clientOnly` is on: Better Auth runs inside Convex (convex/auth.ts).
+// @nuxtjs/better-auth recreates this file when it's missing, so it stays.
+export default defineServerAuth({})

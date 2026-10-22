@@ -38,6 +38,8 @@ export default defineNuxtConfig({
     },
   },
 
+  // Better Auth runs inside Convex (@convex-dev/better-auth). nuxt-convex proxies /api/auth/** to it
+  // and turns the session cookie into a Convex token for SSR and server routes.
   auth: {
     clientOnly: true,
     redirects: {
@@ -48,7 +50,6 @@ export default defineNuxtConfig({
   },
 
   convex: {
-    server: false,
     storage: true,
     r2: true,
   },

@@ -1,73 +1,51 @@
 <script setup lang="ts">
+import { insertAtTop } from '#convex'
 import { api } from '#convex/api'
 
 const toast = useToast()
 const { user } = useUserSession()
-const userId = computed(() => user.value?.id ?? '')
-const taskArgs = computed(() => userId.value ? { userId: userId.value } : 'skip' as const)
 
 // Section A: useConvexQueries — batch multiple queries
-const { data: batchData, errors: batchErrors } = useConvexQueries(computed(() => ({
-  tasks: { query: api.tasks.list, args: taskArgs.value },
-  stats: { query: api.tasks.stats, args: taskArgs.value },
-})))
+const { data: batchData, errors: batchErrors } = useConvexQueries({
+  tasks: { query: api.tasks.list, args: {} },
+  stats: { query: api.tasks.stats, args: {} },
+})
 
 // Section B: useConvexAction
 const { execute: runSummarize, isPending: isSummarizing, error: summarizeError } = useConvexAction(api.tasks.summarize)
 const summaryResult = ref<string | null>(null)
 async function handleSummarize() {
-  if (!userId.value)
-    return
   summaryResult.value = null
   try {
-    summaryResult.value = await runSummarize({ userId: userId.value })
+    summaryResult.value = await runSummarize({})
   }
   catch (e) {
     toast.add({ color: 'error', title: 'Action failed', description: e instanceof Error ? e.message : 'Unknown error' })
   }
 }
 
-// Section E: useConvexClient + useConvexHttpClient
-const httpQueryResult = ref<string | null>(null)
-const isHttpQuerying = ref(false)
-async function runHttpQuery() {
-  if (!userId.value)
-    return
-  isHttpQuerying.value = true
-  try {
-    const { useConvexHttpClient } = await import('#convex/advanced')
-    const httpClient = useConvexHttpClient()
-    const result = await httpClient.query(api.tasks.stats, { userId: userId.value })
-    httpQueryResult.value = JSON.stringify(result, null, 2)
-  }
-  catch (e) {
-    httpQueryResult.value = `Error: ${e instanceof Error ? e.message : 'Unknown'}`
-  }
-  finally {
-    isHttpQuerying.value = false
-  }
-}
+// Section E: a Nitro route calling Convex as the signed-in user (server/api/tasks/stats.get.ts)
+const { data: serverStats, error: serverStatsError, status: serverStatsStatus, refresh: refreshServerStats } = useFetch('/api/tasks/stats', { server: false, immediate: false })
 
 // Section F: Optimistic update with insertAtTop
 const optimisticTitle = ref('')
 const { mutate: addTaskOptimistic, isPending: isOptimisticAdding } = useConvexMutation(api.tasks.add, {
-  optimisticUpdate: async (localStore, args) => {
-    const { insertAtTop } = await import('vue-convex')
+  optimisticUpdate: (localStore, args) => {
     insertAtTop({
       paginatedQuery: api.tasks.listPaginated,
-      argsToMatch: { userId: args.userId },
+      argsToMatch: {},
       localQueryStore: localStore,
-      item: { _id: crypto.randomUUID() as any, _creationTime: Date.now(), title: args.title, userId: args.userId, createdAt: Date.now() },
+      item: { _id: crypto.randomUUID() as any, _creationTime: Date.now(), title: args.title, userId: user.value?.id, createdAt: Date.now() },
     })
   },
 })
-const { data: optimisticTasks, isDone: optimisticIsDone, isLoadingMore: optimisticLoading, loadMore: optimisticLoadMore } = useConvexPaginatedQuery(api.tasks.listPaginated, taskArgs, { numItems: 5 })
+const { data: optimisticTasks, isDone: optimisticIsDone, isLoadingMore: optimisticLoading, loadMore: optimisticLoadMore } = useConvexPaginatedQuery(api.tasks.listPaginated, {}, { numItems: 5 })
 async function addWithOptimistic() {
   const title = optimisticTitle.value.trim()
-  if (!title || !userId.value)
+  if (!title)
     return
   try {
-    await addTaskOptimistic({ title, userId: userId.value })
+    await addTaskOptimistic({ title })
     optimisticTitle.value = ''
     toast.add({ color: 'success', title: 'Task created (optimistic)' })
   }
@@ -153,7 +131,7 @@ async function addWithOptimistic() {
             </h3>
             <span class="text-sm text-muted">&lt;ConvexQuery&gt;</span>
           </div>
-          <ConvexQuery :query="api.tasks.list" :args="taskArgs" :options="{ server: false }">
+          <ConvexQuery :query="api.tasks.list" :args="{}">
             <template #default="{ data }">
               <div class="space-y-1">
                 <div v-for="task in (data as any[]).slice(0, 4)" :key="task._id" class="rounded-md border border-default bg-elevated/50 px-3 py-2">
@@ -186,7 +164,7 @@ async function addWithOptimistic() {
             </h3>
             <span class="text-sm text-muted">&lt;ConvexPaginatedQuery&gt;</span>
           </div>
-          <ConvexPaginatedQuery :query="api.tasks.listPaginated" :args="taskArgs" :options="{ numItems: 3 }">
+          <ConvexPaginatedQuery :query="api.tasks.listPaginated" :args="{}" :options="{ numItems: 3 }">
             <template #default="{ data, isDone, isLoadingMore, loadMore }">
               <div class="space-y-1">
                 <div v-for="task in data" :key="task._id" class="rounded-md border border-default bg-elevated/50 px-3 py-2">
@@ -195,7 +173,7 @@ async function addWithOptimistic() {
                   </p>
                 </div>
                 <div class="flex items-center gap-3 pt-2">
-                  <UButton v-if="!isDone" size="xs" :loading="isLoadingMore" @click="loadMore">
+                  <UButton v-if="!isDone" size="xs" :loading="isLoadingMore" @click="loadMore()">
                     Load more
                   </UButton>
                   <UBadge v-else color="success" variant="subtle">
@@ -217,20 +195,23 @@ async function addWithOptimistic() {
           </ConvexPaginatedQuery>
         </section>
 
-        <!-- Section E: useConvexClient + useConvexHttpClient -->
+        <!-- Section E: Nitro server helpers -->
         <section class="space-y-4">
           <div class="flex items-center justify-between">
             <h3 class="font-semibold text-highlighted">
-              Raw clients
+              Server route
             </h3>
-            <span class="text-sm text-muted">useConvexClient / useConvexHttpClient</span>
+            <span class="text-sm text-muted">serverConvexQuery / requireConvexAuth</span>
           </div>
           <div class="flex items-center gap-3">
-            <UButton size="sm" :loading="isHttpQuerying" @click="runHttpQuery">
-              One-shot HTTP query
+            <UButton size="sm" :loading="serverStatsStatus === 'pending'" @click="refreshServerStats()">
+              GET /api/tasks/stats
             </UButton>
           </div>
-          <pre v-if="httpQueryResult" class="rounded-md border border-default bg-elevated/50 p-3 text-xs text-highlighted overflow-auto max-h-32">{{ httpQueryResult }}</pre>
+          <pre v-if="serverStats" class="rounded-md border border-default bg-elevated/50 p-3 text-xs text-highlighted overflow-auto max-h-32">{{ serverStats }}</pre>
+          <p v-if="serverStatsError" class="text-sm text-error">
+            {{ serverStatsError.statusCode }}: {{ serverStatsError.statusMessage || serverStatsError.message }}
+          </p>
         </section>
 
         <!-- Section F: Optimistic update with insertAtTop -->
@@ -257,7 +238,7 @@ async function addWithOptimistic() {
               </p>
             </div>
             <div class="flex items-center gap-3 pt-2">
-              <UButton v-if="!optimisticIsDone" size="xs" :loading="optimisticLoading" @click="optimisticLoadMore">
+              <UButton v-if="!optimisticIsDone" size="xs" :loading="optimisticLoading" @click="optimisticLoadMore()">
                 Load more
               </UButton>
               <UBadge v-else color="success" variant="subtle">

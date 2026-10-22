@@ -3,22 +3,21 @@ import type { Id } from '../../../convex/_generated/dataModel'
 import { api } from '#convex/api'
 
 const toast = useToast()
-const { user } = useUserSession()
-const userId = computed(() => user.value?.id ?? '')
-const taskArgs = computed(() => userId.value ? { userId: userId.value } : 'skip' as const)
+// The functions read the user from the auth token, so the queries need no arguments
+const { isAuthenticated } = useConvexAuth()
 
 const form = reactive({ title: '', seedCount: 18 })
 
-const { data: allTasks, isPending } = useConvexQuery(api.tasks.list, taskArgs)
+// Awaited, so SSR renders the signed-in user's tasks (nuxt-convex resolves their token on the server)
+const { data: allTasks, isPending } = await useConvexQuery(api.tasks.list, {})
 const {
   data: paginatedTasks,
-  pages,
   isDone,
   isLoadingMore,
   loadMore,
   reset,
   isPending: isPaginationPending,
-} = useConvexPaginatedQuery(api.tasks.listPaginated, taskArgs, { numItems: 6 })
+} = useConvexPaginatedQuery(api.tasks.listPaginated, {}, { numItems: 6 })
 
 const { mutate: addTask, isPending: isCreating } = useConvexMutation(api.tasks.add)
 const { mutate: removeTask, isPending: isRemoving } = useConvexMutation(api.tasks.remove)
@@ -36,10 +35,10 @@ function getErrorMessage(error: unknown): string {
 
 async function createTask() {
   const title = form.title.trim()
-  if (!title || !userId.value)
+  if (!title)
     return
   try {
-    await addTask({ title, userId: userId.value })
+    await addTask({ title })
     form.title = ''
     reset()
     toast.add({ color: 'success', title: 'Task created' })
@@ -60,11 +59,9 @@ async function removeTaskById(id: Id<'tasks'>) {
 }
 
 async function seedSampleTasks() {
-  if (!userId.value)
-    return
   const count = Math.min(Math.max(Math.round(form.seedCount), 1), 50)
   try {
-    const created = await seedTasks({ userId: userId.value, count })
+    const created = await seedTasks({ count })
     form.seedCount = count
     reset()
     toast.add({ color: 'success', title: `${created} sample tasks created` })
@@ -75,10 +72,8 @@ async function seedSampleTasks() {
 }
 
 async function clearTasks() {
-  if (!userId.value)
-    return
   try {
-    const removed = await clearAllTasks({ userId: userId.value })
+    const removed = await clearAllTasks({})
     reset()
     toast.add({ color: 'success', title: `Cleared ${removed} task${removed === 1 ? '' : 's'}` })
   }
@@ -101,7 +96,7 @@ async function clearTasks() {
             {{ totalTasks }} total
           </UBadge>
 
-          <UButton size="sm" color="neutral" variant="soft" :loading="isSeeding" @click="seedSampleTasks">
+          <UButton size="sm" color="neutral" variant="soft" :loading="isSeeding" :disabled="!isAuthenticated" @click="seedSampleTasks">
             Seed {{ form.seedCount }}
           </UButton>
 
@@ -115,7 +110,7 @@ async function clearTasks() {
         <template #left>
           <form class="flex items-center gap-2" @submit.prevent="createTask">
             <UInput v-model="form.title" placeholder="New task title..." class="w-64" />
-            <UButton type="submit" size="sm" :loading="isCreating" :disabled="!form.title.trim()">
+            <UButton type="submit" size="sm" :loading="isCreating" :disabled="!isAuthenticated || !form.title.trim()">
               Create
             </UButton>
           </form>
@@ -170,7 +165,7 @@ async function clearTasks() {
             <h3 class="font-semibold text-highlighted">
               Paginated archive
             </h3>
-            <span class="text-sm text-muted">{{ pages.length }} page{{ pages.length === 1 ? '' : 's' }}</span>
+            <span class="text-sm text-muted">{{ isDone ? 'All loaded' : 'More available' }}</span>
           </div>
 
           <div v-if="isPaginationPending && !paginatedTasks.length" class="flex items-center gap-2 py-10 text-muted">
@@ -193,7 +188,7 @@ async function clearTasks() {
             </div>
 
             <div class="flex items-center gap-3 pt-2">
-              <UButton v-if="!isDone" size="sm" :loading="isLoadingMore" @click="loadMore">
+              <UButton v-if="!isDone" size="sm" :loading="isLoadingMore" @click="loadMore()">
                 Load more
               </UButton>
               <UBadge v-else color="success" variant="subtle">

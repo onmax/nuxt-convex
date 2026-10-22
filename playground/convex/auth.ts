@@ -2,7 +2,7 @@
 import type { GenericCtx } from '@convex-dev/better-auth'
 import type { DataModel } from './_generated/dataModel'
 import { createClient } from '@convex-dev/better-auth'
-import { convex, crossDomain } from '@convex-dev/better-auth/plugins'
+import { convex } from '@convex-dev/better-auth/plugins'
 import { betterAuth } from 'better-auth/minimal'
 import { components } from './_generated/api'
 import { query } from './_generated/server'
@@ -19,6 +19,8 @@ export const authComponent = createClient<DataModel>(components.betterAuth, {
 
 export function createAuth(ctx: GenericCtx<DataModel>): ReturnType<typeof betterAuth> {
   return betterAuth({
+    // Requests reach Convex through the Nuxt app's /api/auth proxy, so the app is the public URL
+    baseURL: siteUrl,
     trustedOrigins: [siteUrl],
     useSecureCookies,
     database: authComponent.adapter(ctx),
@@ -33,7 +35,7 @@ export function createAuth(ctx: GenericCtx<DataModel>): ReturnType<typeof better
           },
         }
       : {}),
-    plugins: [crossDomain({ siteUrl }), convex({ authConfig })],
+    plugins: [convex({ authConfig })],
   })
 }
 

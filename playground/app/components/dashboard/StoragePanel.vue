@@ -3,15 +3,13 @@ import type { Id } from '../../../convex/_generated/dataModel'
 import { api } from '#convex/api'
 
 const toast = useToast()
-const { user } = useUserSession()
-const userId = computed(() => user.value?.id ?? '')
+const { isAuthenticated } = useConvexAuth()
 
 const fileInput = ref<HTMLInputElement | null>(null)
 const selectedFile = ref<File | null>(null)
 const deletingId = ref<Id<'uploads'> | null>(null)
 
-const uploadArgs = computed(() => userId.value ? { userId: userId.value } : 'skip' as const)
-const { data: uploads, isPending } = useConvexQuery(api._hub.storage.list, uploadArgs)
+const { data: uploads, isPending } = useConvexQuery(api._hub.storage.list, {})
 const { mutate: generateUploadUrl } = useConvexMutation(api._hub.storage.generateUploadUrl)
 const { mutate: saveFile } = useConvexMutation(api._hub.storage.saveFile)
 const { mutate: removeUpload } = useConvexMutation(api._hub.storage.remove)
@@ -27,7 +25,7 @@ function handleFileChange(event: Event) {
 }
 
 async function uploadSelectedFile() {
-  if (!selectedFile.value || !userId.value)
+  if (!selectedFile.value || !isAuthenticated.value)
     return
 
   isUploading.value = true
@@ -55,7 +53,6 @@ async function uploadSelectedFile() {
       storageId: storageId as Id<'_storage'>,
       name: file.name,
       type: file.type || 'application/octet-stream',
-      userId: userId.value,
     })
 
     selectedFile.value = null
