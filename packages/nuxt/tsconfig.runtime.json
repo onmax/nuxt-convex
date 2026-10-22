@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "paths": {
+      "vue-convex": ["../vue/src/index.ts"],
+      "vue-convex/advanced": ["../vue/src/advanced.ts"],
+      "vue-convex/storage": ["../vue/src/storage.ts"]
+    },
+    "types": ["node"],
+    "noEmit": true
+  },
+  "include": ["src/runtime", "test/types"],
+  // Owned by the better-auth integration, which has its own pending type errors.
+  "exclude": ["src/runtime/better-auth"]
+}

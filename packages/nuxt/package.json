@@ -54,7 +54,7 @@
     "playground:prepare": "nuxi prepare ../../playground",
     "test": "nuxt-module-build build && vitest run --config vitest.config.ts",
     "test:watch": "vitest --config vitest.config.ts",
-    "typecheck": "nuxt-module-build build"
+    "typecheck": "nuxt-module-build build && tsc -p tsconfig.runtime.json"
   },
   "peerDependencies": {
     "@convex-dev/r2": ">=0.9.1",
