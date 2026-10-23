@@ -79,8 +79,8 @@ const links = computed(() => appConfig.github && appConfig.github.url
 
       <template v-if="links.length">
         <UButton
-          v-for="(link, index) of links"
-          :key="index"
+          v-for="link of links"
+          :key="link.to"
           v-bind="{ color: 'neutral', variant: 'ghost', ...link }"
         />
       </template>
@@ -88,7 +88,7 @@ const links = computed(() => appConfig.github && appConfig.github.url
 
     <template #toggle="{ open, toggle }">
       <IconMenuToggle
-        :open="open"
+        :open
         class="lg:hidden"
         @click="toggle"
       />

@@ -1,4 +1,4 @@
-import type { Nuxt } from '@nuxt/schema'
+import type { Nuxt } from 'nuxt/schema'
 import { accessSync, constants, existsSync } from 'node:fs'
 import { getLayerDirectories } from '@nuxt/kit'
 import { dirname, isAbsolute, join, normalize, relative } from 'pathe'

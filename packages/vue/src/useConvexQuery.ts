@@ -45,5 +45,5 @@ export function useConvexQuery<Query extends QueryReference>(
   query: MaybeRefOrGetter<Query>,
   ...[args, options]: UseConvexQueryArgs<Query>
 ): UseConvexQueryReturn<Query> & PromiseLike<UseConvexQueryReturn<Query>> {
-  return createQueryResource(useConvexRuntimeContext(), query, args as MaybeRefOrGetter<Record<string, unknown> | 'skip' | undefined>, options)
+  return createQueryResource(useConvexRuntimeContext(), query, args, options)
 }

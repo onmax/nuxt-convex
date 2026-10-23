@@ -34,6 +34,8 @@ jobs:
       # The Nuxt module imports vue-convex's built output, so build before anything type-aware.
       - run: pnpm build
       - run: pnpm typecheck
+      # Reads packages/*/dist, so it runs after the build
+      - run: pnpm check:doctor
       - run: pnpm test
       - run: pnpm validate:packages
 

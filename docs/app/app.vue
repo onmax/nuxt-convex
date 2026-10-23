@@ -10,6 +10,7 @@ const { locale, locales, isEnabled, switchLocalePath } = useDocusI18n()
 const { isEnabled: isAssistantEnabled, panelWidth: assistantPanelWidth, shouldPushContent } = useAssistant()
 const { activeModule } = useDocsModules()
 
+// SAFETY: an unknown locale code reads undefined from the locale namespace and falls back to `en`.
 const nuxtUiLocale = computed(() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales] || nuxtUiLocales.en)
 const lang = computed(() => nuxtUiLocale.value.code)
 const dir = computed(() => nuxtUiLocale.value.dir)
@@ -48,15 +49,18 @@ if (isEnabled.value) {
   onMounted(() => {
     const currentLocale = route.path.split('/')[1]
     if (!locales.some(locale => locale.code === currentLocale)) {
+      // SAFETY: i18n is enabled in this branch, and its switchLocalePath always returns a path.
       return navigateTo(switchLocalePath(defaultLocale) as string)
     }
   })
 }
 
+// SAFETY: Docus defines a `docs` page collection, or one `docs_<locale>` collection per locale with i18n.
 const { data: navigation } = await useAsyncData(() => `navigation_${collectionName.value}`, () => queryCollectionNavigation(collectionName.value as keyof PageCollections), {
   transform: (data: ContentNavigationItem[]) => transformNavigation(data, isEnabled.value, locale.value),
   watch: [locale],
 })
+// SAFETY: same collection name as the navigation query above.
 const { data: files } = useLazyAsyncData(`search_${collectionName.value}`, () => queryCollectionSearchSections(collectionName.value as keyof PageCollections), {
   server: false,
   watch: [locale],
@@ -85,8 +89,8 @@ provide('navigation', navigation)
 
     <ClientOnly>
       <LazyUContentSearch
-        :files="files"
-        :navigation="navigation"
+        :files
+        :navigation
       />
 
       <template v-if="isAssistantEnabled">

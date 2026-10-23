@@ -2,7 +2,15 @@
 // Adapted from Inspira UI's BorderBeam (https://inspira-ui.com/docs/components/special-effects/border-beam,
 // MIT), itself a port of Magic UI. Changes: no `cn` dependency, durations in seconds, and the beam is
 // hidden under prefers-reduced-motion.
-const props = withDefaults(defineProps<{
+const {
+  size = 220,
+  duration = 12,
+  anchor = 90,
+  borderWidth = 1,
+  colorFrom = 'var(--color-brand-amber)',
+  colorTo = 'var(--color-brand-red)',
+  delay = 0,
+} = defineProps<{
   size?: number
   duration?: number
   borderWidth?: number
@@ -10,24 +18,16 @@ const props = withDefaults(defineProps<{
   colorFrom?: string
   colorTo?: string
   delay?: number
-}>(), {
-  size: 220,
-  duration: 12,
-  anchor: 90,
-  borderWidth: 1,
-  colorFrom: 'var(--color-brand-amber)',
-  colorTo: 'var(--color-brand-red)',
-  delay: 0,
-})
+}>()
 
 const style = computed(() => ({
-  '--beam-size': props.size,
-  '--beam-duration': `${props.duration}s`,
-  '--beam-anchor': props.anchor,
-  '--beam-border-width': props.borderWidth,
-  '--beam-color-from': props.colorFrom,
-  '--beam-color-to': props.colorTo,
-  '--beam-delay': `-${props.delay}s`,
+  '--beam-size': size,
+  '--beam-duration': `${duration}s`,
+  '--beam-anchor': anchor,
+  '--beam-border-width': borderWidth,
+  '--beam-color-from': colorFrom,
+  '--beam-color-to': colorTo,
+  '--beam-delay': `-${delay}s`,
 }))
 </script>
 
@@ -35,7 +35,7 @@ const style = computed(() => ({
   <div
     aria-hidden="true"
     class="border-beam pointer-events-none absolute inset-0 rounded-[inherit]"
-    :style="style"
+    :style
   />
 </template>
 

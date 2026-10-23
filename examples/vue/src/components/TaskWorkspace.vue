@@ -25,10 +25,10 @@ const { busyId, draftTitle, errorMessage, isAdding, remaining, removeTask, statu
 
     <TaskComposer v-model="draftTitle" :disabled="isAdding" @submit="submitTask" />
     <TaskList
-      :busy-id="busyId"
-      :error-message="errorMessage"
-      :status="status"
-      :tasks="tasks"
+      :busy-id
+      :error-message
+      :status
+      :tasks
       @toggle="toggleTask"
       @remove="removeTask"
     />

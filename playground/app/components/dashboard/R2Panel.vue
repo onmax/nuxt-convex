@@ -1,17 +1,9 @@
 <script setup lang="ts">
 import { api } from '#convex/api'
 
-interface R2Api {
-  generateUploadUrl: unknown
-  syncMetadata: unknown
-  listMetadata: unknown
-  deleteObject: unknown
-}
-
 const toast = useToast()
-const r2Api = api as typeof api & { r2: R2Api }
 
-const fileInput = ref<HTMLInputElement | null>(null)
+const fileInput = useTemplateRef<HTMLInputElement>('fileInput')
 const selectedFile = ref<File | null>(null)
 const deletingKey = ref<string | null>(null)
 
@@ -22,15 +14,11 @@ const {
   loadMore,
   reset,
   isPending,
-} = useConvexPaginatedQuery(r2Api.r2.listMetadata, {}, { numItems: 8, auth: 'required' })
+} = useConvexPaginatedQuery(api.r2.listMetadata, {}, { numItems: 8, auth: 'required' })
 
-const { mutate: deleteObject } = useConvexMutation(r2Api.r2.deleteObject, {
-  onError: (error: Error) => {
-    toast.add({ color: 'error', title: 'R2 deletion failed', description: error.message })
-  },
-})
+const { mutate: deleteObject } = useConvexMutation(api.r2.deleteObject)
 
-const { upload, isUploading, progress, error } = useConvexR2Upload(r2Api.r2, {
+const { upload, isUploading, progress, error } = useConvexR2Upload(api.r2, {
   onSuccess: (key, file) => {
     selectedFile.value = null
     reset()
@@ -44,7 +32,8 @@ const { upload, isUploading, progress, error } = useConvexR2Upload(r2Api.r2, {
 const objectCount = computed(() => objects.value.length)
 
 function handleFileChange(event: Event) {
-  selectedFile.value = (event.target as HTMLInputElement).files?.[0] ?? null
+  const input = event.target
+  selectedFile.value = input instanceof HTMLInputElement ? input.files?.[0] ?? null : null
 }
 
 async function uploadSelectedFile() {
@@ -60,6 +49,9 @@ async function removeObject(key: string) {
   try {
     await deleteObject({ key })
     reset()
+  }
+  catch (error) {
+    toast.add({ color: 'error', title: 'R2 deletion failed', description: error instanceof Error ? error.message : String(error) })
   }
   finally {
     deletingKey.value = null

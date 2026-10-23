@@ -19,15 +19,19 @@ export interface ConvexHydrationAdapter {
 export type Settled = { value: any } | { error: Error }
 
 export function queryKey(query: FunctionReference<'query'>, args: Record<string, unknown>): string {
+  // SAFETY: convexToJson checks every value at runtime and throws for anything Convex can't send.
   return `${getFunctionName(query)}|${JSON.stringify(convexToJson(args as Value))}`
 }
 
+/** `data[field]` when a `ConvexError` carries an object, like `{ code: 'NOT_FOUND' }`. */
+export function readErrorDataField(data: unknown, field: string): unknown {
+  return typeof data === 'object' && data !== null ? Reflect.get(data, field) : undefined
+}
+
 export function isConvexError(error: unknown, code?: string): error is ConvexError<Value> {
-  const isConvex = error instanceof ConvexError || (error instanceof Error && error.name === 'ConvexError' && 'data' in error)
-  if (!isConvex || code === undefined)
-    return isConvex
-  const data = (error as ConvexError<Value>).data
-  return data === code || (typeof data === 'object' && data !== null && (data as Record<string, unknown>).code === code)
+  if (!(error instanceof ConvexError || (error instanceof Error && error.name === 'ConvexError' && 'data' in error)))
+    return false
+  return code === undefined || error.data === code || readErrorDataField(error.data, 'code') === code
 }
 
 export function encodeSettled(settled: Settled): ConvexHydrationEntry {

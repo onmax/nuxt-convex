@@ -32,6 +32,7 @@ export type ConvexPaginatedQuerySlots = SlotsType<{
 export default defineComponent(<Query extends PaginatedQueryReference>(props: ConvexPaginatedQueryProps<Query>, { slots }: SetupContext<Record<never, never>, ConvexPaginatedQuerySlots>) => {
   const state = useConvexPaginatedQuery(
     () => props.query,
+    // SAFETY: omitted args become `{}`, and Convex validates the args against the query on the server.
     () => props.args ?? ({} as Omit<FunctionArgs<Query>, 'paginationOpts'>),
     props.options ?? { numItems: 10 },
   )
@@ -56,7 +57,9 @@ export default defineComponent(<Query extends PaginatedQueryReference>(props: Co
   return shouldWait ? Promise.resolve(state).then(() => render) : render
 }, {
   name: 'ConvexPaginatedQuery',
+  // SAFETY: `slots` only feeds type inference; Vue never reads its runtime value.
   slots: Object as ConvexPaginatedQuerySlots,
+  // SAFETY: `as any` keeps defineComponent on the generic setup overload, so the setup signature types the props; these are loose runtime checks.
   props: {
     query: { type: Object as PropType<PaginatedQueryReference>, required: true },
     args: { type: [Object, String] as PropType<Record<string, unknown> | 'skip'>, default: undefined },

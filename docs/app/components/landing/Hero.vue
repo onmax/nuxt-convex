@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { VNode } from 'vue'
+import type { VNode, VNodeArrayChildren } from 'vue'
 import type { CodeWindowFile } from './CodeWindow.vue'
 import type { Framework } from './InstallCommand.vue'
+import { Fragment, isVNode } from 'vue'
 
 interface HeroLink {
   label: string
@@ -29,10 +30,12 @@ const slots = defineSlots<{
 
 const framework = ref<Framework>('nuxt')
 
-function firstPre(nodes?: VNode[]): VNode | undefined {
+function firstPre(nodes?: VNodeArrayChildren): VNode | undefined {
   for (const node of nodes ?? []) {
-    if (typeof node.type === 'symbol' && Array.isArray(node.children)) {
-      const found = firstPre(node.children as VNode[])
+    if (!isVNode(node))
+      continue
+    if (node.type === Fragment && Array.isArray(node.children)) {
+      const found = firstPre(node.children)
       if (found)
         return found
     }
@@ -118,7 +121,7 @@ const titleParts = computed(() => {
       </div>
 
       <div class="relative mt-16 w-full max-w-5xl sm:mt-20">
-        <LandingCodeWindow :files="files" :default-index="1" :hovers="hovers">
+        <LandingCodeWindow :files :default-index="1" :hovers>
           <template #aside>
             <LandingLivePreview />
           </template>

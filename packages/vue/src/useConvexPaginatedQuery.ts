@@ -40,5 +40,5 @@ export function useConvexPaginatedQuery<Query extends PaginatedQueryReference>(
   args: MaybeRefOrGetter<Omit<FunctionArgs<Query>, 'paginationOpts'> | 'skip'>,
   options: UseConvexPaginatedQueryOptions,
 ): UseConvexPaginatedQueryReturn<PaginatedQueryItem<Query>> & PromiseLike<UseConvexPaginatedQueryReturn<PaginatedQueryItem<Query>>> {
-  return createPaginationResource(useConvexRuntimeContext(), query, args as MaybeRefOrGetter<Record<string, unknown> | 'skip'>, options)
+  return createPaginationResource(useConvexRuntimeContext(), query, args, options)
 }

@@ -25,16 +25,14 @@ export function createAuth(ctx: GenericCtx<DataModel>): ReturnType<typeof better
     useSecureCookies,
     database: authComponent.adapter(ctx),
     emailAndPassword: { enabled: true, requireEmailVerification: false },
-    ...(enableGitHubAuth
+    socialProviders: enableGitHubAuth
       ? {
-          socialProviders: {
-            github: {
-              clientId: process.env.GITHUB_CLIENT_ID!,
-              clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-            },
+          github: {
+            clientId: process.env.GITHUB_CLIENT_ID!,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET!,
           },
         }
-      : {}),
+      : {},
     plugins: [convex({ authConfig })],
   })
 }

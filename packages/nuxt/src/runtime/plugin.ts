@@ -1,3 +1,4 @@
+import type { ConvexClientOptions } from 'convex/browser'
 import type { ConvexHydrationEntry, ConvexVueOptions } from 'vue-convex'
 import type { ConvexStorageOptions } from 'vue-convex/storage'
 import type { ConvexPublicRuntimeConfig } from '../types/config'
@@ -17,6 +18,7 @@ let warnedMissingUrl = false
 export default defineNuxtPlugin({
   name: 'nuxt-convex',
   async setup(nuxtApp) {
+    // SAFETY: the module writes `public.convex` from the resolved options; old builds may only have `server`.
     const config = (useRuntimeConfig().public.convex ?? {}) as RuntimeConvexConfig
     // Only `isAuthenticated` is shared with the client, never the token.
     const authState = useState<{ isAuthenticated: boolean } | null>('convex:auth', () => null)
@@ -29,8 +31,9 @@ export default defineNuxtPlugin({
 
     if (import.meta.server) {
       const event = useRequestEvent()
+      // SAFETY: `$convexToken` is only set by nuxt-convex's server runtime, always to a token resolver.
       const resolve = event?.context.$convexToken as ConvexTokenResolver | undefined
-      if (config.url && typeof resolve === 'function') {
+      if (config.url && resolve) {
         let token: Promise<string | null> | undefined
         const getToken = (): Promise<string | null> => token ??= Promise.resolve(resolve()).then(value => value ?? null)
         serverAuth = { getToken }
@@ -42,17 +45,19 @@ export default defineNuxtPlugin({
       }
     }
 
+    const clientOptions: ConvexClientOptions = { ...config.clientOptions }
+    // Hold queries until the token is in place, so they don't run anonymously first.
+    if (import.meta.client && authState.value?.isAuthenticated)
+      clientOptions.expectAuth = true
+
+    // SAFETY: only `$convex:` keys are read through this view, and only the hydration adapter below writes them.
     const payload = nuxtApp.payload.data as Record<string, ConvexHydrationEntry | undefined>
     const options: ConvexVueOptions = {
       url: config.url || undefined,
       server: config.ssr ?? config.server ?? true,
       serverAuth,
       initialAuth: authState.value ?? undefined,
-      clientOptions: {
-        ...config.clientOptions,
-        // Hold queries until the token is in place, so they don't run anonymously first.
-        ...(import.meta.client && authState.value?.isAuthenticated ? { expectAuth: true } : {}),
-      },
+      clientOptions,
       hydration: {
         set: (key, entry) => {
           payload[PAYLOAD_PREFIX + key] = entry
@@ -75,9 +80,10 @@ export default defineNuxtPlugin({
     let storageOptions: ConvexStorageOptions | undefined
     if (config.storage) {
       try {
+        // SAFETY: getStorageRefs() returns the generated `api._hub.storage`, which holds the scaffolded storage functions.
         const storage = getStorageRefs() as Partial<ConvexStorageOptions> | undefined
-        if (storage?.generateUploadUrl && storage?.getUrl && storage?.remove)
-          storageOptions = storage as ConvexStorageOptions
+        if (storage?.generateUploadUrl && storage.getUrl && storage.remove)
+          storageOptions = { generateUploadUrl: storage.generateUploadUrl, getUrl: storage.getUrl, remove: storage.remove }
       }
       catch (error) {
         console.warn('[nuxt-convex] Failed to load storage refs from the generated Convex API.', error)

@@ -46,6 +46,7 @@ export function useConvexServer(event: ConvexServerEvent): ConvexServer {
   const call = (kind: 'query' | 'mutation' | 'action') => async (fn: FunctionReference<any>, ...args: [any?]) => {
     const convex = await getClient()
     try {
+      // SAFETY: the public ConvexServer methods type the reference and args; this only drops the per-kind overloads.
       return await (convex[kind] as (fn: FunctionReference<any>, ...args: [any?]) => Promise<any>)(fn, ...args)
     }
     catch (error) {
@@ -82,12 +83,14 @@ export function serverConvexAction<Action extends FunctionReference<'action'>>(e
  * anything else becomes a 500 whose message doesn't leak Convex internals. The original error is the `cause`.
  */
 export function toConvexH3Error(error: unknown): NuxtError {
-  if (isNuxtError(error))
+  if (isNuxtError(error)) {
+    // SAFETY: an HTTP error the server runtime threw is passed through as is; h3 and Nitro read it like a NuxtError.
     return error as NuxtError
+  }
 
   if (error instanceof Error && error.name === 'ConvexError') {
-    const data = (error as Error & { data?: unknown }).data
-    const record = data && typeof data === 'object' ? data as Record<string, unknown> : undefined
+    const data = 'data' in error ? error.data : undefined
+    const record: { status?: unknown, message?: unknown } | undefined = data && typeof data === 'object' ? data : undefined
     const status = typeof record?.status === 'number' && record.status >= 400 && record.status < 600 ? record.status : 400
     const message = typeof data === 'string' ? data : typeof record?.message === 'string' ? record.message : 'Convex function failed'
     return createError({ status, message, data, cause: error })
@@ -97,6 +100,7 @@ export function toConvexH3Error(error: unknown): NuxtError {
 }
 
 async function createClient(event: ConvexServerEvent): Promise<ConvexHttpClient> {
+  // SAFETY: the module writes `public.convex` from resolveConvexOptions(); it's absent only outside a nuxt-convex app.
   const config = useRuntimeConfig().public.convex as ConvexPublicRuntimeConfig | undefined
   if (!config?.url)
     throw createError({ status: 500, message: '[nuxt-convex] Convex URL is not configured. Set CONVEX_URL or NUXT_PUBLIC_CONVEX_URL.' })

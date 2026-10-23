@@ -1,5 +1,5 @@
 import type { OptimisticLocalStore } from 'convex/browser'
-import type { FunctionArgs, FunctionReference, FunctionReturnType, PaginationOptions, PaginationResult } from 'convex/server'
+import type { FunctionArgs, FunctionReference, FunctionReturnType, PaginationResult } from 'convex/server'
 import type { Value } from 'convex/values'
 import { compareValues, convexToJson } from 'convex/values'
 
@@ -17,8 +17,8 @@ function matchesArgs<Query extends PaginatedQueryReference>(
   if (argsToMatch === undefined)
     return queries
   return queries.filter((q) => {
-    const keys = Object.keys(argsToMatch) as Array<string>
-    return keys.every(k => compareValues((argsToMatch as any)[k], (q.args as any)[k]) === 0)
+    const args: Record<string, Value> = q.args
+    return Object.entries(argsToMatch).every(([k, v]) => compareValues(v, args[k]) === 0)
   })
 }
 
@@ -28,16 +28,17 @@ export function optimisticallyUpdateValueInPaginatedQuery<Query extends Paginate
   args: PaginatedQueryArgs<Query>,
   updateValue: (currentValue: PaginatedQueryItem<Query>) => PaginatedQueryItem<Query>,
 ): void {
+  // SAFETY: args has the query's argument type, and Convex function arguments are always Convex values.
   const expectedArgs = JSON.stringify(convexToJson(args as Value))
 
   for (const queryResult of localStore.getAllQueries(query)) {
     if (queryResult.value === undefined)
       continue
-    const { paginationOpts: _, ...innerArgs } = queryResult.args as { paginationOpts: PaginationOptions }
-    if (JSON.stringify(convexToJson(innerArgs as Value)) !== expectedArgs)
+    const { paginationOpts: _, ...innerArgs }: Record<string, Value> = queryResult.args
+    if (JSON.stringify(convexToJson(innerArgs)) !== expectedArgs)
       continue
     const value = queryResult.value
-    if (typeof value === 'object' && value !== null && Array.isArray(value.page)) {
+    if (Array.isArray(value?.page)) {
       localStore.setQuery(query, queryResult.args, {
         ...value,
         page: value.page.map(updateValue),
@@ -92,17 +93,8 @@ export function insertAtPosition<Query extends PaginatedQueryReference>(options:
   const queries: LocalQueryResult<Query>[] = localQueryStore.getAllQueries(paginatedQuery)
 
   const queryGroups: Record<string, LocalQueryResult<Query>[]> = {}
-  for (const query of queries) {
-    if (argsToMatch !== undefined && !Object.keys(argsToMatch).every(
-      k => compareValues((argsToMatch as any)[k], (query.args as any)[k]) === 0,
-    )) {
-      continue
-    }
-    const key = JSON.stringify(
-      Object.fromEntries(
-        Object.entries(query.args).map(([k, v]) => [k, k === 'paginationOpts' ? (v as any).id : v]),
-      ),
-    )
+  for (const query of matchesArgs(queries, argsToMatch)) {
+    const key = JSON.stringify({ ...query.args, paginationOpts: query.args.paginationOpts.id })
     queryGroups[key] ??= []
     queryGroups[key].push(query)
   }

@@ -7,6 +7,7 @@ const DROPPED_RESPONSE_HEADERS = ['connection', 'content-encoding', 'content-len
 
 /** Forwards Better Auth requests to the Convex deployment, where `@convex-dev/better-auth` serves them */
 export default defineEventHandler(async (event) => {
+  // SAFETY: the module writes `public.convex` from resolveConvexOptions(); it's absent only outside a nuxt-convex app.
   const siteUrl = resolveConvexSiteUrl(useRuntimeConfig().public.convex as ConvexPublicRuntimeConfig | undefined)
   if (!siteUrl)
     throw createError({ status: 500, message: '[nuxt-convex] Set CONVEX_SITE_URL (or convex.siteUrl) to proxy auth requests to Convex.' })

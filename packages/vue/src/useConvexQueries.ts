@@ -100,6 +100,7 @@ export function useConvexQueries<T extends Record<string, QueryEntry>>(
     subscriptions.clear()
   }, true)
 
+  // SAFETY: each key is only ever set from the subscription to `queries[key]`, so it holds that query's result.
   return {
     data: shallowReadonly(data) as UseConvexQueriesReturn<T>['data'],
     errors: shallowReadonly(errors) as UseConvexQueriesReturn<T>['errors'],

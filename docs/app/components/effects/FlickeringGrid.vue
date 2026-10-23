@@ -1,23 +1,26 @@
 <script setup lang="ts">
+import { usePreferredReducedMotion } from '@vueuse/core'
+
 // Adapted from Inspira UI's FlickeringGrid (https://inspira-ui.com/docs/components/backgrounds/flickering-grid,
 // MIT), itself a port of Magic UI. Changes: the color comes from the element's CSS `color` so it follows
 // the theme, redraws are capped at ~12 fps, and prefers-reduced-motion draws one static frame.
-const props = withDefaults(defineProps<{
+const {
+  squareSize = 4,
+  gridGap = 6,
+  flickerChance = 0.3,
+  maxOpacity = 0.3,
+  fps = 12,
+} = defineProps<{
   squareSize?: number
   gridGap?: number
   flickerChance?: number
   maxOpacity?: number
   fps?: number
-}>(), {
-  squareSize: 4,
-  gridGap: 6,
-  flickerChance: 0.3,
-  maxOpacity: 0.3,
-  fps: 12,
-})
+}>()
 
 const container = useTemplateRef<HTMLDivElement>('container')
 const canvas = useTemplateRef<HTMLCanvasElement>('canvas')
+const reducedMotion = usePreferredReducedMotion()
 
 let frame: number | undefined
 let resizeObserver: ResizeObserver | undefined
@@ -30,8 +33,7 @@ onMounted(() => {
   if (!el || !cvs || !ctx)
     return
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-  const step = props.squareSize + props.gridGap
+  const step = squareSize + gridGap
   let cols = 0
   let rows = 0
   let dpr = 1
@@ -50,14 +52,14 @@ onMounted(() => {
     rows = Math.floor(height / step)
     squares = new Float32Array(cols * rows)
     for (let i = 0; i < squares.length; i++)
-      squares[i] = Math.random() * props.maxOpacity
+      squares[i] = Math.random() * maxOpacity
     draw()
   }
 
   function draw() {
     ctx!.clearRect(0, 0, cvs!.width, cvs!.height)
     ctx!.fillStyle = getComputedStyle(el!).color
-    const size = props.squareSize * dpr
+    const size = squareSize * dpr
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
         ctx!.globalAlpha = squares[i * rows + j]!
@@ -68,14 +70,14 @@ onMounted(() => {
   }
 
   function tick(time: number) {
-    if (!inView || reducedMotion.matches)
+    if (!inView || reducedMotion.value === 'reduce')
       return
     const elapsed = time - last
-    if (elapsed >= 1000 / props.fps) {
+    if (elapsed >= 1000 / fps) {
       const delta = elapsed / 1000
       for (let i = 0; i < squares.length; i++) {
-        if (Math.random() < props.flickerChance * delta)
-          squares[i] = Math.random() * props.maxOpacity
+        if (Math.random() < flickerChance * delta)
+          squares[i] = Math.random() * maxOpacity
       }
       draw()
       last = time

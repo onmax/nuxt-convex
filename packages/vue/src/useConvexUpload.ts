@@ -1,6 +1,6 @@
 import type { Ref } from 'vue'
 import { shallowReadonly, shallowRef } from 'vue'
-import { normalizeError } from './internal/useConvexRuntimeContext'
+import { normalizeError, useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 import { useConvexStorage } from './useConvexStorage'
 
 export interface UseConvexUploadOptions {
@@ -42,7 +42,17 @@ function post(url: string, file: File, signal: AbortSignal | undefined, onProgre
   })
 }
 
+/** Convex answers an upload with `{ "storageId": "..." }`. */
+function parseStorageId(body: string): string {
+  const response: unknown = JSON.parse(body)
+  const storageId = typeof response === 'object' && response !== null && 'storageId' in response ? response.storageId : undefined
+  if (typeof storageId !== 'string' || storageId.length === 0)
+    throw new Error('[vue-convex/storage] Upload response did not include a storageId')
+  return storageId
+}
+
 export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvexUploadReturn {
+  const { isServer } = useConvexRuntimeContext()
   const storage = useConvexStorage()
   const isUploading = shallowRef(false)
   const progress = shallowRef(0)
@@ -56,7 +66,7 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
 
   return {
     async upload(file, { signal } = {}) {
-      if (typeof window === 'undefined')
+      if (isServer)
         return fail(new Error('[vue-convex/storage] Uploads are only available on the client'))
 
       isUploading.value = true
@@ -71,10 +81,7 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
           options.onProgress?.({ loaded, total })
         })
 
-        const { storageId } = JSON.parse(body) as { storageId?: unknown }
-        if (typeof storageId !== 'string' || storageId.length === 0)
-          throw new Error('[vue-convex/storage] Upload response did not include a storageId')
-
+        const storageId = parseStorageId(body)
         progress.value = 100
         await options.onSuccess?.(storageId, file)
         return storageId

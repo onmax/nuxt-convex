@@ -1,19 +1,14 @@
 <script setup lang="ts">
 const runtimeConfig = useRuntimeConfig()
-const convex = runtimeConfig.public.convex as {
-  url?: string
-  server?: boolean
-  storage?: boolean
-  r2?: boolean
-} | undefined
+const convex = runtimeConfig.public.convex
 
 const { user, ready } = useUserSession()
 const { state, isConnected } = useConvexConnectionState()
 
 const moduleConfig = computed(() => [
-  { label: 'convex.server', value: convex?.server ? 'true' : 'false' },
-  { label: 'convex.storage', value: convex?.storage ? 'true' : 'false' },
-  { label: 'convex.r2', value: convex?.r2 ? 'true' : 'false' },
+  { label: 'convex.ssr', value: convex.ssr ? 'true' : 'false' },
+  { label: 'convex.storage', value: convex.storage ? 'true' : 'false' },
+  { label: 'convex.r2', value: convex.r2 ? 'true' : 'false' },
   { label: 'GitHub auth', value: runtimeConfig.public.enableGitHubAuth ? 'enabled' : 'disabled' },
 ])
 
@@ -21,7 +16,7 @@ const diagnostics = computed(() => [
   { label: 'Auth path', value: 'Email/password', detail: 'Better Auth with Convex adapter' },
   { label: 'GitHub provider', value: runtimeConfig.public.enableGitHubAuth ? 'Enabled' : 'Disabled', detail: 'Optional, behind env flag' },
   { label: 'Connection', value: state.value || 'connecting', detail: isConnected.value ? 'Realtime client connected' : 'Reconnecting...' },
-  { label: 'Convex URL', value: convex?.url || 'Missing', detail: 'runtimeConfig.public.convex.url' },
+  { label: 'Convex URL', value: convex.url || 'Missing', detail: 'runtimeConfig.public.convex.url' },
 ])
 </script>
 

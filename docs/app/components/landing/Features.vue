@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <section class="py-20 sm:py-28">
     <UContainer>
-      <LandingSectionHeading :eyebrow="eyebrow" :title="title" :description="description" />
+      <LandingSectionHeading :eyebrow :title :description />
 
       <ul class="mx-auto grid max-w-5xl gap-px overflow-hidden rounded-2xl bg-(--ui-border) shadow-[0_0_0_1px_var(--ui-border)] sm:grid-cols-2 lg:grid-cols-3">
         <li

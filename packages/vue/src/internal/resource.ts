@@ -1,4 +1,5 @@
 import type { FunctionReference } from 'convex/server'
+import type { Value } from 'convex/values'
 import type { ComputedRef, MaybeRefOrGetter } from 'vue'
 import type { ConvexRuntimeContext } from './runtime'
 import { computed, toValue } from 'vue'
@@ -15,7 +16,7 @@ export type QueryStatus = 'idle' | 'pending' | 'success' | 'error'
 export type QueryAuthMode = 'required' | 'optional' | 'none'
 
 export type QueryTarget
-  = | { key: string, args: Record<string, unknown> }
+  = | { key: string, args: Record<string, Value> }
     | { key: string, error: Error }
     | { key: 'skip' }
 
@@ -32,7 +33,9 @@ export function useQueryTarget(
     if (value === 'skip' || (auth === 'required' && !context.authStateRef.value.isAuthenticated))
       return { key: 'skip' }
     try {
-      return { key: queryKey(toValue(query), value) + suffix, args: value }
+      const key = queryKey(toValue(query), value) + suffix
+      // SAFETY: queryKey() ran convexToJson() over the args, which throws for anything that isn't a Convex value.
+      return { key, args: value as Record<string, Value> }
     }
     catch (error) {
       // convexToJson rejects values Convex can't send (Date, class instances, undefined in arrays)

@@ -62,7 +62,7 @@ const { isUploading, progress } = uploadState
       <UploadPreviewCard
         v-for="file in files"
         :key="file._id"
-        :file="file"
+        :file
         :is-deleting="busyId === file.storageId"
         @remove="removeFile"
       />

@@ -6,6 +6,7 @@ const { locale, isEnabled } = useDocusI18n()
 
 const collectionName = computed(() => isEnabled.value ? `landing_${locale.value}` : 'landing')
 
+// SAFETY: Docus defines a `landing` page collection, or one `landing_<locale>` collection per locale with i18n.
 const { data: page } = await useAsyncData(collectionName.value, () => queryCollection(collectionName.value as keyof Collections).path(route.path).first())
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
@@ -14,6 +15,7 @@ if (!page.value) {
 const title = page.value.seo?.title || page.value.title
 const description = page.value.seo?.description || page.value.description
 
+// SAFETY: seo.ogImage can only come from the landing page's front matter, where it is an image URL when set.
 useSeo({
   title,
   description,

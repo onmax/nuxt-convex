@@ -26,7 +26,7 @@ const brand = {
 <template>
   <section class="border-y border-default bg-muted/50 py-20 sm:py-28">
     <UContainer>
-      <LandingSectionHeading :eyebrow="eyebrow" :title="title" :description="description" />
+      <LandingSectionHeading :eyebrow :title :description />
 
       <div class="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
         <NuxtLink

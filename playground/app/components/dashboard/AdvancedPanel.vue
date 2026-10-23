@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Id } from '../../../convex/_generated/dataModel'
 import { insertAtTop } from '#convex'
 import { api } from '#convex/api'
 
@@ -25,17 +26,23 @@ async function handleSummarize() {
 }
 
 // Section E: a Nitro route calling Convex as the signed-in user (server/api/tasks/stats.get.ts)
-const { data: serverStats, error: serverStatsError, status: serverStatsStatus, refresh: refreshServerStats } = useFetch('/api/tasks/stats', { server: false, immediate: false })
+const { data: serverStats, error: serverStatsError, status: serverStatsStatus, refresh: refreshServerStats } = useFetch('/api/tasks/stats', {
+  key: 'advanced:server-stats',
+  // nuxt-doctor: async-data-readonly: a GET that only reads stats, so a refreshNuxtData() replay is harmless
+  server: false,
+  immediate: false,
+})
 
 // Section F: Optimistic update with insertAtTop
 const optimisticTitle = ref('')
 const { mutate: addTaskOptimistic, isPending: isOptimisticAdding } = useConvexMutation(api.tasks.add, {
   optimisticUpdate: (localStore, args) => {
+    // SAFETY: a placeholder id for the optimistic row only; Convex rolls the row back once the server's results include the mutation.
     insertAtTop({
       paginatedQuery: api.tasks.listPaginated,
       argsToMatch: {},
       localQueryStore: localStore,
-      item: { _id: crypto.randomUUID() as any, _creationTime: Date.now(), title: args.title, userId: user.value?.id, createdAt: Date.now() },
+      item: { _id: crypto.randomUUID() as Id<'tasks'>, _creationTime: Date.now(), title: args.title, userId: user.value?.id, createdAt: Date.now() },
     })
   },
 })

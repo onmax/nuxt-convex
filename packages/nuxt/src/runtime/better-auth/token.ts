@@ -25,6 +25,7 @@ export function createBetterAuthTokenFetcher(options: BetterAuthTokenFetcherOpti
       return cached = data?.token ?? null
     }
     catch (error) {
+      // SAFETY: $fetch rejects with ofetch's FetchError, which carries the HTTP response when there was one.
       const status = (error as { response?: { status?: number } }).response?.status
       if (status === 401 || status === 403)
         return cached = null
