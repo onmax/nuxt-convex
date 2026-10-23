@@ -21,6 +21,7 @@
     "lint:docs": "eslint docs/app docs/scripts docs/nuxt.config.ts",
     "lint:docs:fix": "eslint docs/app docs/scripts docs/nuxt.config.ts --fix",
     "typecheck": "pnpm --filter vue-convex typecheck && pnpm --filter nuxt-convex typecheck",
+    "check:doctor": "pnpm playground:prepare && pnpm --filter docs exec nuxi prepare && vite-doctor . --max-warnings 0 --format text",
     "test": "pnpm --filter vue-convex test && pnpm --filter nuxt-convex test",
     "validate:packages": "pnpm build && publint packages/vue && publint packages/nuxt",
     "preview:packages": "mkdir -p .artifacts && pnpm --filter vue-convex pack --pack-destination .artifacts && pnpm --filter nuxt-convex pack --pack-destination .artifacts"
@@ -45,6 +46,7 @@
     "tsdown": "catalog:build",
     "typescript": "catalog:build",
     "vite": "catalog:vite",
+    "vite-doctor": "catalog:lint",
     "vitest": "catalog:test",
     "vitest-package-exports": "catalog:test",
     "vue": "catalog:nuxt"

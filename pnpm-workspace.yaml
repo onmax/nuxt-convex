@@ -72,6 +72,7 @@ catalogs:
     '@nuxt/eslint-config': ^1.17.0
     eslint: ^10.13.0
     eslint-plugin-format: ^2.0.1
+    vite-doctor: ^0.1.0
   nuxt:
     '@nuxt/devtools': 4.0.0-beta.7
     '@nuxt/devtools-kit': 4.0.0-beta.7
