@@ -15,7 +15,7 @@ function getEnvValue(env: EnvSource, ...keys: string[]): string | undefined {
 }
 
 export function parseBooleanFlag(value: BooleanSource, fallback: boolean): boolean {
-  if (typeof value === 'boolean')
+  if (value === true || value === false)
     return value
 
   if (value == null || value === '')

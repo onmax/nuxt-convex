@@ -1,4 +1,5 @@
 import type { FunctionReference, FunctionReturnType } from 'convex/server'
+import type { Value } from 'convex/values'
 import type { MaybeRefOrGetter } from 'vue'
 import type { UseConvexQueryOptions, UseConvexQueryReturn } from '../useConvexQuery'
 import type { Settled } from './hydration'
@@ -70,9 +71,9 @@ export function createQueryResource<Query extends QueryReference>(
     let version = 0
     let previousKey: string | undefined
 
-    const readCache = (args: Record<string, unknown>): Settled | undefined => {
+    const readCache = (args: Record<string, Value>): Settled | undefined => {
       try {
-        const value = context.clientRef.value?.client.localQueryResult(getFunctionName(toValue(query)), args as any)
+        const value = context.clientRef.value?.client.localQueryResult(getFunctionName(toValue(query)), args)
         return value === undefined ? undefined : { value }
       }
       catch {
@@ -114,10 +115,12 @@ export function createQueryResource<Query extends QueryReference>(
       }
 
       if (client) {
+        // A plain query reference takes the validated args; a generic `FunctionArgs<Query>` would not.
+        const reference: QueryReference = toValue(query)
         try {
           unsubscribe = client.onUpdate(
-            toValue(query),
-            current.args as any,
+            reference,
+            current.args,
             value => runVersion === version && settle({ value }),
             err => runVersion === version && settle({ error: normalizeError(err) }),
           )

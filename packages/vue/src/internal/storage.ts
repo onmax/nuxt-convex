@@ -2,8 +2,8 @@ import type { FunctionReference } from 'convex/server'
 import type { InjectionKey } from 'vue'
 
 export interface ConvexStorageOptions {
-  generateUploadUrl: FunctionReference<'mutation'>
-  getUrl: FunctionReference<'query'>
+  generateUploadUrl: FunctionReference<'mutation', 'public', any, string>
+  getUrl: FunctionReference<'query', 'public', any, string | null>
   remove: FunctionReference<'mutation'>
 }
 

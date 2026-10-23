@@ -11,7 +11,7 @@ defineProps<{
 <template>
   <section class="py-20 sm:py-28">
     <UContainer>
-      <LandingSectionHeading :eyebrow="eyebrow" :title="title" :description="description" />
+      <LandingSectionHeading :eyebrow :title :description />
 
       <ol class="relative mx-auto grid max-w-5xl gap-4 lg:grid-cols-3 lg:gap-6">
         <div

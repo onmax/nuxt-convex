@@ -73,26 +73,32 @@ export interface ConvexRuntimeContext {
 
 export const CONVEX_VUE_KEY: InjectionKey<ConvexRuntimeContext> = Symbol('vue-convex')
 
-function resolveOptions(options: ConvexVueOptions = {}): ResolvedConvexVueOptions {
+type ConnectableOptions = ResolvedConvexVueOptions & { url: string }
+
+function resolveOptions<Options extends ConvexVueOptions>(options: Options): Options & { server: boolean } {
   return { ...options, server: options.server ?? true }
 }
 
-function createHttpClient(options: ResolvedConvexVueOptions & { url: string }): ConvexHttpClient {
+function hasUrl(options: ResolvedConvexVueOptions): options is ConnectableOptions {
+  return !!options.url
+}
+
+function createHttpClient(options: ConnectableOptions): ConvexHttpClient {
   return new ConvexHttpClient(options.url, {
     logger: options.clientOptions?.logger,
     skipConvexDeploymentUrlCheck: options.clientOptions?.skipConvexDeploymentUrlCheck,
   })
 }
 
-function requireUrl(options: ResolvedConvexVueOptions): ResolvedConvexVueOptions & { url: string } {
-  if (!options.url)
+function requireUrl(options: ResolvedConvexVueOptions): ConnectableOptions {
+  if (!hasUrl(options))
     throw new Error('[vue-convex] reconfigure() requires a configured Convex URL. Use connect({ url }) first.')
-  return options as ResolvedConvexVueOptions & { url: string }
+  return options
 }
 
 export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}): ConvexRuntimeContext {
   const isServer = typeof window === 'undefined'
-  const optionsRef = shallowRef(resolveOptions(initialOptions))
+  const optionsRef = shallowRef<ResolvedConvexVueOptions>(resolveOptions(initialOptions))
   const statusRef = shallowRef<ConvexControllerStatus>('disconnected')
   const clientRef = shallowRef<ConvexClient>()
   const initialAuth = initialOptions.initialAuth
@@ -106,8 +112,8 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
 
   const getHttpClient = (): ConvexHttpClient | undefined => {
     const options = optionsRef.value
-    if (!httpClient && options.url)
-      httpClient = createHttpClient(options as ResolvedConvexVueOptions & { url: string })
+    if (!httpClient && hasUrl(options))
+      httpClient = createHttpClient(options)
     return httpClient
   }
 
@@ -116,7 +122,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
   const getServerHttpClient = async (anonymous: boolean): Promise<ConvexHttpClient | undefined> => {
     const options = optionsRef.value
     const anonymousClient = getHttpClient()
-    if (anonymous || !options.serverAuth || !anonymousClient)
+    if (anonymous || !options.serverAuth || !anonymousClient || !hasUrl(options))
       return anonymousClient
 
     authedHttpClient ??= options.serverAuth.getToken()
@@ -127,7 +133,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
       .then((token) => {
         if (!token)
           return anonymousClient
-        const client = createHttpClient(options as ResolvedConvexVueOptions & { url: string })
+        const client = createHttpClient(options)
         client.setAuth(token)
         return client
       })
@@ -167,7 +173,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
     clientRef.value = undefined
   }
 
-  const applyConnectedOptions = (nextOptions: ResolvedConvexVueOptions & { url: string }): void => {
+  const applyConnectedOptions = (nextOptions: ConnectableOptions): void => {
     closeClient()
     optionsRef.value = nextOptions
     httpClient = undefined
@@ -181,7 +187,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
     options: shallowReadonly(optionsRef),
     status: shallowReadonly(statusRef),
     connect(options) {
-      applyConnectedOptions(resolveOptions({ ...optionsRef.value, ...options }) as ResolvedConvexVueOptions & { url: string })
+      applyConnectedOptions(resolveOptions({ ...optionsRef.value, ...options }))
     },
     reconfigure(options) {
       applyConnectedOptions(requireUrl(resolveOptions({ ...optionsRef.value, ...options })))
@@ -198,15 +204,16 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
     getHttpClient,
   }
 
-  if (optionsRef.value.url)
-    applyConnectedOptions(optionsRef.value as ResolvedConvexVueOptions & { url: string })
+  const startOptions = optionsRef.value
+  if (hasUrl(startOptions))
+    applyConnectedOptions(startOptions)
 
   return {
     controller,
     isServer,
     optionsRef,
     statusRef,
-    clientRef: clientRef as ShallowRef<ConvexClient | undefined>,
+    clientRef,
     authStateRef,
     initialAuth,
     getHttpClient,

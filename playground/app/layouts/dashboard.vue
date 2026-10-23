@@ -2,7 +2,7 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 
 const runtimeConfig = useRuntimeConfig()
-const convex = runtimeConfig.public.convex as { storage?: boolean, r2?: boolean } | undefined
+const convex = runtimeConfig.public.convex
 
 const open = ref(false)
 
@@ -15,7 +15,7 @@ const mainNav = computed<NavigationMenuItem[]>(() => {
     onSelect: () => { open.value = false },
   }]
 
-  if (convex?.storage !== false) {
+  if (convex.storage) {
     items.push({
       label: 'Storage',
       icon: 'i-lucide-cloud-upload',
@@ -24,7 +24,7 @@ const mainNav = computed<NavigationMenuItem[]>(() => {
     })
   }
 
-  if (convex?.r2 !== false) {
+  if (convex.r2) {
     items.push({
       label: 'Cloudflare R2',
       icon: 'i-simple-icons-cloudflare',
@@ -91,14 +91,14 @@ const secondaryNav: NavigationMenuItem[] = [{
 
       <template #default="{ collapsed }">
         <UNavigationMenu
-          :collapsed="collapsed"
+          :collapsed
           :items="mainNav"
           orientation="vertical"
           tooltip
         />
 
         <UNavigationMenu
-          :collapsed="collapsed"
+          :collapsed
           :items="secondaryNav"
           orientation="vertical"
           tooltip
@@ -107,7 +107,7 @@ const secondaryNav: NavigationMenuItem[] = [{
       </template>
 
       <template #footer="{ collapsed }">
-        <UserMenu :collapsed="collapsed" />
+        <UserMenu :collapsed />
       </template>
     </UDashboardSidebar>
 

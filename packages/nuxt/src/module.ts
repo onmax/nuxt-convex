@@ -1,4 +1,4 @@
-import type { Nuxt, NuxtModule } from '@nuxt/schema'
+import type { Nuxt, NuxtModule } from 'nuxt/schema'
 import type { ResolvedConvexRoot } from './internal/convex-paths'
 import type { ResolvedConvexOptions } from './internal/options'
 import type { ConvexConfig } from './types/config'
@@ -63,6 +63,7 @@ const module: NuxtModule<ConvexConfig> = defineNuxtModule<ConvexConfig>({
   },
   async setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
+    // SAFETY: `auth` is @nuxtjs/better-auth's config key, typed only when its types load; every field read is optional.
     const betterAuthOptions = (nuxt.options as { auth?: { clientOnly?: boolean, database?: { provider?: string } } }).auth
 
     if (betterAuthOptions?.database?.provider === 'convex') {
@@ -79,6 +80,7 @@ const module: NuxtModule<ConvexConfig> = defineNuxtModule<ConvexConfig>({
     })
     const convexRoot = resolveConvexRoot(nuxt, config.dir)
 
+    // SAFETY: defu skips a user value that isn't a plain object, so a non-record never reaches the merge.
     nuxt.options.runtimeConfig.public.convex = defu(
       nuxt.options.runtimeConfig.public.convex as Record<string, unknown> | undefined,
       config.runtime,

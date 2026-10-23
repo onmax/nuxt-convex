@@ -31,6 +31,7 @@ export function useUploadWorkspace(): UseUploadWorkspaceReturn {
   // Uploads the file to Convex storage, then records it with our own mutation
   const uploadState = useConvexUpload({
     onSuccess: async (storageId, file) => {
+      // SAFETY: Convex storage uploads respond with the id of the new `_storage` document.
       await saveFile({
         storageId: storageId as StorageId,
         name: file.name,
@@ -45,7 +46,8 @@ export function useUploadWorkspace(): UseUploadWorkspaceReturn {
   const error = computed(() => uploadState.error.value ?? saveError.value ?? removeError.value ?? queryError.value)
 
   function selectFile(event: Event): void {
-    selectedFile.value = (event.target as HTMLInputElement).files?.[0] ?? null
+    const input = event.target
+    selectedFile.value = input instanceof HTMLInputElement ? input.files?.[0] ?? null : null
   }
 
   async function uploadSelectedFile(): Promise<void> {

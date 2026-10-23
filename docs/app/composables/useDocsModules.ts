@@ -22,7 +22,7 @@ export function useDocsModules(): {
   const route = useRoute()
   const appConfig = useAppConfig()
 
-  const modules = computed(() => (appConfig.docsModules || []) as DocsModule[])
+  const modules = computed(() => appConfig.docsModules || [])
 
   // The first module that matches wins, so a path listed by two modules highlights one tab
   const activeModule = computed(() => modules.value.find(module => module.match.some(prefix => matchesPath(route.path, prefix))) || null)

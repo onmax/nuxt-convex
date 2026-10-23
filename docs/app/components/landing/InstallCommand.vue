@@ -23,7 +23,7 @@ const { copy, copied } = useClipboard({ copiedDuring: 1600 })
     >
       <button
         v-for="(item, key) in commands"
-        :key="key"
+        :key
         type="button"
         :aria-pressed="framework === key"
         class="relative flex h-8 items-center gap-1.5 rounded-md px-2 sm:px-2.5 text-[13px] font-medium transition-[color,background-color,box-shadow] duration-150 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"

@@ -5,7 +5,7 @@ import { api } from '#convex/api'
 const toast = useToast()
 const { isAuthenticated } = useConvexAuth()
 
-const fileInput = ref<HTMLInputElement | null>(null)
+const fileInput = useTemplateRef<HTMLInputElement>('fileInput')
 const selectedFile = ref<File | null>(null)
 const deletingId = ref<Id<'uploads'> | null>(null)
 
@@ -21,7 +21,8 @@ const uploadError = ref<Error | null>(null)
 const uploadCount = computed(() => uploads.value?.length ?? 0)
 
 function handleFileChange(event: Event) {
-  selectedFile.value = (event.target as HTMLInputElement).files?.[0] ?? null
+  const input = event.target
+  selectedFile.value = input instanceof HTMLInputElement ? input.files?.[0] ?? null : null
 }
 
 async function uploadSelectedFile() {
@@ -49,6 +50,7 @@ async function uploadSelectedFile() {
       throw new Error('Upload response did not include a storageId')
 
     progress.value = 100
+    // SAFETY: Convex storage uploads respond with the id of the new `_storage` document, checked to be a non-empty string above.
     await saveFile({
       storageId: storageId as Id<'_storage'>,
       name: file.name,

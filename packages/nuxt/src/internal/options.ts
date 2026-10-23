@@ -39,7 +39,7 @@ export function resolveConvexOptions(options: ConvexConfig, ctx: ResolveConvexOp
 }
 
 function resolveAuth(input: ConvexConfig['auth'], betterAuth: ResolveConvexOptionsContext['betterAuth']): ResolvedConvexAuthConfig {
-  const options = typeof input === 'object' ? input : {}
+  const options = input && input !== true ? input : {}
   const basePath = options.basePath || '/api/auth'
   const provider = input === false || options.provider === false
     ? 'none'

@@ -5,11 +5,10 @@ import type { Settled } from './hydration'
 import type { QueryStatus } from './resource'
 import type { ConvexRuntimeContext } from './runtime'
 import { computed, onScopeDispose, shallowReadonly, shallowRef, toValue, watch } from 'vue'
-import { isConvexError } from './hydration'
+import { isConvexError, readErrorDataField } from './hydration'
 import { createWaiters, makeAwaitable, useQueryTarget } from './resource'
 import { normalizeError } from './useConvexRuntimeContext'
 
-type PageResult = PaginationResult<unknown>
 type PageArgs = Record<string, unknown> & { paginationOpts: Record<string, unknown> }
 
 /**
@@ -17,14 +16,14 @@ type PageArgs = Record<string, unknown> & { paginationOpts: Record<string, unkno
  * `usePaginatedQuery` in `convex/react`: every session has its own `id` so it gets
  * fresh query journals, and pages that grow are split in two.
  */
-interface Session {
+interface Session<Item> {
   id: number
   args: Record<string, unknown>
   nextPageKey: number
   pageKeys: number[]
   pageArgs: Map<number, PageArgs>
   splits: Map<number, [number, number]>
-  results: Map<number, PageResult | Error>
+  results: Map<number, PaginationResult<Item> | Error>
   unsubscribers: Map<number, () => void>
 }
 
@@ -32,13 +31,17 @@ let nextSessionId = 0
 
 // The cursor no longer matches the query (data-dependent pagination changed underneath us): restart.
 function isInvalidCursor(error: Error): boolean {
-  const data = isConvexError(error) ? error.data as Record<string, unknown> | undefined : undefined
-  return data?.paginationError === 'InvalidCursor' || error.message.includes('InvalidCursor')
+  return (isConvexError(error) && readErrorDataField(error.data, 'paginationError') === 'InvalidCursor') || error.message.includes('InvalidCursor')
+}
+
+// `@click="loadMore"` passes the click event, which isn't a page size.
+function isPageSize(value: unknown): value is number {
+  return Number.isInteger(value)
 }
 
 export function createPaginationResource<Item>(
   context: ConvexRuntimeContext,
-  query: MaybeRefOrGetter<FunctionReference<'query'>>,
+  query: MaybeRefOrGetter<FunctionReference<'query', 'public', any, PaginationResult<Item>>>,
   args: MaybeRefOrGetter<Record<string, unknown> | 'skip' | undefined>,
   options: UseConvexPaginatedQueryOptions,
 ): UseConvexPaginatedQueryReturn<Item> & PromiseLike<UseConvexPaginatedQueryReturn<Item>> {
@@ -49,8 +52,8 @@ export function createPaginationResource<Item>(
   const isLoadingMore = shallowRef(false)
   const target = useQueryTarget(context, query, args, options.auth, `|paginated:${options.numItems}`)
   const waiters = createWaiters(() => status.value !== 'pending')
-  let session: Session | undefined
-  let lastPage: PageResult | undefined
+  let session: Session<Item> | undefined
+  let lastPage: PaginationResult<Item> | undefined
 
   function setStatus(next: QueryStatus): void {
     status.value = next
@@ -88,7 +91,7 @@ export function createPaginationResource<Item>(
     evaluate()
   }
 
-  function syncSubscriptions(current: Session): void {
+  function syncSubscriptions(current: Session<Item>): void {
     const client = context.clientRef.value
     if (!client)
       return
@@ -101,14 +104,14 @@ export function createPaginationResource<Item>(
     for (const [key, pageArgs] of current.pageArgs) {
       if (current.unsubscribers.has(key))
         continue
-      const onSettled = (result: PageResult | Error): void => {
+      const onSettled = (result: PaginationResult<Item> | Error): void => {
         if (session !== current)
           return
         current.results.set(key, result)
         evaluate()
       }
       try {
-        current.unsubscribers.set(key, client.onUpdate(toValue(query), pageArgs as any, onSettled, err => onSettled(normalizeError(err))))
+        current.unsubscribers.set(key, client.onUpdate(toValue(query), pageArgs, onSettled, err => onSettled(normalizeError(err))))
       }
       catch (err) {
         onSettled(normalizeError(err))
@@ -116,7 +119,7 @@ export function createPaginationResource<Item>(
     }
   }
 
-  function splitPage(current: Session, key: number, splitCursor: string, continueCursor: string): void {
+  function splitPage(current: Session<Item>, key: number, splitCursor: string, continueCursor: string): void {
     const paginationOpts = current.pageArgs.get(key)!.paginationOpts
     const first = current.nextPageKey++
     const second = current.nextPageKey++
@@ -126,7 +129,7 @@ export function createPaginationResource<Item>(
     syncSubscriptions(current)
   }
 
-  function completeSplit(current: Session, key: number): void {
+  function completeSplit(current: Session<Item>, key: number): void {
     const split = current.splits.get(key)!
     current.pageKeys.splice(current.pageKeys.indexOf(key), 1, ...split)
     current.splits.delete(key)
@@ -141,7 +144,7 @@ export function createPaginationResource<Item>(
       return
 
     const items: Item[] = []
-    let last: PageResult | undefined
+    let last: PaginationResult<Item> | undefined
     let failure: Error | undefined
     let loadedAnyPage = false
 
@@ -174,7 +177,7 @@ export function createPaginationResource<Item>(
       // The server couldn't read the whole page: stop before it until the split lands.
       if (result.pageStatus === 'SplitRequired')
         break
-      items.push(...result.page as Item[])
+      items.push(...result.page)
       last = result
       loadedAnyPage = true
     }
@@ -250,8 +253,7 @@ export function createPaginationResource<Item>(
     isDone: shallowReadonly(isDone),
     isLoadingMore: shallowReadonly(isLoadingMore),
     loadMore(numItems?: number) {
-      // `@click="loadMore"` passes the click event.
-      const pageSize = typeof numItems === 'number' ? numItems : options.numItems
+      const pageSize = isPageSize(numItems) ? numItems : options.numItems
       const current = session
       if (context.isServer || !current || !lastPage || status.value !== 'success' || isDone.value || isLoadingMore.value)
         return false

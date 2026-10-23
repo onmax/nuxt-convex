@@ -1,5 +1,5 @@
 import type { FunctionArgs, FunctionReference, FunctionReturnType } from 'convex/server'
-import type { MaybeRefOrGetter, PropType, SetupContext, SlotsType, VNodeChild } from 'vue'
+import type { PropType, SetupContext, SlotsType, VNodeChild } from 'vue'
 import type { ConvexQueryError, UseConvexQueryArgs, UseConvexQueryOptions } from 'vue-convex'
 import { defineComponent } from 'vue'
 import { useConvexQuery } from '#convex'
@@ -27,8 +27,8 @@ function isEmpty(value: unknown): boolean {
 }
 
 export default defineComponent(<Query extends QueryReference>(props: ConvexQueryProps<Query>, { slots }: SetupContext<Record<never, never>, ConvexQuerySlots>) => {
-  const args = (() => props.args ?? {}) as MaybeRefOrGetter<FunctionArgs<Query> | 'skip'>
-  const state = useConvexQuery(() => props.query, ...([args, props.options] as UseConvexQueryArgs<Query>))
+  // SAFETY: omitted args become `{}` like in useConvexQuery, and TS can't resolve UseConvexQueryArgs for a generic Query.
+  const state = useConvexQuery(() => props.query, ...([() => props.args ?? {}, props.options] as UseConvexQueryArgs<Query>))
 
   const render = (): VNodeChild => {
     if (state.isPending.value)
@@ -45,7 +45,9 @@ export default defineComponent(<Query extends QueryReference>(props: ConvexQuery
   return shouldWait ? Promise.resolve(state).then(() => render) : render
 }, {
   name: 'ConvexQuery',
+  // SAFETY: `slots` only feeds type inference; Vue never reads its runtime value.
   slots: Object as ConvexQuerySlots,
+  // SAFETY: `as any` keeps defineComponent on the generic setup overload, so the setup signature types the props; these are loose runtime checks.
   props: {
     query: { type: Object as PropType<QueryReference>, required: true },
     args: { type: [Object, String] as PropType<Record<string, unknown> | 'skip'>, default: undefined },

@@ -3,8 +3,13 @@ import type { DeepReadonly, Ref } from 'vue'
 import { readonly, ref } from 'vue'
 import { useConvexController } from '#nuxt-convex/advanced-runtime'
 
+interface SignedUploadUrl {
+  key: string
+  url: string
+}
+
 export interface ConvexR2Api {
-  generateUploadUrl: FunctionReference<'mutation'>
+  generateUploadUrl: FunctionReference<'mutation', 'public', any, SignedUploadUrl>
   syncMetadata: FunctionReference<'mutation'>
 }
 
@@ -19,11 +24,6 @@ export interface UseConvexR2UploadReturn {
   isUploading: DeepReadonly<Ref<boolean>>
   progress: DeepReadonly<Ref<number>>
   error: DeepReadonly<Ref<Error | null>>
-}
-
-interface SignedUploadUrl {
-  key: string
-  url: string
 }
 
 function uploadWithProgress(
@@ -81,7 +81,7 @@ export function useConvexR2Upload(api: ConvexR2Api, options: UseConvexR2UploadOp
         const client = controller.getClient()
         if (!client)
           throw new Error('[nuxt-convex] Convex realtime client is not connected')
-        const { key, url } = await client.mutation(api.generateUploadUrl, {}) as SignedUploadUrl
+        const { key, url } = await client.mutation(api.generateUploadUrl, {})
 
         await uploadWithProgress(url, file, (nextProgress) => {
           progress.value = nextProgress.total > 0

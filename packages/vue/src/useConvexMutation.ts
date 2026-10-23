@@ -25,6 +25,7 @@ export function useConvexMutation<Mutation extends MutationReference>(
   const { error, isPending, run } = useCommandState()
 
   return {
+    // SAFETY: OptionalRestArgs only lets args be omitted when the mutation takes none, so `{}` is its args.
     mutate: (...args) => run(() => requireRealtimeClient(clientRef).mutation(
       mutation,
       (args[0] ?? {}) as FunctionArgs<Mutation>,

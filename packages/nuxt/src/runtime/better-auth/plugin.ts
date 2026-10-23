@@ -14,6 +14,7 @@ export default defineNuxtPlugin({
   name: 'nuxt-convex:better-auth',
   dependsOn: ['nuxt-convex'],
   setup(nuxtApp) {
+    // SAFETY: the module writes `public.convex` from resolveConvexOptions() before it registers this plugin.
     const config = useRuntimeConfig().public.convex as ConvexPublicRuntimeConfig
     const { session, ready } = useUserSession()
     let scope: EffectScope | undefined

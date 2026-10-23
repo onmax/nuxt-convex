@@ -1,0 +1,69 @@
+{
+  "extends": [
+    "auto",
+    "vite/strict",
+    "vue/strict",
+    "nuxt/strict",
+    "nitro/strict",
+    "typescript/strict",
+    "vueuse/strict",
+    "package/recommended"
+  ],
+  "suppressions": [
+    {
+      "ruleId": "typescript/strict/no-runtime-typeof",
+      "file": "packages/vue/src/internal/runtime.ts",
+      "reason": "`typeof window` detects whether the runtime is on the server; there is no input value to parse."
+    },
+    {
+      "ruleId": "typescript/strict/no-runtime-typeof",
+      "file": "packages/vue/src/internal/hydration.ts",
+      "reason": "ConvexError data is an arbitrary Convex value thrown by a Convex function; isConvexError() and readErrorDataField() are the boundary checks that read it."
+    },
+    {
+      "ruleId": "typescript/strict/no-runtime-typeof",
+      "file": "packages/vue/src/useConvexUpload.ts",
+      "reason": "parseStorageId() validates the untyped JSON body of the Convex storage upload response at its boundary."
+    },
+    {
+      "ruleId": "typescript/strict/no-runtime-typeof",
+      "file": "packages/nuxt/src/runtime/server/internal/token.ts",
+      "reason": "Validates the untyped JSON body of the Better Auth token endpoint, and detects which h3 response shape the event has (web Headers or a Node response)."
+    },
+    {
+      "ruleId": "typescript/strict/no-runtime-typeof",
+      "file": "packages/nuxt/src/runtime/server/utils/convex.ts",
+      "reason": "toConvexH3Error() reads `status` and `message` from untyped ConvexError data at the boundary where it becomes an H3 error."
+    },
+    {
+      "ruleId": "typescript/strict/no-runtime-typeof",
+      "file": "examples/vue/src/composables/useTaskWorkspace.ts",
+      "reason": "ConvexError data is an untyped Convex value from the server; toMessage() checks its shape at that boundary before reading `message`."
+    },
+    {
+      "ruleId": "typescript/strict/no-runtime-typeof",
+      "file": "playground/app/components/dashboard/StoragePanel.vue",
+      "reason": "Validates `storageId` in the untyped JSON body of the Convex storage upload response at its boundary."
+    },
+    {
+      "ruleId": "vite/env/no-untyped-env",
+      "file": "examples/vue/src/lib/convex.ts",
+      "reason": "VITE_CONVEX_URL is declared on ImportMetaEnv in examples/vue/src/env.d.ts; the rule only reads env.d.ts files under the root Doctor runs from, not the workspace package's."
+    },
+    {
+      "ruleId": "nuxt/hydration/require-clientonly-fallback",
+      "file": "docs/app/app.vue",
+      "reason": "Every child is an overlay (the teleported search modal, the fixed assistant panel and input), so the empty server span shifts no layout."
+    },
+    {
+      "ruleId": "nuxt-ui/prefer-u-button",
+      "file": "docs/app/components/landing/CodeWindow.vue",
+      "reason": "These are custom-styled ARIA tabs with roving tabindex; UButton's base, size and variant classes would change the landing page."
+    },
+    {
+      "ruleId": "nuxt-ui/prefer-u-button",
+      "file": "docs/app/components/landing/InstallCommand.vue",
+      "reason": "A custom-styled segmented toggle using aria-pressed; UButton's base, size and variant classes would change the landing page."
+    }
+  ]
+}

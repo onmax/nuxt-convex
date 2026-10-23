@@ -1,21 +1,19 @@
 <script setup lang="ts">
 import type { Doc, Id } from '../../convex/_generated/dataModel'
 
-const props = withDefaults(defineProps<{
+const { upload, isDeleting = false } = defineProps<{
   upload: Doc<'uploads'>
   isDeleting?: boolean
-}>(), {
-  isDeleting: false,
-})
+}>()
 
 const emit = defineEmits<{
   remove: [id: Id<'uploads'>]
 }>()
 
 const { getUrl } = useConvexStorage()
-const reactiveUrl = getUrl(props.upload.storageId)
-const previewUrl = computed(() => reactiveUrl.value || props.upload.url || null)
-const isImage = computed(() => props.upload.type.startsWith('image/'))
+const reactiveUrl = getUrl(upload.storageId)
+const previewUrl = computed(() => reactiveUrl.value || upload.url || null)
+const isImage = computed(() => upload.type.startsWith('image/'))
 </script>
 
 <template>

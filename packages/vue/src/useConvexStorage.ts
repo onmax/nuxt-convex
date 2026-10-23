@@ -24,7 +24,7 @@ export function useConvexStorage(): ConvexStorageReturn {
         const id = toValue(storageId)
         return id ? { storageId: id } : 'skip'
       })
-      return computed(() => (data.value as string | null | undefined) ?? null)
+      return computed(() => data.value ?? null)
     },
     async remove(storageId) {
       await requireRealtimeClient(context.clientRef).mutation(storage.remove, { storageId })

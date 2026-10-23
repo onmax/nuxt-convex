@@ -17,6 +17,7 @@ export function useConvexAction<Action extends ActionReference>(action: Action):
   const { error, isPending, run } = useCommandState()
 
   return {
+    // SAFETY: OptionalRestArgs only lets args be omitted when the action takes none, so `{}` is its args.
     execute: (...args) => run(() => requireRealtimeClient(clientRef).action(action, (args[0] ?? {}) as FunctionArgs<Action>)),
     error,
     isPending,
