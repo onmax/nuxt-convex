@@ -165,6 +165,7 @@ describe('nuxt-convex', () => {
     expect(sharedImports).toContain('useConvexQuery')
     expect(sharedImports).toContain('useConvexAuth')
     expect(sharedImports).toContain('useConvexConnectionState')
+    expect(sharedImports).toContain('isConvexError')
     expect(sharedImports).toContain('useConvexStorage')
     expect(sharedImports).toContain('useConvexUpload')
     expect(sharedImports).not.toContain('useConvexR2Upload')

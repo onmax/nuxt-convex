@@ -28,6 +28,7 @@ const rootAutoImports = [
   'useConvexPaginatedQuery',
   'useConvexAuth',
   'useConvexConnectionState',
+  'isConvexError',
 ] as const
 
 const storageAutoImports = [
@@ -134,6 +135,14 @@ function dedupeConvex(nuxt: Nuxt): void {
   const dedupe = nuxt.options.vite.resolve.dedupe ||= []
   if (!dedupe.includes('convex'))
     dedupe.push('convex')
+  // Pre-bundle up front: `convex/_generated/api.js` imports `convex/server`, and finding it on the
+  // first page load makes Vite re-optimize and reload the page
+  nuxt.options.vite.optimizeDeps ||= {}
+  const include = nuxt.options.vite.optimizeDeps.include ||= []
+  for (const id of ['convex/browser', 'convex/server', 'convex/values']) {
+    if (!include.includes(id))
+      include.push(id)
+  }
   // One copy of vue-convex (and its injection key) in the SSR bundle
   nuxt.options.build.transpile.push('vue-convex')
 }
@@ -223,6 +232,16 @@ function setupServer(nuxt: Nuxt, resolve: Resolve, config: ResolvedConvexOptions
   // Server-only, so it stays out of the app's aliases
   nuxt.options.nitro.alias ||= {}
   nuxt.options.nitro.alias['#convex/server'] = serverUtils
+  // Types only: the app tsconfig type-checks server routes through Nitro's typed route map
+  nuxt.hook('prepare:types', ({ tsConfig, sharedTsConfig }) => {
+    for (const config of [tsConfig, sharedTsConfig]) {
+      if (!config)
+        continue
+      config.compilerOptions ||= {}
+      config.compilerOptions.paths ||= {}
+      config.compilerOptions.paths['#convex/server'] = [serverUtils]
+    }
+  })
 
   const isNitro2 = (getNitroVersion(nuxt) ?? 2) === 2
   addTypeTemplate({
