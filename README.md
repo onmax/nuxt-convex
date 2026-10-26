@@ -155,7 +155,11 @@ Both packages:
 
 ## Develop
 
+Use Node.js 24 and Corepack 0.36.0; older bundled Corepack versions cannot launch pnpm 12.
+
 ```bash
+npm install --global corepack@0.36.0
+corepack enable
 pnpm install
 pnpm dev        # the Nuxt playground in playground/
 pnpm dev:vue    # the Vue example in examples/vue/

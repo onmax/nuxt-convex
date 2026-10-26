@@ -2,7 +2,7 @@
   "name": "convex-monorepo",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@11.28.5",
+  "packageManager": "pnpm@12.15.0",
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "pnpm --filter nuxt-convex dev",
