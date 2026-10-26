@@ -41,7 +41,7 @@ catalog:
   '@fontsource-variable/inter': ^5.3.0
   '@fontsource-variable/jetbrains-mono': ^5.3.0
   '@nuxt/content': ^3.16.2
-  '@nuxt/fonts': ^1.0.1
+  '@nuxt/fonts': ^1.2.0
   '@nuxt/ui': ^4.12.0
   '@vercel/analytics': ^2.0.1
   '@vercel/speed-insights': ^2.0.0
@@ -61,14 +61,14 @@ catalogs:
   build:
     '@nuxt/module-builder': ^1.0.3
     publint: ^0.3.25
-    tsdown: ^0.23.1
+    tsdown: ^0.23.2
     typescript: ^6.0.3
   convex:
     '@convex-dev/better-auth': ^0.12.5
     '@convex-dev/r2': ^0.10.4
-    convex: ^1.47.0
+    convex: ^1.48.0
   lint:
-    '@antfu/eslint-config': ^9.5.1
+    '@antfu/eslint-config': ^10.0.0
     '@nuxt/eslint-config': ^1.17.0
     eslint: ^10.13.0
     eslint-plugin-format: ^2.0.1
@@ -78,10 +78,10 @@ catalogs:
     '@nuxt/devtools-kit': 4.0.0-beta.7
     vue: ^3.5.44
   playground:
-    '@nuxthub/core': ^0.10.10
+    '@nuxthub/core': ^0.10.11
     '@nuxtjs/better-auth': ^0.3.12
     better-auth: 1.6.33
-    wrangler: ^4.151.3
+    wrangler: ^4.152.0
   prod:
     '@nuxt/kit': ^4.6.2
     consola: ^3.4.2
@@ -94,7 +94,7 @@ catalogs:
     vitest: ^5.0.5
     vitest-package-exports: ^1.2.0
   types:
-    '@types/node': ^24.13.3
+    '@types/node': ^24.19.2
 
   vite:
     '@vitejs/plugin-vue': ^6.0.10
