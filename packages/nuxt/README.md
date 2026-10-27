@@ -4,6 +4,11 @@
 
 # nuxt-convex
 
+[![npm version](https://comark-ui.onmax.me/badge.svg?source=npm-version&package=nuxt-convex&icon=npm)](https://www.npmjs.com/package/nuxt-convex)
+[![npm downloads](https://comark-ui.onmax.me/badge.svg?source=npm-downloads&package=nuxt-convex&period=month&icon=npm)](https://www.npmjs.com/package/nuxt-convex)
+[![license](https://comark-ui.onmax.me/badge.svg?label=license&value=MIT)](https://github.com/onmax/nuxt-convex/blob/main/LICENSE)
+[![docs](https://comark-ui.onmax.me/badge.svg?label=docs&value=nuxt-convex.onmax.me)](https://nuxt-convex.onmax.me)
+
 Nuxt module for [Convex](https://convex.dev). It registers [`vue-convex`](https://npmx.dev/package/vue-convex), auto-imports its composables, and points `#convex/api` at your generated Convex API. Queries run once on the server during SSR and then stay subscribed in the browser.
 
 ## Install

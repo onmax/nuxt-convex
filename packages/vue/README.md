@@ -4,6 +4,11 @@
 
 # vue-convex
 
+[![npm version](https://comark-ui.onmax.me/badge.svg?source=npm-version&package=vue-convex&icon=npm)](https://www.npmjs.com/package/vue-convex)
+[![npm downloads](https://comark-ui.onmax.me/badge.svg?source=npm-downloads&package=vue-convex&period=month&icon=npm)](https://www.npmjs.com/package/vue-convex)
+[![license](https://comark-ui.onmax.me/badge.svg?label=license&value=MIT)](https://github.com/onmax/nuxt-convex/blob/main/LICENSE)
+[![docs](https://comark-ui.onmax.me/badge.svg?label=docs&value=nuxt-convex.onmax.me)](https://nuxt-convex.onmax.me)
+
 Vue 3 plugin and composables for [Convex](https://convex.dev): queries that update in realtime, mutations, actions, pagination, auth, and file storage. Using Nuxt? Install [`nuxt-convex`](https://npmx.dev/package/nuxt-convex) instead.
 
 ## Install

@@ -7,12 +7,12 @@
 <p align="center">Convex for Nuxt and Vue: realtime queries that render on the server and stay live in the browser.</p>
 
 <p align="center">
-  <a href="https://npmx.dev/package/nuxt-convex"><img src="https://npmx.dev/api/registry/badge/version/nuxt-convex" alt="nuxt-convex version"></a>
-  <a href="https://npmx.dev/package/nuxt-convex"><img src="https://npmx.dev/api/registry/badge/downloads/nuxt-convex" alt="nuxt-convex downloads"></a>
-  <a href="https://npmx.dev/package/vue-convex"><img src="https://npmx.dev/api/registry/badge/version/vue-convex" alt="vue-convex version"></a>
-  <a href="https://npmx.dev/package/vue-convex"><img src="https://npmx.dev/api/registry/badge/downloads/vue-convex" alt="vue-convex downloads"></a>
-  <a href="https://nuxt-convex.onmax.me"><img src="https://img.shields.io/badge/docs-nuxt--convex.onmax.me-e56a3b" alt="Docs"></a>
-  <a href="https://npmx.dev/package/nuxt-convex"><img src="https://npmx.dev/api/registry/badge/license/nuxt-convex" alt="License"></a>
+  <a href="https://npmx.dev/package/nuxt-convex"><img src="https://comark-ui.onmax.me/badge.svg?source=npm-version&amp;package=nuxt-convex&amp;icon=npm" alt="nuxt-convex version"></a>
+  <a href="https://npmx.dev/package/nuxt-convex"><img src="https://comark-ui.onmax.me/badge.svg?source=npm-downloads&amp;package=nuxt-convex&amp;period=month&amp;icon=npm" alt="nuxt-convex downloads"></a>
+  <a href="https://npmx.dev/package/vue-convex"><img src="https://comark-ui.onmax.me/badge.svg?source=npm-version&amp;package=vue-convex&amp;icon=npm" alt="vue-convex version"></a>
+  <a href="https://npmx.dev/package/vue-convex"><img src="https://comark-ui.onmax.me/badge.svg?source=npm-downloads&amp;package=vue-convex&amp;period=month&amp;icon=npm" alt="vue-convex downloads"></a>
+  <a href="https://nuxt-convex.onmax.me"><img src="https://comark-ui.onmax.me/badge.svg?label=docs&amp;value=nuxt-convex.onmax.me" alt="Docs"></a>
+  <a href="https://npmx.dev/package/nuxt-convex"><img src="https://comark-ui.onmax.me/badge.svg?label=license&amp;value=MIT" alt="License"></a>
 </p>
 
 [Convex](https://convex.dev) is a backend where queries are reactive: when the data changes, every client subscribed to a query gets the new result. This repo connects it to Vue. `vue-convex` is a Vue plugin with composables for queries, mutations, actions, pagination, auth, and file storage. `nuxt-convex` is a Nuxt module built on it: it registers the plugin, auto-imports the composables, and points `#convex/api` at your generated Convex API. In Nuxt, a query runs once on the server during SSR and then subscribes over WebSocket in the browser, so the page arrives with data and keeps it current.
