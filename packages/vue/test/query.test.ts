@@ -379,6 +379,7 @@ describe('connection state and storage urls', () => {
     const fileUrl = harness.run(() => useConvexStorage().getUrl(computed(() => storageId.value)))
     const initialClient = getLastRealtimeClient()
 
+    expect(connection.isConnected.value).toBe(false)
     emitConnectionState(initialClient, { isWebSocketConnected: true })
     initialClient.listeners[0].onResult('https://cdn.convex.dev/initial.png')
     expect(connection.isConnected.value).toBe(true)

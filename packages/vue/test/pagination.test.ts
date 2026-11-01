@@ -44,9 +44,16 @@ describe('useConvexPaginatedQuery', () => {
   it('guards loadMore while pending, loading, done or skipped', async () => {
     const harness = createHarness({ options: { url } })
     const client = getLastRealtimeClient()
-    const args = ref<{ userId: string } | 'skip'>({ userId: '1' })
+    const args = ref<{ userId: string } | 'skip'>('skip')
     const pagination = harness.run(() => useConvexPaginatedQuery(paginatedRef, args, { numItems: 1 }))
 
+    expect(pagination.isSkipped.value).toBe(true)
+    expect(pagination.loadMore()).toBe(false)
+    expect(client.listeners).toHaveLength(0)
+
+    args.value = { userId: '1' }
+    await nextTick()
+    expect(pagination.isSkipped.value).toBe(false)
     expect(pagination.loadMore()).toBe(false)
 
     client.listeners[0].onResult(page([{ _id: 'a' }]))
@@ -60,6 +67,7 @@ describe('useConvexPaginatedQuery', () => {
     args.value = 'skip'
     await nextTick()
     expect(pagination.status.value).toBe('idle')
+    expect(pagination.isSkipped.value).toBe(true)
     expect(pagination.data.value).toEqual([])
     expect(pagination.loadMore()).toBe(false)
     expect(client.listeners).toHaveLength(0)
