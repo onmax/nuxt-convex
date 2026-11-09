@@ -84,9 +84,11 @@ catalogs:
     wrangler: ^4.152.0
   prod:
     '@nuxt/kit': ^4.6.2
+    '@valibot/to-json-schema': ^1.8.0
     consola: ^3.4.2
     defu: ^6.1.7
     pathe: ^2.0.3
+    valibot: ^1.5.0
   test:
     '@nuxt/test-utils': ^4.3.4
     '@vue/test-utils': ^2.5.1

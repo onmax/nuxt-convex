@@ -1,4 +1,5 @@
 import type { ConvexClientOptions } from 'convex/browser'
+import type { ConvexPublicRuntimeConfig } from '../internal/runtime-config'
 
 type SerializableClientOption
   = | 'verbose'
@@ -71,19 +72,6 @@ export interface ConvexConfig {
   devtools?: boolean
 }
 
-export interface ResolvedConvexAuthConfig {
-  provider: 'better-auth' | 'none'
-  basePath: string
-  proxy: boolean
-}
+export type { ConvexPublicRuntimeConfig }
 
-/** Shape of `runtimeConfig.public.convex` */
-export interface ConvexPublicRuntimeConfig {
-  url: string
-  siteUrl: string
-  ssr: boolean
-  storage: boolean
-  r2: boolean
-  clientOptions: ConvexClientConfig
-  auth: ResolvedConvexAuthConfig
-}
+export type ResolvedConvexAuthConfig = ConvexPublicRuntimeConfig['auth']
