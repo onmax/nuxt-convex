@@ -14,6 +14,7 @@ import { formatProjectRelativePath, resolveConvexRoot, resolveStorageServerImpor
 import { resolveDashboardUrl } from './internal/dashboard'
 import { readDotenvLocal } from './internal/env'
 import { resolveConvexOptions } from './internal/options'
+import { registerRuntimeConfigSchema, supportsRuntimeConfigSchemas } from './internal/runtime-config'
 import { buildStorageFunctions, isUnguardedStorageScaffold } from './internal/storage-scaffold'
 
 export * from './types/index'
@@ -85,6 +86,8 @@ const module: NuxtModule<ConvexConfig> = defineNuxtModule<ConvexConfig>({
       nuxt.options.runtimeConfig.public.convex as Record<string, unknown> | undefined,
       config.runtime,
     )
+    if (supportsRuntimeConfigSchemas(nuxt))
+      await registerRuntimeConfigSchema(nuxt)
 
     addPlugin(resolve('./runtime/plugin'))
     if (config.runtime.auth.provider === 'better-auth' && hasNuxtModule('@nuxtjs/better-auth', nuxt))
