@@ -1,7 +1,7 @@
 import type { Nuxt } from 'nuxt/schema'
 import type { ConvexClientConfig } from '../types/config'
 import { pathToFileURL } from 'node:url'
-import { directoryToURL, importModule, resolveModule } from '@nuxt/kit'
+import { directoryToURL, importModule, resolveModule, tryResolveModule } from '@nuxt/kit'
 import { toStandardJsonSchema } from '@valibot/to-json-schema'
 import * as v from 'valibot'
 
@@ -57,7 +57,9 @@ export async function registerRuntimeConfigSchema(nuxt: Nuxt): Promise<void> {
     delete convex.url
 
   // This module's own Kit can predate schemas and would merge the schema in as a value, so use the Kit Nuxt runs with
-  const nuxtEntry = resolveModule('nuxt', { url: [nuxt.options.rootDir, ...nuxt.options.modulesDir].map(dir => directoryToURL(dir)) })
+  const url = [nuxt.options.rootDir, ...nuxt.options.modulesDir].map(dir => directoryToURL(dir))
+  // Prefer the nightly package when present, as Nuxt's loader does.
+  const nuxtEntry = await tryResolveModule('nuxt-nightly', url) ?? resolveModule('nuxt', { url })
   const kit = await importModule<typeof import('@nuxt/kit')>('@nuxt/kit', { url: pathToFileURL(nuxtEntry) })
   await kit.updateRuntimeConfig({ public: { convex: toStandardJsonSchema(convexPublicRuntimeConfigSchema) } })
 }

@@ -23,18 +23,19 @@ function writePackage(dir: string, name: string, code: string): void {
 }
 
 // Nuxt with its own Kit nested under it, like a Nuxt 5 app where this module resolves Kit 4
-const nuxtDir = join(root, 'node_modules/nuxt')
+const stableRoot = join(root, 'stable')
+const nuxtDir = join(stableRoot, 'node_modules/nuxt')
 const kitEntry = join(nuxtDir, 'node_modules/@nuxt/kit/index.mjs')
 writePackage(nuxtDir, 'nuxt', 'export {}\n')
 writePackage(join(nuxtDir, 'node_modules/@nuxt/kit'), '@nuxt/kit', 'export const updates = []\nexport function updateRuntimeConfig(update) { updates.push(update) }\n')
 
-function fakeNuxt(options: { dev: boolean, convex: Record<string, unknown>, schemas?: boolean }): Nuxt {
+function fakeNuxt(options: { dev: boolean, convex: Record<string, unknown>, schemas?: boolean, rootDir?: string }): Nuxt {
   // SAFETY: registerRuntimeConfigSchema reads only these options.
   return {
     options: {
       dev: options.dev,
-      rootDir: root,
-      modulesDir: [join(root, 'node_modules')],
+      rootDir: options.rootDir ?? stableRoot,
+      modulesDir: [join(options.rootDir ?? stableRoot, 'node_modules')],
       runtimeConfig: { public: { convex: options.convex } },
       ...(options.schemas !== false && { _runtimeConfigSchemas: [] }),
     },
@@ -81,5 +82,27 @@ describe('runtime config schema', () => {
     const build = { url: 'https://a.convex.cloud' }
     await registerRuntimeConfigSchema(fakeNuxt({ dev: false, convex: build }))
     expect(build.url).toBe('https://a.convex.cloud')
+  })
+
+  it.each([false, true])('registers through the nightly Kit when stable Nuxt is also installed: %s', async (withStable) => {
+    const rootDir = join(root, withStable ? 'both' : 'nightly-only')
+    const nightlyDir = join(rootDir, 'node_modules/nuxt-nightly')
+    const nightlyKitEntry = join(nightlyDir, 'node_modules/@nuxt/kit/index.mjs')
+    writePackage(nightlyDir, 'nuxt-nightly', 'export {}\n')
+    writePackage(join(nightlyDir, 'node_modules/@nuxt/kit'), '@nuxt/kit', 'export const updates = []\nexport function updateRuntimeConfig(update) { updates.push(update) }\n')
+    if (withStable) {
+      const stableDir = join(rootDir, 'node_modules/nuxt')
+      writePackage(stableDir, 'nuxt', 'export {}\n')
+      writePackage(join(stableDir, 'node_modules/@nuxt/kit'), '@nuxt/kit', 'export function updateRuntimeConfig() { throw new Error("Used stable Kit instead of nightly Kit") }\n')
+    }
+
+    const convex = { ...resolveConvexOptions({}, { env: {} }).runtime }
+    await registerRuntimeConfigSchema(fakeNuxt({ dev: false, convex, rootDir }))
+
+    const { updates } = await import(pathToFileURL(nightlyKitEntry).href) as { updates: { public: { convex: StandardJsonSchema } }[] }
+    expect(updates).toHaveLength(1)
+    const json = updates[0]!.public.convex['~standard'].jsonSchema.output({ target: 'draft-2020-12' })
+    expect(json.required).toContain('url')
+    expect(convex).not.toHaveProperty('url')
   })
 })
