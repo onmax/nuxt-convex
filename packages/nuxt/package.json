@@ -1,7 +1,7 @@
 {
   "name": "nuxt-convex",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Nuxt module for Convex powered by vue-convex",
   "author": "onmax",
   "license": "MIT",
