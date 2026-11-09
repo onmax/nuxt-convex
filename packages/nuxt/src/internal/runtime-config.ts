@@ -40,7 +40,7 @@ export type ConvexPublicRuntimeConfig = v.InferOutput<typeof convexPublicRuntime
 
 /** Nuxt 5 keeps the runtime config schemas it validates in `_runtimeConfigSchemas` */
 export function supportsRuntimeConfigSchemas(nuxt: Nuxt): boolean {
-  return Array.isArray((nuxt.options as { _runtimeConfigSchemas?: unknown })._runtimeConfigSchemas)
+  return '_runtimeConfigSchemas' in nuxt.options && Array.isArray(nuxt.options._runtimeConfigSchemas)
 }
 
 /**
@@ -51,6 +51,7 @@ export function supportsRuntimeConfigSchemas(nuxt: Nuxt): boolean {
  * `npx convex dev` often writes the URL after Nuxt starts.
  */
 export async function registerRuntimeConfigSchema(nuxt: Nuxt): Promise<void> {
+  // SAFETY: the module writes `public.convex` from resolveConvexOptions() before it calls this.
   const convex = nuxt.options.runtimeConfig.public.convex as Partial<ConvexPublicRuntimeConfig>
   if (!nuxt.options.dev && !convex.url)
     delete convex.url
