@@ -1,7 +1,7 @@
 {
   "name": "vue-convex",
   "type": "module",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vue composables and plugin for Convex",
   "author": "onmax",
   "license": "MIT",
