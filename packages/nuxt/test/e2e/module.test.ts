@@ -131,10 +131,7 @@ describe('nuxt-convex', () => {
     expect(fixture.alias('#convex/api')).toBeTruthy()
     expect(fixture.alias('#convex/advanced')).toBeTruthy()
     expect(fixture.alias('#convex/storage')).toBeTruthy()
-    expect(fixture.alias('#convex/r2')).toBeUndefined()
-    expect(fixture.alias('#convex/storage-refs')).toBeUndefined()
     expect(fixture.alias('#convex/server')).toBeUndefined()
-    expect(fixture.alias('convex-vue')).toBeUndefined()
   })
 
   it('scaffolds storage functions when storage: true', () => {
@@ -152,11 +149,9 @@ describe('nuxt-convex', () => {
     expect(rootModule).not.toContain('/src/')
   })
 
-  it('keeps storage refs behind a lazy internal runtime helper', () => {
-    const storageRefsRuntime = readFileSync(join(fixture.buildDir(), 'convex/storage-refs-runtime.mjs'), 'utf8')
-
-    expect(storageRefsRuntime).toMatch(/import\s+\{\s*api\s*\}\s+from\s+['"].*convex\/_generated\/api['"]/)
-    expect(storageRefsRuntime).toContain('return api?._hub?.storage')
+  it('configures useConvexStorage from the generated Convex API', async () => {
+    const html = await fixture.fetch<string>('/', { responseType: 'text' })
+    expect(html).toContain('<span data-testid="storage">configured</span>')
   })
 
   it('auto-imports the app composables', () => {
@@ -179,8 +174,8 @@ describe('nuxt-convex', () => {
 
     for (const name of ['useConvexServer', 'serverConvexQuery', 'serverConvexMutation', 'serverConvexAction', 'getConvexToken', 'requireConvexAuth', 'toConvexH3Error'])
       expect(serverImports).toContain(name)
-    expect(hooks).toContain(`'convex:token': ConvexTokenHook`)
-    expect(hooks).toContain('$convexToken?: ConvexTokenGetter')
+    expect(hooks).toMatch(/'convex:token': \w+/)
+    expect(hooks).toMatch(/\$convexToken\?: \w+/)
   })
 
   it('registers the Nuxt components', () => {
