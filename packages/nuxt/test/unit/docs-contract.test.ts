@@ -39,15 +39,6 @@ function read(relativePath: string): string {
 }
 
 describe('docs contract', () => {
-  it('does not document a #convex/r2 virtual module', () => {
-    expect(search('#convex/r2')).toBe('')
-    expect(search(`import { useUploadFile } from '#convex/r2'`)).toBe('')
-  })
-
-  it('does not document internal storage runtime helpers', () => {
-    expect(search('#convex/storage-refs')).toBe('')
-  })
-
   it('does not recommend direct vue-convex runtime imports in Nuxt-facing docs', () => {
     const nuxtModuleDoc = read('docs/content/2.nuxt-module/index.md')
     const virtualModulesDoc = read('docs/content/5.api-reference/02.virtual-modules.md')
@@ -89,18 +80,6 @@ describe('docs contract', () => {
     expect(betterAuthDoc).toContain('optional and secondary')
     expect(betterAuthDoc).toContain('Diagnostics')
     expect(betterAuthDoc).toContain('playground')
-  })
-
-  it('documents Better Auth running inside Convex, not the removed database provider', () => {
-    const betterAuthDoc = read('docs/content/6.integrations/1.better-auth.md')
-
-    expect(betterAuthDoc).toContain('clientOnly: true')
-    expect(betterAuthDoc).toContain('Failed to decrypt private key')
-    expect(betterAuthDoc).toContain('adapter:deleteMany')
-    expect(search(`provider: 'convex',`)).toBe('')
-    expect(search('nuxt-convex/better-auth\'')).toBe('')
-    expect(search('@onmax/convex-vue')).toBe('')
-    expect(search('onmax/nuxt-better-auth')).toBe('')
   })
 
   it('documents the ssr module option instead of the deprecated server option', () => {

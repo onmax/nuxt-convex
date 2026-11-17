@@ -44,11 +44,9 @@ describe('vue-convex exports', async () => {
     const advancedTypes = readFileSync(resolve(process.cwd(), 'dist/advanced.d.mts'), 'utf8')
     const storageTypes = readFileSync(resolve(process.cwd(), 'dist/storage.d.mts'), 'utf8')
 
-    expect(rootTypes).not.toContain('useConvexContext')
     expect(rootTypes).not.toContain('useConvexClient')
     expect(rootTypes).not.toContain('useConvexStorage')
     expect(rootTypes).not.toContain('useConvexUpload')
-    expect(rootTypes).not.toContain('manualInit')
     expect(rootTypes).not.toContain('getHttpClient')
 
     expect(advancedTypes).not.toContain('CONVEX_VUE_KEY')

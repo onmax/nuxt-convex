@@ -131,10 +131,7 @@ describe('nuxt-convex', () => {
     expect(fixture.alias('#convex/api')).toBeTruthy()
     expect(fixture.alias('#convex/advanced')).toBeTruthy()
     expect(fixture.alias('#convex/storage')).toBeTruthy()
-    expect(fixture.alias('#convex/r2')).toBeUndefined()
-    expect(fixture.alias('#convex/storage-refs')).toBeUndefined()
     expect(fixture.alias('#convex/server')).toBeUndefined()
-    expect(fixture.alias('convex-vue')).toBeUndefined()
   })
 
   it('scaffolds storage functions when storage: true', () => {

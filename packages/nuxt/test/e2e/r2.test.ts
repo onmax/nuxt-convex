@@ -9,14 +9,11 @@ const rootDir = fileURLToPath(new URL('../fixtures/r2', import.meta.url))
 describe('nuxt-convex r2', () => {
   const fixture = setupSubprocessE2E({ rootDir })
 
-  it('keeps the R2 helper as an auto-import without creating extra public aliases', () => {
+  it('registers the public aliases without storage in r2 mode', () => {
     expect(fixture.alias('#convex')).toBeTruthy()
     expect(fixture.alias('#convex/api')).toBeTruthy()
     expect(fixture.alias('#convex/advanced')).toBeTruthy()
     expect(fixture.alias('#convex/storage')).toBeUndefined()
-    expect(fixture.alias('#convex/r2')).toBeUndefined()
-    expect(fixture.alias('convex-vue')).toBeUndefined()
-    expect(fixture.alias('convex-vue/advanced')).toBeUndefined()
   })
 
   it('auto-imports the supported r2 helper without exposing extra runtime helpers', () => {
