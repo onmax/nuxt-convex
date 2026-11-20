@@ -8,7 +8,7 @@ const DISABLED_VALUES = new Set(['0', 'false', 'no', 'off'])
 
 function getEnvValue(env: EnvSource, ...keys: string[]): string | undefined {
   for (const key of keys) {
-    const value = env[key]
+    const value = Object.hasOwn(env, key) ? env[key] : undefined
     if (value)
       return value
   }

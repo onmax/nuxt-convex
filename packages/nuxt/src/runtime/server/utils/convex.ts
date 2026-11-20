@@ -77,6 +77,11 @@ export function serverConvexAction<Action extends FunctionReference<'action'>>(e
   return useConvexServer(event).action(action, ...args)
 }
 
+/** `instanceof Error` that also accepts an Error from another realm (node:vm, an iframe). */
+function isError(value: unknown): value is Error {
+  return value instanceof Error || Object.prototype.toString.call(value) === '[object Error]'
+}
+
 /**
  * Map a Convex failure to an H3 error.
  * A `ConvexError` becomes a 400 carrying its `data` (or `data.status` when it's a 4xx/5xx number);
@@ -88,7 +93,7 @@ export function toConvexH3Error(error: unknown): NuxtError {
     return error as NuxtError
   }
 
-  if (error instanceof Error && error.name === 'ConvexError') {
+  if (isError(error) && error.name === 'ConvexError') {
     const data = 'data' in error ? error.data : undefined
     const record: { status?: unknown, message?: unknown } | undefined = data && typeof data === 'object' ? data : undefined
     const status = typeof record?.status === 'number' && record.status >= 400 && record.status < 600 ? record.status : 400

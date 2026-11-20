@@ -62,7 +62,10 @@ export default defineNuxtPlugin({
         set: (key, entry) => {
           payload[PAYLOAD_PREFIX + key] = entry
         },
-        get: key => payload[PAYLOAD_PREFIX + key],
+        get: (key) => {
+          const payloadKey = PAYLOAD_PREFIX + key
+          return Object.hasOwn(payload, payloadKey) ? payload[payloadKey] : undefined
+        },
         isHydrating: () => nuxtApp.isHydrating === true && !!nuxtApp.payload.serverRendered,
       },
     }

@@ -2,6 +2,7 @@ import type { ConvexClient } from 'convex/browser'
 import type { ShallowRef } from 'vue'
 import type { ConvexRuntimeContext } from './runtime'
 import { hasInjectionContext, inject } from 'vue'
+import { isError } from './errors'
 import { CONVEX_VUE_KEY } from './runtime'
 
 export function useConvexRuntimeContext(): ConvexRuntimeContext {
@@ -20,5 +21,5 @@ export function requireRealtimeClient(clientRef: ShallowRef<ConvexClient | undef
 }
 
 export function normalizeError(err: unknown): Error {
-  return err instanceof Error ? err : new Error(String(err))
+  return isError(err) ? err : new Error(String(err))
 }
