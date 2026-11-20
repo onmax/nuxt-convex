@@ -1,6 +1,7 @@
 {
   "extends": [
     "strict",
+    "vue/strict",
     "package/recommended"
   ],
   "suppressions": [
