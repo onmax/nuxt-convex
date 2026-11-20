@@ -2,6 +2,7 @@ import type { FunctionReference } from 'convex/server'
 import type { DeepReadonly, Ref } from 'vue'
 import { readonly, ref } from 'vue'
 import { useConvexController } from '#nuxt-convex/advanced-runtime'
+import { runtimeErrors } from '../diagnostics'
 
 interface SignedUploadUrl {
   key: string
@@ -68,7 +69,7 @@ export function useConvexR2Upload(api: ConvexR2Api, options: UseConvexR2UploadOp
     progress: readonly(progress),
     async upload(file) {
       if (import.meta.server) {
-        const serverError = new Error('[nuxt-convex] R2 uploads are only available on the client')
+        const serverError = runtimeErrors.NUXT_CONVEX_R0009()
         error.value = serverError
         options.onError?.(serverError)
         return null
@@ -80,7 +81,7 @@ export function useConvexR2Upload(api: ConvexR2Api, options: UseConvexR2UploadOp
       try {
         const client = controller.getClient()
         if (!client)
-          throw new Error('[nuxt-convex] Convex realtime client is not connected')
+          throw runtimeErrors.NUXT_CONVEX_R0008()
         const { key, url } = await client.mutation(api.generateUploadUrl, {})
 
         await uploadWithProgress(url, file, (nextProgress) => {

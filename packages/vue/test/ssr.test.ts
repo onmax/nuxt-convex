@@ -168,6 +168,25 @@ describe('sSR and hydration', () => {
     expect(JSON.stringify(payload.data)).not.toContain('jwt')
   })
 
+  it('runs SSR queries anonymously and reports VUE_CONVEX_R0009 when serverAuth.getToken() rejects', async () => {
+    const failure = new Error('token service down')
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+    httpQuery.mockImplementation(async (_query, _args, client) => client.setAuth.mock.calls.length ? ['private'] : ['public'])
+    const Mine = defineComponent({
+      async setup() {
+        const mine = await useConvexQuery(queryRef, { userId: '1' })
+        return () => h('p', String(mine.data.value))
+      },
+    })
+
+    const html = await renderOnServer(withSuspense(Mine), { url, serverAuth: { getToken: () => Promise.reject(failure) }, hydration: createPayload().server })
+
+    expect(html).toContain('public')
+    expect(error).toHaveBeenCalledTimes(1)
+    expect(error).toHaveBeenCalledWith('%s', expect.stringContaining('[VUE_CONVEX_R0009]'), failure)
+    error.mockRestore()
+  })
+
   it('leaves queries pending on the server unless awaited or enabled', async () => {
     const Lazy = defineComponent({
       async setup() {

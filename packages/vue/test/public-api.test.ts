@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createApp } from 'vue'
 import {
   actionRef,
   createHarness,
@@ -92,7 +93,23 @@ describe('vue-convex public API', () => {
   })
 
   it('explains where composables can be called', () => {
-    expect(() => root.useConvexQuery(queryRef, { userId: '1' })).toThrow('must be called inside setup()')
+    expect(() => root.useConvexQuery(queryRef, { userId: '1' })).toThrow(expect.objectContaining({ name: 'VUE_CONVEX_R0001', message: expect.stringContaining('must be called inside setup()') }))
+  })
+
+  it('explains that the plugin is missing', () => {
+    const app = createApp({ render: () => null })
+
+    expect(() => app.runWithContext(() => root.useConvexQuery(queryRef, { userId: '1' }))).toThrow(expect.objectContaining({
+      name: 'VUE_CONVEX_R0002',
+      fix: expect.stringContaining('app.use(convexVue, { url })'),
+      docs: 'https://nuxt-convex.onmax.me/errors/vue-convex-r0002',
+    }))
+  })
+
+  it('refuses to reconfigure without a URL', () => {
+    const controller = advanced.createConvexVueController()
+
+    expect(() => controller.reconfigure({ server: false })).toThrow(expect.objectContaining({ name: 'VUE_CONVEX_R0005' }))
   })
 
   it('exposes raw clients through the advanced entrypoint', () => {
@@ -108,12 +125,8 @@ describe('vue-convex public API', () => {
   it('throws clear advanced errors when raw clients are unavailable', () => {
     const harness = createHarness()
 
-    expect(() => harness.run(() => advanced.useConvexClient())).toThrow(
-      '[vue-convex/advanced] Convex realtime client is not connected. Use useConvexController() to connect first.',
-    )
-    expect(() => harness.run(() => advanced.useConvexHttpClient())).toThrow(
-      '[vue-convex/advanced] Convex HTTP client is not connected. Use useConvexController() to connect first.',
-    )
+    expect(() => harness.run(() => advanced.useConvexClient())).toThrow(expect.objectContaining({ name: 'VUE_CONVEX_R0003' }))
+    expect(() => harness.run(() => advanced.useConvexHttpClient())).toThrow(expect.objectContaining({ name: 'VUE_CONVEX_R0004' }))
 
     harness.stop()
   })
@@ -211,9 +224,7 @@ describe('vue-convex public API', () => {
   it('requires the /storage feature to be installed before using storage helpers', () => {
     const harness = createHarness({ options: { url: 'https://test.convex.cloud' } })
 
-    expect(() => harness.run(() => storage.useConvexStorage())).toThrow(
-      '[vue-convex/storage] Storage feature is not configured. Install convexVueStorage first.',
-    )
+    expect(() => harness.run(() => storage.useConvexStorage())).toThrow(expect.objectContaining({ name: 'VUE_CONVEX_R0006' }))
 
     harness.stop()
   })
@@ -241,14 +252,14 @@ describe('vue-convex public API', () => {
     {
       failure: 'the upload response is invalid',
       response: { status: 200, body: {} },
-      message: '[vue-convex/storage] Upload response did not include a storageId',
+      expected: { name: 'VUE_CONVEX_R0007' },
     },
     {
       failure: 'the upload request fails',
       response: { status: 500, statusText: 'Server Error' },
-      message: '[vue-convex/storage] Upload failed: 500 Server Error',
+      expected: { message: '[vue-convex/storage] Upload failed: 500 Server Error' },
     },
-  ])('returns null and reports an error when $failure', async ({ response, message }) => {
+  ])('returns null and reports an error when $failure', async ({ response, expected }) => {
     const onError = vi.fn()
     const harness = createHarness({
       options: { url: 'https://test.convex.cloud' },
@@ -263,7 +274,7 @@ describe('vue-convex public API', () => {
     const file = new globalThis.File(['hello'], 'hello.txt', { type: 'text/plain' })
 
     await expect(upload.upload(file)).resolves.toBeNull()
-    expect(upload.error.value?.message).toBe(message)
+    expect(upload.error.value).toMatchObject(expected)
     expect(onError).toHaveBeenCalledTimes(1)
 
     harness.stop()

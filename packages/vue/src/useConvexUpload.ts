@@ -1,5 +1,6 @@
 import type { Ref } from 'vue'
 import { shallowReadonly, shallowRef } from 'vue'
+import { errors } from './internal/diagnostics'
 import { normalizeError, useConvexRuntimeContext } from './internal/useConvexRuntimeContext'
 import { useConvexStorage } from './useConvexStorage'
 
@@ -47,7 +48,7 @@ function parseStorageId(body: string): string {
   const response: unknown = JSON.parse(body)
   const storageId = typeof response === 'object' && response !== null && 'storageId' in response ? response.storageId : undefined
   if (typeof storageId !== 'string' || storageId.length === 0)
-    throw new Error('[vue-convex/storage] Upload response did not include a storageId')
+    throw errors.VUE_CONVEX_R0007()
   return storageId
 }
 
@@ -67,7 +68,7 @@ export function useConvexUpload(options: UseConvexUploadOptions = {}): UseConvex
   return {
     async upload(file, { signal } = {}) {
       if (isServer)
-        return fail(new Error('[vue-convex/storage] Uploads are only available on the client'))
+        return fail(errors.VUE_CONVEX_R0008())
 
       isUploading.value = true
       progress.value = 0

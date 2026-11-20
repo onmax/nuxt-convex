@@ -12,6 +12,7 @@ import { join } from 'pathe'
 import { version } from '../package.json'
 import { formatProjectRelativePath, resolveConvexRoot, resolveStorageServerImportPath, toImportPath } from './internal/convex-paths'
 import { resolveDashboardUrl } from './internal/dashboard'
+import { moduleErrors, moduleWarnings } from './internal/diagnostics'
 import { readDotenvLocal } from './internal/env'
 import { resolveConvexOptions } from './internal/options'
 import { registerRuntimeConfigSchema, supportsRuntimeConfigSchemas } from './internal/runtime-config'
@@ -68,11 +69,12 @@ const module: NuxtModule<ConvexConfig> = defineNuxtModule<ConvexConfig>({
     const betterAuthOptions = (nuxt.options as { auth?: { clientOnly?: boolean, database?: { provider?: string } } }).auth
 
     if (betterAuthOptions?.database?.provider === 'convex') {
-      throw new Error('[nuxt-convex] The `convex` Better Auth database provider was removed: it needed public, unauthenticated CRUD functions over your auth tables. '
-        + 'Run Better Auth inside Convex with `@convex-dev/better-auth` and set `auth.clientOnly: true`; nuxt-convex proxies `/api/auth/**` to it.')
+      const diagnostic = moduleErrors.NUXT_CONVEX_C0001()
+      diagnostic.message = `[${diagnostic.code}] ${diagnostic.message}`
+      throw diagnostic
     }
     if (options.server !== undefined)
-      log.warn('`convex.server` is deprecated, use `convex.ssr` instead.')
+      moduleWarnings.NUXT_CONVEX_D0001()
 
     const config = resolveConvexOptions(options, {
       env: process.env,
@@ -118,7 +120,7 @@ const module: NuxtModule<ConvexConfig> = defineNuxtModule<ConvexConfig>({
       if (config.runtime.url)
         log.debug(`Convex URL: ${config.runtime.url}`)
       else
-        log.warn('Convex URL not configured. Run `npx convex dev` or set CONVEX_URL.')
+        moduleWarnings.NUXT_CONVEX_C0002()
     }
   },
 })
@@ -203,7 +205,7 @@ function setupStorageRuntimeFallback(nuxt: Nuxt): void {
 function setupConvexApiAlias(nuxt: Nuxt, convexRoot: ResolvedConvexRoot): void {
   const generatedDir = convexRoot.generatedDir
   if (nuxt.options.dev && !existsSync(generatedDir))
-    log.warn(`Missing ${formatProjectRelativePath(nuxt, generatedDir)}. Run \`npx convex dev\` to generate types.`)
+    moduleWarnings.NUXT_CONVEX_B0001({ generatedDir: formatProjectRelativePath(nuxt, generatedDir) })
 
   // TypeScript resolves it through `paths`, straight to Convex's generated `api.d.ts`
   nuxt.options.alias['#convex/api'] = join(generatedDir, 'api')
@@ -291,12 +293,12 @@ async function scaffoldStorageFunctions(nuxt: Nuxt, convexRoot: ResolvedConvexRo
 
   if (existsSync(storagePath)) {
     if (isUnguardedStorageScaffold(await readFile(storagePath, 'utf8')))
-      log.warn(`${formatProjectRelativePath(nuxt, storagePath)} lets anyone upload and delete files. Delete it to regenerate it with auth checks.`)
+      moduleWarnings.NUXT_CONVEX_B0002({ storagePath: formatProjectRelativePath(nuxt, storagePath) })
     return
   }
 
   if (convexRoot.fallsBackToProjectWrite)
-    log.warn(`Reading Convex files from ${formatProjectRelativePath(nuxt, convexRoot.readDir)} and scaffolding ${formatProjectRelativePath(nuxt, storagePath)} instead because the resolved layer is not writable. Set \`convex.dir\` to a writable project path to override this.`)
+    moduleWarnings.NUXT_CONVEX_B0003({ readDir: formatProjectRelativePath(nuxt, convexRoot.readDir), storagePath: formatProjectRelativePath(nuxt, storagePath) })
 
   await mkdir(storageDir, { recursive: true })
   await writeFile(storagePath, buildStorageFunctions(resolveStorageServerImportPath(convexRoot)))

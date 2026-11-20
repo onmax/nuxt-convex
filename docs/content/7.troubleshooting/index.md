@@ -3,7 +3,7 @@ title: Troubleshooting
 description: Diagnose common setup, SSR, auth and deployment issues in nuxt-convex and vue-convex.
 ---
 
-Each entry starts from the symptom you see. Messages in quotes are what the module or the runtime logs.
+Each entry starts from the symptom you see. Messages in quotes are what the module or the runtime logs. Messages with a code, like `[NUXT_CONVEX_C0002]`, link to their page in [Error Codes](/errors).
 
 ## `#convex/api` cannot be resolved
 
@@ -34,7 +34,7 @@ Each entry starts from the symptom you see. Messages in quotes are what the modu
 - For another auth provider, set the token in the [`convex:token` hook](/nuxt-module/authenticated-ssr#custom-providers).
 - As a stopgap, `{ server: false }` on the query makes it load in the browser only.
 
-## "Set CONVEX_SITE_URL (or convex.siteUrl) to proxy auth requests to Convex"
+## "The Better Auth proxy has no Convex site URL to forward auth requests to"
 
 **Cause:** the Better Auth proxy couldn't work out where Better Auth runs. The site URL is derived automatically only from `*.convex.cloud` URLs and local backends.
 
@@ -70,7 +70,7 @@ Add `--prod`, or use a production deploy key, for the production deployment.
 
 **Fix:** pin `better-auth@1.6.33` and allow it in your peer rules. See [the version warning](/integrations/better-auth#install-the-tested-stack).
 
-## "`convex.server` is deprecated, use `convex.ssr` instead"
+## "`convex.server` is deprecated"
 
 **Cause:** `nuxt.config.ts` uses the old option name.
 
@@ -84,7 +84,7 @@ Add `--prod`, or use a production deploy key, for the production deployment.
 
 ## `useConvexStorage` or `useConvexUpload` is not available
 
-**Cause:** storage isn't enabled. In Vue, "Storage feature is not configured. Install convexVueStorage first."
+**Cause:** storage isn't enabled. In Vue, "Storage feature is not configured" ([`VUE_CONVEX_R0006`](/errors/vue-convex-r0006)).
 
 **Fix:** set `convex.storage: true` in Nuxt. In Vue, install `convexVueStorage` from `vue-convex/storage` with `generateUploadUrl`, `getUrl` and `remove`.
 

@@ -1,5 +1,6 @@
 import type { ConvexPublicRuntimeConfig } from '../../../types/config'
 import { createError, defineEventHandler, getRequestIP, useRuntimeConfig } from 'nuxt/server'
+import { runtimeErrors } from '../../diagnostics'
 import { resolveConvexSiteUrl } from '../../utils/site-url'
 
 const DROPPED_REQUEST_HEADERS = ['connection', 'content-length', 'expect', 'host', 'keep-alive', 'proxy-connection', 'te', 'trailer', 'transfer-encoding', 'upgrade']
@@ -8,9 +9,12 @@ const DROPPED_RESPONSE_HEADERS = ['connection', 'content-encoding', 'content-len
 /** Forwards Better Auth requests to the Convex deployment, where `@convex-dev/better-auth` serves them */
 export default defineEventHandler(async (event) => {
   // SAFETY: the module writes `public.convex` from resolveConvexOptions(); it's absent only outside a nuxt-convex app.
-  const siteUrl = resolveConvexSiteUrl(useRuntimeConfig().public.convex as ConvexPublicRuntimeConfig | undefined)
-  if (!siteUrl)
-    throw createError({ status: 500, message: '[nuxt-convex] Set CONVEX_SITE_URL (or convex.siteUrl) to proxy auth requests to Convex.' })
+  const config = useRuntimeConfig().public.convex as ConvexPublicRuntimeConfig | undefined
+  const siteUrl = resolveConvexSiteUrl(config)
+  if (!siteUrl) {
+    const diagnostic = runtimeErrors.NUXT_CONVEX_R0006()
+    throw createError({ status: 500, message: `[${diagnostic.code}] ${diagnostic.message}`, cause: diagnostic })
+  }
 
   const { req, url } = event
   const headers = new Headers(req.headers)
@@ -29,13 +33,19 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = req.method === 'GET' || req.method === 'HEAD' ? undefined : await req.arrayBuffer()
-  const response = await fetch(new URL(url.pathname + url.search, siteUrl), {
+  const upstream = new URL(url.pathname + url.search, siteUrl)
+  const response = await fetch(upstream, {
     method: req.method,
     headers,
     body: body?.byteLength ? body : undefined,
     redirect: 'manual',
   }).catch((cause: unknown) => {
-    throw createError({ status: 502, statusText: 'Bad Gateway', message: `[nuxt-convex] Could not reach ${siteUrl}`, cause })
+    const probePath = `${(config?.auth?.basePath ?? '/api/auth').replace(/\/$/, '')}/ok`
+    const diagnostic = runtimeErrors.NUXT_CONVEX_R0007({ origin: upstream.origin, probePath, cause })
+    // eslint-disable-next-line node/prefer-global/process -- Nitro replaces process.env.NODE_ENV at build time
+    if (process.env.NODE_ENV === 'production')
+      console.warn(`[${diagnostic.code}] Upstream: ${upstream.origin}`)
+    throw createError({ status: 502, statusText: 'Bad Gateway', message: `[${diagnostic.code}] ${diagnostic.message}`, cause: diagnostic })
   })
 
   const responseHeaders = new Headers(response.headers)

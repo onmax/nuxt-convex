@@ -4,6 +4,7 @@ import type { InjectionKey, Ref, ShallowRef } from 'vue'
 import type { ConvexHydrationAdapter, Settled } from './hydration'
 import { ConvexClient, ConvexHttpClient } from 'convex/browser'
 import { shallowReadonly, shallowRef } from 'vue'
+import { errors, warnings } from './diagnostics'
 import { decodeHydrated, encodeSettled } from './hydration'
 
 export interface ConvexServerAuth {
@@ -92,7 +93,7 @@ function createHttpClient(options: ConnectableOptions): ConvexHttpClient {
 
 function requireUrl(options: ResolvedConvexVueOptions): ConnectableOptions {
   if (!hasUrl(options))
-    throw new Error('[vue-convex] reconfigure() requires a configured Convex URL. Use connect({ url }) first.')
+    throw errors.VUE_CONVEX_R0005()
   return options
 }
 
@@ -127,7 +128,7 @@ export function createConvexRuntimeContext(initialOptions: ConvexVueOptions = {}
 
     authedHttpClient ??= options.serverAuth.getToken()
       .catch((error) => {
-        console.error('[vue-convex] serverAuth.getToken() failed; running SSR queries anonymously.', error)
+        warnings.VUE_CONVEX_R0009({ cause: error })
         return null
       })
       .then((token) => {

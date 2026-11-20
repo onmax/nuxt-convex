@@ -49,7 +49,7 @@ describe('useConvexR2Upload', () => {
 
     expect(getClient).not.toHaveBeenCalled()
     await expect(upload(new File(['x'], 'x.txt'))).resolves.toBeNull()
-    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: '[nuxt-convex] Convex realtime client is not connected' }))
+    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ name: 'NUXT_CONVEX_R0008' }))
   })
 
   it('uploads via the Convex client and syncs metadata', async () => {
