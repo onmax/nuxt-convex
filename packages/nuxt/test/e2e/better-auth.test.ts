@@ -59,7 +59,7 @@ describe('better-auth integration', () => {
   it('rejects the removed convex database provider', async () => {
     await expect(setupModule({ auth: { clientOnly: false, database: { provider: 'convex' } } } as NuxtConfig))
       .rejects
-      .toThrow(/`convex` Better Auth database provider was removed/)
+      .toThrow(expect.objectContaining({ name: 'NUXT_CONVEX_C0001', message: expect.stringContaining('`convex` Better Auth database provider was removed') }))
   })
 
   it('keeps `server` as a deprecated alias of `ssr`', async () => {

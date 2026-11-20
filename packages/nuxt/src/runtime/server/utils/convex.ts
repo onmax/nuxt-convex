@@ -4,6 +4,7 @@ import type { ConvexPublicRuntimeConfig } from '../../../types/config'
 import type { ConvexServerEvent } from '../internal/token'
 import { ConvexHttpClient } from 'convex/browser'
 import { createError, isNuxtError, useRuntimeConfig } from 'nuxt/server'
+import { runtimeErrors } from '../../diagnostics'
 import { getConvexTokenGetter } from '../internal/token'
 
 export type { ConvexServerEvent, ConvexTokenContext } from '../internal/token'
@@ -107,8 +108,10 @@ export function toConvexH3Error(error: unknown): NuxtError {
 async function createClient(event: ConvexServerEvent): Promise<ConvexHttpClient> {
   // SAFETY: the module writes `public.convex` from resolveConvexOptions(); it's absent only outside a nuxt-convex app.
   const config = useRuntimeConfig().public.convex as ConvexPublicRuntimeConfig | undefined
-  if (!config?.url)
-    throw createError({ status: 500, message: '[nuxt-convex] Convex URL is not configured. Set CONVEX_URL or NUXT_PUBLIC_CONVEX_URL.' })
+  if (!config?.url) {
+    const diagnostic = runtimeErrors.NUXT_CONVEX_R0005()
+    throw createError({ status: 500, message: `[${diagnostic.code}] ${diagnostic.message}`, cause: diagnostic })
+  }
 
   const client = new ConvexHttpClient(config.url, {
     skipConvexDeploymentUrlCheck: config.clientOptions?.skipConvexDeploymentUrlCheck,

@@ -100,6 +100,17 @@ describe('server token resolver', () => {
     warn.mockRestore()
   })
 
+  it('reports NUXT_CONVEX_R0004 when the token endpoint fails', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    mocks.serverFetch.mockResolvedValueOnce(new Response(null, { status: 500 }))
+
+    expect(await getConvexToken(createEvent({ cookie: 'better-auth.session_token=a' }))).toBeNull()
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0]![0]).toMatch(/^\[NUXT_CONVEX_R0004\] Better Auth token request failed with 500/)
+    expect(warn.mock.calls[0]![0]).toContain('/api/auth/convex/token')
+    warn.mockRestore()
+  })
+
   it('has no built-in provider when auth is disabled', async () => {
     mocks.runtimeConfig.public.convex.auth = { provider: 'none', basePath: '/api/auth' }
     expect(await getConvexToken(createEvent({ cookie: 'better-auth.session_token=a' }))).toBeNull()
@@ -160,7 +171,11 @@ describe('server helpers', () => {
 
   it('fails clearly without a Convex URL', async () => {
     mocks.runtimeConfig.public.convex.url = ''
-    await expect(serverConvexQuery(createEvent(), { _name: 'tasks:list' } as any)).rejects.toMatchObject({ status: 500, message: expect.stringContaining('Convex URL') })
+    await expect(serverConvexQuery(createEvent(), { _name: 'tasks:list' } as any)).rejects.toMatchObject({
+      status: 500,
+      message: expect.stringContaining('[NUXT_CONVEX_R0005] Convex URL is not configured'),
+      cause: expect.objectContaining({ name: 'NUXT_CONVEX_R0005', fix: expect.stringContaining('NUXT_PUBLIC_CONVEX_URL') }),
+    })
   })
 })
 

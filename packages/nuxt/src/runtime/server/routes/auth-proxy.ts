@@ -1,5 +1,6 @@
 import type { ConvexPublicRuntimeConfig } from '../../../types/config'
 import { createError, defineEventHandler, getRequestIP, useRuntimeConfig } from 'nuxt/server'
+import { runtimeErrors } from '../../diagnostics'
 import { resolveConvexSiteUrl } from '../../utils/site-url'
 
 const DROPPED_REQUEST_HEADERS = ['connection', 'content-length', 'expect', 'host', 'keep-alive', 'proxy-connection', 'te', 'trailer', 'transfer-encoding', 'upgrade']
@@ -9,8 +10,10 @@ const DROPPED_RESPONSE_HEADERS = ['connection', 'content-encoding', 'content-len
 export default defineEventHandler(async (event) => {
   // SAFETY: the module writes `public.convex` from resolveConvexOptions(); it's absent only outside a nuxt-convex app.
   const siteUrl = resolveConvexSiteUrl(useRuntimeConfig().public.convex as ConvexPublicRuntimeConfig | undefined)
-  if (!siteUrl)
-    throw createError({ status: 500, message: '[nuxt-convex] Set CONVEX_SITE_URL (or convex.siteUrl) to proxy auth requests to Convex.' })
+  if (!siteUrl) {
+    const diagnostic = runtimeErrors.NUXT_CONVEX_R0006()
+    throw createError({ status: 500, message: `[${diagnostic.code}] ${diagnostic.message}`, cause: diagnostic })
+  }
 
   const { req, url } = event
   const headers = new Headers(req.headers)
@@ -35,7 +38,8 @@ export default defineEventHandler(async (event) => {
     body: body?.byteLength ? body : undefined,
     redirect: 'manual',
   }).catch((cause: unknown) => {
-    throw createError({ status: 502, statusText: 'Bad Gateway', message: `[nuxt-convex] Could not reach ${siteUrl}`, cause })
+    const diagnostic = runtimeErrors.NUXT_CONVEX_R0007({ siteUrl, cause })
+    throw createError({ status: 502, statusText: 'Bad Gateway', message: `[${diagnostic.code}] ${diagnostic.message}`, cause: diagnostic })
   })
 
   const responseHeaders = new Headers(response.headers)

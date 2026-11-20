@@ -5,6 +5,7 @@ import type { ConvexPublicRuntimeConfig } from '../types/config'
 import { convexVue } from '#convex'
 import { defineNuxtPlugin, useRequestEvent, useRuntimeConfig, useState } from '#imports'
 import { getStorageRefs } from '#nuxt-convex/storage-refs-runtime'
+import { runtimeWarnings } from './diagnostics'
 
 // `server` is what nuxt-convex <= 0.0.7 wrote for `ssr`
 type RuntimeConvexConfig = Partial<ConvexPublicRuntimeConfig> & { server?: boolean }
@@ -26,7 +27,7 @@ export default defineNuxtPlugin({
 
     if (!config.url && import.meta.dev && !warnedMissingUrl) {
       warnedMissingUrl = true
-      console.warn('[nuxt-convex] No Convex URL configured, so the runtime starts disconnected. Set CONVEX_URL or NUXT_PUBLIC_CONVEX_URL.')
+      runtimeWarnings.NUXT_CONVEX_R0001()
     }
 
     if (import.meta.server) {
@@ -38,7 +39,7 @@ export default defineNuxtPlugin({
         const getToken = (): Promise<string | null> => token ??= Promise.resolve(resolve()).then(value => value ?? null)
         serverAuth = { getToken }
         const isAuthenticated = await getToken().then(Boolean, (error) => {
-          console.error('[nuxt-convex] Failed to resolve the Convex token; rendering signed out.', error)
+          runtimeWarnings.NUXT_CONVEX_R0002({ cause: error }, { method: 'error' })
           return false
         })
         authState.value = { isAuthenticated }
@@ -89,7 +90,7 @@ export default defineNuxtPlugin({
           storageOptions = { generateUploadUrl: storage.generateUploadUrl, getUrl: storage.getUrl, remove: storage.remove }
       }
       catch (error) {
-        console.warn('[nuxt-convex] Failed to load storage refs from the generated Convex API.', error)
+        runtimeWarnings.NUXT_CONVEX_R0003({ cause: error })
       }
     }
 

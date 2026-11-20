@@ -68,6 +68,7 @@
     "@valibot/to-json-schema": "catalog:prod",
     "consola": "catalog:prod",
     "defu": "catalog:prod",
+    "nostics": "catalog:prod",
     "pathe": "catalog:prod",
     "valibot": "catalog:prod",
     "vue-convex": "workspace:*"

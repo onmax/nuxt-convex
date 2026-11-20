@@ -1,6 +1,7 @@
 import type { NuxtRequestEvent, RequestEvent } from 'nuxt/server'
 import type { ConvexPublicRuntimeConfig } from '../../../types/config'
 import { getRequestHeaders, serverFetch, useRuntimeConfig, useServerHooks } from 'nuxt/server'
+import { runtimeWarnings } from '../../diagnostics'
 
 /** An h3 event (Nitro handlers) or a portable `nuxt/server` event */
 export type ConvexServerEvent = NuxtRequestEvent | RequestEvent
@@ -56,16 +57,17 @@ async function fetchBetterAuthToken(event: ConvexServerEvent, headers: Headers, 
   if (!SESSION_COOKIE_RE.test(headers.get('cookie') || ''))
     return null
 
+  const tokenPath = `${basePath.replace(/\/$/, '')}/convex/token`
   try {
     // SAFETY: both event shapes carry the `req` and `context` serverFetch reads; their types differ between Nitro versions.
-    const response = await serverFetch(event as AnyEvent, `${basePath.replace(/\/$/, '')}/convex/token`, { forwardHeaders: ['cookie'] })
+    const response = await serverFetch(event as AnyEvent, tokenPath, { forwardHeaders: ['cookie'] })
     if (response.ok) {
       // SAFETY: claims nothing about the body: every member is optional and unknown, and the token is checked below.
       const data = await response.json() as { token?: unknown } | null
       return typeof data?.token === 'string' ? data.token : null
     }
     if (response.status !== 401 && response.status !== 403)
-      console.warn(`[nuxt-convex] Better Auth token request failed with ${response.status}. Rendering anonymously.`)
+      runtimeWarnings.NUXT_CONVEX_R0004({ status: response.status, tokenPath })
   }
   catch (error) {
     console.warn('[nuxt-convex] Better Auth token request failed. Rendering anonymously.', error)
