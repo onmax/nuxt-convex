@@ -1,12 +1,7 @@
 {
   "extends": [
-    "auto",
-    "vite/strict",
+    "strict",
     "vue/strict",
-    "nuxt/strict",
-    "nitro/strict",
-    "typescript/strict",
-    "vueuse/strict",
     "package/recommended"
   ],
   "suppressions": [

@@ -2,11 +2,14 @@ minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
   - '@nuxtjs/better-auth@0.3.12'
   - vite@8.3.5
+  - vite-doctor@0.1.4
 
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - chokidar
   - semver
+  # Same trusted publisher as 0.1.0, published without the manual approval step pnpm compares.
+  - vite-doctor@0.1.4
 
 # @convex-dev/better-auth (<= 0.12.5) needs better-auth <1.7: it imports
 # better-auth/plugins/oidc-provider, which 1.7 removed. @nuxtjs/better-auth asks for >=1.7,
@@ -72,7 +75,7 @@ catalogs:
     '@nuxt/eslint-config': ^1.17.0
     eslint: ^10.13.0
     eslint-plugin-format: ^2.0.1
-    vite-doctor: ^0.1.0
+    vite-doctor: ^0.1.4
   nuxt:
     '@nuxt/devtools': 4.0.0-beta.7
     '@nuxt/devtools-kit': 4.0.0-beta.7

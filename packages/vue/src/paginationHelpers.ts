@@ -18,7 +18,7 @@ function matchesArgs<Query extends PaginatedQueryReference>(
     return queries
   return queries.filter((q) => {
     const args: Record<string, Value> = q.args
-    return Object.entries(argsToMatch).every(([k, v]) => compareValues(v, args[k]) === 0)
+    return Object.entries(argsToMatch).every(([k, v]) => compareValues(v, Object.hasOwn(args, k) ? args[k] : undefined) === 0)
   })
 }
 
@@ -92,13 +92,16 @@ export function insertAtPosition<Query extends PaginatedQueryReference>(options:
   const { paginatedQuery, sortOrder, sortKeyFromItem, localQueryStore, item, argsToMatch } = options
   const queries: LocalQueryResult<Query>[] = localQueryStore.getAllQueries(paginatedQuery)
 
-  const queryGroups: Record<string, LocalQueryResult<Query>[]> = {}
+  const queryGroups = new Map<string, LocalQueryResult<Query>[]>()
   for (const query of matchesArgs(queries, argsToMatch)) {
     const key = JSON.stringify({ ...query.args, paginationOpts: query.args.paginationOpts.id })
-    queryGroups[key] ??= []
-    queryGroups[key].push(query)
+    const group = queryGroups.get(key)
+    if (group)
+      group.push(query)
+    else
+      queryGroups.set(key, [query])
   }
-  for (const pageQueries of Object.values(queryGroups)) {
+  for (const pageQueries of queryGroups.values()) {
     insertAtPositionInPages({ pageQueries, paginatedQuery, sortOrder, sortKeyFromItem, localQueryStore, item })
   }
 }

@@ -2,6 +2,7 @@ import type { FunctionReference } from 'convex/server'
 import type { JSONValue, Value } from 'convex/values'
 import { getFunctionName } from 'convex/server'
 import { ConvexError, convexToJson, jsonToConvex } from 'convex/values'
+import { isError } from './errors'
 
 /** A settled SSR query, serialized with `convexToJson` so `bigint` and `ArrayBuffer` survive. */
 export type ConvexHydrationEntry
@@ -29,7 +30,7 @@ export function readErrorDataField(data: unknown, field: string): unknown {
 }
 
 export function isConvexError(error: unknown, code?: string): error is ConvexError<Value> {
-  if (!(error instanceof ConvexError || (error instanceof Error && error.name === 'ConvexError' && 'data' in error)))
+  if (!(error instanceof ConvexError || (isError(error) && error.name === 'ConvexError' && 'data' in error)))
     return false
   return code === undefined || error.data === code || readErrorDataField(error.data, 'code') === code
 }

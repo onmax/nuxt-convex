@@ -13,8 +13,9 @@ export interface ConvexEnv {
 
 function pick(env: Env, ...keys: string[]): string | undefined {
   for (const key of keys) {
-    if (env[key])
-      return env[key]
+    const value = Object.hasOwn(env, key) ? env[key] : undefined
+    if (value)
+      return value
   }
 }
 

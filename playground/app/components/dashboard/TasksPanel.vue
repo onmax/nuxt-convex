@@ -29,8 +29,13 @@ const totalTasks = computed(() => allTasks.value?.length ?? 0)
 const remainingTasks = computed(() => Math.max(totalTasks.value - headlineTasks.value.length, 0))
 const hasTasks = computed(() => totalTasks.value > 0)
 
+// `instanceof Error` that also accepts an Error from another realm
+function isError(value: unknown): value is Error {
+  return value instanceof Error || Object.prototype.toString.call(value) === '[object Error]'
+}
+
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : 'Please try again.'
+  return isError(error) ? error.message : 'Please try again.'
 }
 
 async function createTask() {
