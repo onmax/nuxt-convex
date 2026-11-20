@@ -1,5 +1,7 @@
+import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { execPath } from 'node:process'
 import { describe, expect, it } from 'vitest'
 
 describe('vue-convex exports', async () => {
@@ -37,6 +39,18 @@ describe('vue-convex exports', async () => {
       'useConvexStorage',
       'useConvexUpload',
     ])
+  })
+
+  it.each([
+    ['vue-convex', 'convexVue'],
+    ['vue-convex/advanced', 'useConvexClient'],
+    ['vue-convex/storage', 'useConvexUpload'],
+  ])('loads %s without Node require(esm)', (entry, symbol) => {
+    execFileSync(execPath, ['--no-experimental-require-module', '-e', `
+      const assert = require('node:assert/strict')
+      const [entry, symbol] = process.argv.slice(1)
+      assert.equal(typeof require(entry)[symbol], 'function')
+    `, entry, symbol])
   })
 
   it('keeps internal symbols out of the built declarations', () => {

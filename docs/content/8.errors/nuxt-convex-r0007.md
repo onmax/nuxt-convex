@@ -20,4 +20,4 @@ The `/api/auth/**` proxy could not connect to the Convex site URL. The request a
 
 ## How to fix it
 
-Open `<siteUrl>/api/auth/ok` directly. If it doesn't answer, fix the URL or start `npx convex dev`.
+Open `/ok` under your configured `convex.auth.basePath` directly on the Convex site. With the default base path, that's `<siteUrl>/api/auth/ok`; with `/auth/`, it's `<siteUrl>/auth/ok`. If it doesn't answer, fix the URL or start `npx convex dev`.

@@ -5,5 +5,6 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,
+  deps: { alwaysBundle: ['nostics'] },
   external: ['vue', 'convex', 'convex/browser', 'convex/server'],
 })

@@ -5,6 +5,7 @@ import yaml from 'yaml'
 import { errors as vueErrors, warnings as vueWarnings } from '../../../vue/src/internal/diagnostics'
 import { moduleErrors, moduleWarnings } from '../../src/internal/diagnostics'
 import { runtimeErrors, runtimeWarnings } from '../../src/runtime/diagnostics'
+import { authWarnings } from '../../src/runtime/server/internal/auth-diagnostics'
 
 const repoRoot = resolve(process.cwd(), '../..')
 
@@ -33,7 +34,7 @@ describe('docs contract', () => {
   })
 
   it('has an error page for every diagnostic code, linked from the index', () => {
-    const codes = [moduleErrors, moduleWarnings, runtimeErrors, runtimeWarnings, vueErrors, vueWarnings].flatMap(catalog => Object.keys(catalog))
+    const codes = [moduleErrors, moduleWarnings, runtimeErrors, runtimeWarnings, authWarnings, vueErrors, vueWarnings].flatMap(catalog => Object.keys(catalog))
     const index = read('docs/content/8.errors/index.md')
 
     expect(codes).toHaveLength(24)

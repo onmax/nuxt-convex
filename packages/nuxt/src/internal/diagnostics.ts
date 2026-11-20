@@ -35,7 +35,7 @@ export const moduleWarnings = defineDiagnostics({
     },
     NUXT_CONVEX_B0002: {
       why: (p: { storagePath: string }) => `${p.storagePath} lets anyone upload and delete files.`,
-      fix: (p: { storagePath: string }) => `Delete ${p.storagePath} to regenerate it with auth checks.`,
+      fix: (p: { storagePath: string }) => `Add auth and ownership checks to ${p.storagePath} in place. Only delete and regenerate an unmodified scaffold.`,
     },
     NUXT_CONVEX_B0003: {
       why: (p: { readDir: string, storagePath: string }) => `Reading Convex files from ${p.readDir} and scaffolding ${p.storagePath} instead, because the resolved layer is not writable.`,

@@ -21,8 +21,8 @@ export const runtimeErrors = process.env.NODE_ENV === 'production'
           fix: 'Set CONVEX_SITE_URL (or convex.siteUrl), or NUXT_PUBLIC_CONVEX_SITE_URL at run time.',
         },
         NUXT_CONVEX_R0007: {
-          why: (p: { siteUrl: string }) => `Could not reach ${p.siteUrl}.`,
-          fix: (p: { siteUrl: string }) => `Open ${p.siteUrl}/api/auth/ok. If it doesn't answer, fix the site URL or start \`npx convex dev\`.`,
+          why: (params: { origin: string }) => `Could not reach ${params.origin}.`,
+          fix: (params: { origin: string, probePath: string }) => `Open ${params.origin}${params.probePath}. If it doesn't answer, fix the site URL or start \`npx convex dev\`.`,
         },
         NUXT_CONVEX_R0008: {
           why: 'The Convex realtime client is not connected, so R2 uploads cannot start.',
@@ -56,10 +56,6 @@ export const runtimeWarnings = process.env.NODE_ENV === 'production'
         NUXT_CONVEX_R0003: {
           why: 'Failed to load storage refs from the generated Convex API.',
           fix: 'Run `npx convex dev` so convex/_generated includes `_hub/storage`.',
-        },
-        NUXT_CONVEX_R0004: {
-          why: (p: { status: number }) => `Better Auth token request failed with ${p.status}, so the page renders anonymously.`,
-          fix: (p: { tokenPath: string }) => `Request ${p.tokenPath} while signed in: it should return { "token": "..." }. Check the Better Auth setup in your Convex deployment.`,
         },
       },
     })

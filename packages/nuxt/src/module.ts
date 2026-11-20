@@ -69,7 +69,9 @@ const module: NuxtModule<ConvexConfig> = defineNuxtModule<ConvexConfig>({
     const betterAuthOptions = (nuxt.options as { auth?: { clientOnly?: boolean, database?: { provider?: string } } }).auth
 
     if (betterAuthOptions?.database?.provider === 'convex') {
-      throw moduleErrors.NUXT_CONVEX_C0001()
+      const diagnostic = moduleErrors.NUXT_CONVEX_C0001()
+      diagnostic.message = `[${diagnostic.code}] ${diagnostic.message}`
+      throw diagnostic
     }
     if (options.server !== undefined)
       moduleWarnings.NUXT_CONVEX_D0001()

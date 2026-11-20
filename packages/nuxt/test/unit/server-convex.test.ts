@@ -111,6 +111,31 @@ describe('server token resolver', () => {
     warn.mockRestore()
   })
 
+  it('retains the status and configured token path in production warnings', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.resetModules()
+    mocks.runtimeConfig.public.convex.auth.basePath = '/auth/'
+
+    try {
+      const { createConvexTokenGetter } = await import('../../src/runtime/server/internal/token')
+      for (const status of [404, 500]) {
+        mocks.serverFetch.mockResolvedValueOnce(new Response(null, { status }))
+        const getToken = createConvexTokenGetter(createEvent({ cookie: 'better-auth.session_token=a' }))
+        expect(await getToken()).toBeNull()
+      }
+      expect(warn).toHaveBeenCalledTimes(2)
+      expect(warn.mock.calls[0]![0]).toContain('[NUXT_CONVEX_R0004] HTTP 404 /auth/convex/token')
+      expect(warn.mock.calls[1]![0]).toContain('[NUXT_CONVEX_R0004] HTTP 500 /auth/convex/token')
+      expect(warn.mock.calls[1]![0]).not.toContain('while signed in')
+    }
+    finally {
+      warn.mockRestore()
+      vi.unstubAllEnvs()
+      vi.resetModules()
+    }
+  })
+
   it('has no built-in provider when auth is disabled', async () => {
     mocks.runtimeConfig.public.convex.auth = { provider: 'none', basePath: '/api/auth' }
     expect(await getConvexToken(createEvent({ cookie: 'better-auth.session_token=a' }))).toBeNull()

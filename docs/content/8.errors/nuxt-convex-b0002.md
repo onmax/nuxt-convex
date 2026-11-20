@@ -18,4 +18,4 @@ Package: `nuxt-convex`
 
 ## How to fix it
 
-Delete `convex/_hub/storage.ts`. The module regenerates it with auth checks on the next start. Then add ownership checks: see [File Storage](/nuxt-module/file-storage#review-the-generated-scaffold).
+If you've customized `convex/_hub/storage.ts`, keep the file and add authentication and ownership checks in place. If the scaffold is unmodified, you can delete it and let the module regenerate it with auth checks on the next start, then add ownership checks. See [File Storage](/nuxt-module/file-storage#review-the-generated-scaffold).

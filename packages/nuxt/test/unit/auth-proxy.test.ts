@@ -13,8 +13,8 @@ vi.mock('nuxt/server', () => ({
 
 const { default: authProxy } = await import('../../src/runtime/server/routes/auth-proxy')
 
-function createEvent() {
-  const url = new URL('http://app.test/api/auth/get-session')
+function createEvent(path = '/api/auth/get-session') {
+  const url = new URL(path, 'http://app.test')
   return { req: new Request(url), url } as any
 }
 
@@ -38,13 +38,36 @@ describe('auth proxy', () => {
     vi.stubGlobal('fetch', vi.fn(async () => {
       throw failure
     }))
-    mocks.runtimeConfig.public.convex = { siteUrl: 'https://down.convex.site' }
+    mocks.runtimeConfig.public.convex = { siteUrl: 'https://down.convex.site', auth: { basePath: '/auth/' } }
 
-    await expect(authProxy(createEvent())).rejects.toMatchObject({
+    await expect(authProxy(createEvent('/auth/get-session'))).rejects.toMatchObject({
       status: 502,
       statusText: 'Bad Gateway',
       message: '[NUXT_CONVEX_R0007] Could not reach https://down.convex.site.',
-      cause: expect.objectContaining({ name: 'NUXT_CONVEX_R0007', cause: failure }),
+      cause: expect.objectContaining({ name: 'NUXT_CONVEX_R0007', cause: failure, fix: expect.stringContaining('https://down.convex.site/auth/ok') }),
     })
+  })
+
+  it('logs only the upstream origin on a production 502', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    vi.stubEnv('NODE_ENV', 'production')
+    vi.resetModules()
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('fetch failed')))
+    mocks.runtimeConfig.public.convex = { siteUrl: 'https://user:pass@down.convex.site/private?secret=value' }
+
+    try {
+      const { default: productionProxy } = await import('../../src/runtime/server/routes/auth-proxy')
+      await expect(productionProxy(createEvent('/api/auth/get-session?token=value'))).rejects.toMatchObject({
+        status: 502,
+        message: expect.not.stringContaining('down.convex.site'),
+        cause: expect.objectContaining({ name: 'NUXT_CONVEX_R0007' }),
+      })
+      expect(warn.mock.calls).toEqual([['[NUXT_CONVEX_R0007] Upstream: https://down.convex.site']])
+    }
+    finally {
+      warn.mockRestore()
+      vi.unstubAllEnvs()
+      vi.resetModules()
+    }
   })
 })

@@ -1,7 +1,7 @@
 import type { NuxtRequestEvent, RequestEvent } from 'nuxt/server'
 import type { ConvexPublicRuntimeConfig } from '../../../types/config'
 import { getRequestHeaders, serverFetch, useRuntimeConfig, useServerHooks } from 'nuxt/server'
-import { runtimeWarnings } from '../../diagnostics'
+import { authWarnings } from './auth-diagnostics'
 
 /** An h3 event (Nitro handlers) or a portable `nuxt/server` event */
 export type ConvexServerEvent = NuxtRequestEvent | RequestEvent
@@ -67,7 +67,7 @@ async function fetchBetterAuthToken(event: ConvexServerEvent, headers: Headers, 
       return typeof data?.token === 'string' ? data.token : null
     }
     if (response.status !== 401 && response.status !== 403)
-      runtimeWarnings.NUXT_CONVEX_R0004({ status: response.status, tokenPath })
+      authWarnings.NUXT_CONVEX_R0004({ status: response.status, tokenPath })
   }
   catch (error) {
     console.warn('[nuxt-convex] Better Auth token request failed. Rendering anonymously.', error)

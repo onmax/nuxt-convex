@@ -20,4 +20,4 @@ The server asked Better Auth for the request's Convex token and got an error sta
 
 ## How to fix it
 
-Request `/api/auth/convex/token` in the browser while signed in. It should return `{ "token": "..." }`. If it fails, fix the Better Auth setup in your Convex deployment. See [Better Auth](/integrations/better-auth).
+Request `/convex/token` under your configured `convex.auth.basePath` in the browser while signed in. With the default base path, that's `/api/auth/convex/token`; with `/auth/`, it's `/auth/convex/token`. It should return `{ "token": "..." }`. If it fails, fix the Better Auth setup in your Convex deployment. See [Better Auth](/integrations/better-auth).
