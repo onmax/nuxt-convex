@@ -42,7 +42,7 @@ describe('vue-convex exports', async () => {
   })
 
   it.each([
-    ['vue-convex', 'convexVue'],
+    ['vue-convex', 'useConvexQuery'],
     ['vue-convex/advanced', 'useConvexClient'],
     ['vue-convex/storage', 'useConvexUpload'],
   ])('loads %s without Node require(esm)', (entry, symbol) => {
