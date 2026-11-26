@@ -17,7 +17,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      script: [{ type: 'module', src: 'https://console.vitehub.dev/hosted-comments.js', 'data-vitehub-comments': '902f100b-b905-43da-8857-bc466e238012', 'data-vitehub-repo': 'onmax/nuxt-convex' }],
+      script: [{ 'type': 'module', 'src': 'https://console.vitehub.dev/hosted-comments.js', 'data-vitehub-comments': '902f100b-b905-43da-8857-bc466e238012', 'data-vitehub-repo': 'onmax/nuxt-convex' }],
     },
   },
 
