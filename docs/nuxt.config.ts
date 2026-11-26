@@ -40,6 +40,7 @@ export default defineNuxtConfig({
     head: {
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
       meta: [{ name: 'twitter:card', content: 'summary_large_image' }],
+      script: [{ type: 'module', src: 'https://console.vitehub.dev/hosted-comments.js', 'data-vitehub-comments': '0b25334d-0e8e-4c59-8812-14fdd0c66e5d', 'data-vitehub-repo': 'onmax/nuxt-convex' }],
     },
   },
 
